@@ -328,11 +328,11 @@
                         </span>
                     </div>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        URL Webhook telah dikunci secara terpusat di dalam kodingan (variabel <code>DEFAULT_WEBHOOK_URL</code>).
+                        URL Webhook telah dikunci secara terpusat di dalam kodingan (variabel <code>DEFAULT_WEBHOOK_URL</code>). Auto-sync aktif setiap 10 detik.
                     </p>
                     <div class="flex flex-wrap gap-2 pt-1">
-                        <button onclick="syncDataFromCloud()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition">
-                            <i class="fa-solid fa-rotate mr-1"></i> Tarik Data Terbaru
+                        <button onclick="syncDataFromCloud(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition">
+                            <i class="fa-solid fa-rotate mr-1"></i> Tarik Data Manual
                         </button>
                         <button onclick="openScriptGuideModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-2.5 rounded-xl font-bold text-xs border border-amber-300 transition">
                             <i class="fa-solid fa-code mr-1"></i> Panduan Kode Google Apps Script
@@ -712,6 +712,7 @@ function getOrCreateSheet(ss, name) {
         let isAdminUnlocked = false;
         let webhookUrl = DEFAULT_WEBHOOK_URL;
         let currentProofDataUrl = '';
+        let autoSyncTimer = null;
 
         try {
             const savedMenu = localStorage.getItem('kantin_menu');
@@ -1735,21 +1736,21 @@ function getOrCreateSheet(ss, name) {
             if (!statusBadge) return;
             if (isOnline) {
                 statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
-                statusBadge.innerHTML = '<i class="fa-solid fa-cloud text-[10px] mr-1"></i> Terhubung Cloud';
+                statusBadge.innerHTML = '<i class="fa-solid fa-rotate text-[10px] mr-1 animate-spin"></i> Auto-Sync Aktif (10s)';
             } else {
                 statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600';
                 statusBadge.innerHTML = '<i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)';
             }
         }
 
-        function syncDataFromCloud() {
+        function syncDataFromCloud(isSilent = false) {
             if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
-                showToast('Isi URL Webhook di kodingan (DEFAULT_WEBHOOK_URL)!', 'error');
+                if (!isSilent) showToast('Isi URL Webhook di kodingan (DEFAULT_WEBHOOK_URL)!', 'error');
                 updateSyncStatus(false);
                 return;
             }
 
-            showToast('Menghubungkan Cloud...', 'info');
+            if (!isSilent) showToast('Menghubungkan Cloud...', 'info');
             fetch(webhookUrl)
                 .then(res => res.json())
                 .then(data => {
@@ -1783,14 +1784,24 @@ function getOrCreateSheet(ss, name) {
                             renderUserVouchers();
                         }
                         updateSyncStatus(true);
-                        showToast('Sync Cloud Berhasil! ☁️', 'success');
+                        if (!isSilent) showToast('Sync Cloud Berhasil! ☁️', 'success');
                     }
                 })
                 .catch(err => {
                     console.log('Cloud Sync Error:', err);
                     updateSyncStatus(false);
-                    showToast('Sync Cloud Gagal!', 'error');
+                    if (!isSilent) showToast('Sync Cloud Gagal!', 'error');
                 });
+        }
+
+        function startAutoSync() {
+            if (autoSyncTimer) clearInterval(autoSyncTimer);
+            if (webhookUrl && !webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
+                // Auto sync setiap 10 detik secara silent (tanpa pop-up toast)
+                autoSyncTimer = setInterval(() => {
+                    syncDataFromCloud(true);
+                }, 10000);
+            }
         }
 
         function syncOrdersToCloud() {
@@ -1910,7 +1921,8 @@ function getOrCreateSheet(ss, name) {
             updateQrisImagePreview();
             loadCashierWaSetting();
             if (webhookUrl && !webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
-                syncDataFromCloud();
+                syncDataFromCloud(false);
+                startAutoSync();
             } else {
                 updateSyncStatus(false);
             }
