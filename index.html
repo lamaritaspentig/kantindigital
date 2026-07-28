@@ -742,32 +742,56 @@ function getOrCreateSheet(ss, name) {
         }
 
         function getVoucherTheme(price) {
-            if (price <= 2000) {
+            const p = Number(price || 0);
+            if (p <= 1000) {
                 return {
-                    bgCard: 'bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-transparent',
-                    borderCard: 'border-amber-500/30',
-                    bgInner: 'bg-amber-50/50',
-                    borderInner: 'border-amber-200/60',
+                    bgCard: 'bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-transparent',
+                    borderCard: 'border-amber-400/40',
+                    bgInner: 'bg-amber-50/70',
+                    borderInner: 'border-amber-200',
                     textSub: 'text-amber-800',
-                    textTitle: 'text-amber-950'
+                    textTitle: 'text-amber-950',
+                    textPrice: 'text-amber-700'
                 };
-            } else if (price <= 3000) {
+            } else if (p <= 2000) {
+                return {
+                    bgCard: 'bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-transparent',
+                    borderCard: 'border-orange-400/40',
+                    bgInner: 'bg-orange-50/70',
+                    borderInner: 'border-orange-200',
+                    textSub: 'text-orange-800',
+                    textTitle: 'text-orange-950',
+                    textPrice: 'text-orange-700'
+                };
+            } else if (p <= 3000) {
                 return {
                     bgCard: 'bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent',
-                    borderCard: 'border-emerald-500/30',
-                    bgInner: 'bg-emerald-50/50',
-                    borderInner: 'border-emerald-200/60',
+                    borderCard: 'border-emerald-400/40',
+                    bgInner: 'bg-emerald-50/70',
+                    borderInner: 'border-emerald-200',
                     textSub: 'text-emerald-800',
-                    textTitle: 'text-emerald-950'
+                    textTitle: 'text-emerald-950',
+                    textPrice: 'text-emerald-700'
+                };
+            } else if (p <= 5000) {
+                return {
+                    bgCard: 'bg-gradient-to-br from-blue-500/10 via-sky-500/5 to-transparent',
+                    borderCard: 'border-blue-400/40',
+                    bgInner: 'bg-blue-50/70',
+                    borderInner: 'border-blue-200',
+                    textSub: 'text-blue-800',
+                    textTitle: 'text-blue-950',
+                    textPrice: 'text-blue-700'
                 };
             } else {
                 return {
-                    bgCard: 'bg-gradient-to-br from-blue-500/10 via-indigo-500/5 to-transparent',
-                    borderCard: 'border-blue-500/30',
-                    bgInner: 'bg-blue-50/50',
-                    borderInner: 'border-blue-200/60',
-                    textSub: 'text-blue-800',
-                    textTitle: 'text-blue-950'
+                    bgCard: 'bg-gradient-to-br from-purple-500/10 via-indigo-500/5 to-transparent',
+                    borderCard: 'border-purple-400/40',
+                    bgInner: 'bg-purple-50/70',
+                    borderInner: 'border-purple-200',
+                    textSub: 'text-purple-800',
+                    textTitle: 'text-purple-950',
+                    textPrice: 'text-purple-700'
                 };
             }
         }
@@ -1174,7 +1198,7 @@ function getOrCreateSheet(ss, name) {
                             <span class="text-[10px] font-extrabold uppercase ${theme.textSub} tracking-wider">Kantin SARAS Spentig</span>
                             <h3 class="font-extrabold ${theme.textTitle} text-base leading-snug">${item.name}</h3>
                         </div>
-                        <p class="text-2xl font-black text-blue-700">${formatRupiah(item.price)}</p>
+                        <p class="text-2xl font-black ${theme.textPrice}">${formatRupiah(item.price)}</p>
                     </div>
 
                     <button onclick="addToCart('${item.id}')" ${item.stock <= 0 ? 'disabled' : ''} class="mt-5 w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white py-3 rounded-2xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2">
@@ -1541,7 +1565,7 @@ function getOrCreateSheet(ss, name) {
                         <div class="flex items-center justify-between gap-2">
                             <div>
                                 <p class="text-[9px] font-extrabold ${theme.textSub} uppercase">Nominal</p>
-                                <p class="text-2xl font-black text-blue-700 leading-none tracking-tight">RP ${(v.nominal || 0).toLocaleString('id-ID')}</p>
+                                <p class="text-2xl font-black ${theme.textPrice} leading-none tracking-tight">RP ${(v.nominal || 0).toLocaleString('id-ID')}</p>
                                 <div class="mt-2 space-y-0.5">
                                     <p class="text-xs font-black text-slate-900 leading-tight">${v.buyerName}</p>
                                     <p class="text-[10px] font-bold ${theme.textSub}">Kelas: ${v.buyerClass} ${v.buyerNisn ? `• NISN: ${v.buyerNisn}` : ''}</p>
