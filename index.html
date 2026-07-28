@@ -43,11 +43,11 @@
             </div>
 
             <!-- Role Switcher -->
-            <div class="bg-slate-100 p-1 rounded-2xl flex items-center text-xs font-bold border border-slate-200/80 shadow-inner">
-                <button onclick="setRole('siswa')" id="role-siswa-btn" class="px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5">
+            <div class="bg-slate-100 p-1 rounded-2xl flex items-center text-xs font-bold border border-slate-200/80 shadow-inner shrink-0">
+                <button onclick="setRole('siswa')" id="role-siswa-btn" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-xs font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs">
                     <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Siswa / Ortu
                 </button>
-                <button onclick="setRole('admin')" id="role-admin-btn" class="px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5">
+                <button onclick="setRole('admin')" id="role-admin-btn" class="px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-500 hover:text-slate-800 font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs">
                     <i class="fa-solid fa-user-shield"></i> Kasir
                     <i id="admin-lock-icon" class="fa-solid fa-lock text-[10px] text-slate-400"></i>
                 </button>
@@ -305,6 +305,18 @@
                     </div>
                 </div>
 
+                <!-- WA Kasir Settings -->
+                <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3">
+                    <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-emerald-600 text-sm"></i> Nomor WhatsApp Kasir (Untuk Tombol Bantuan)
+                    </h3>
+                    <p class="text-xs text-slate-500">Nomor ini akan dihubungi oleh siswa/orang tua saat mengeklik tombol "Bantuan Kasir".</p>
+                    <div class="flex gap-2">
+                        <input type="tel" id="setting-cashier-wa" placeholder="Contoh: 081234567890" class="flex-1 px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500">
+                        <button onclick="saveCashierWa()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs transition">Simpan WA</button>
+                    </div>
+                </div>
+
                 <!-- Google Spreadsheet Webhook -->
                 <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3">
                     <div class="flex items-center justify-between">
@@ -329,8 +341,13 @@
                 </div>
             </div>
         </section>
-
     </main>
+
+    <!-- FLOATING WHATSAPP HELP BUTTON -->
+    <a id="btn-wa-help" onclick="openWhatsAppHelp(event)" href="#" target="_blank" title="Hubungi Kasir via WhatsApp" class="fixed bottom-5 right-5 z-40 bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl shadow-xl shadow-emerald-900/20 border border-emerald-400/40 flex items-center gap-2 text-xs font-extrabold transition-all transform hover:scale-105 active:scale-95">
+        <i class="fa-brands fa-whatsapp text-lg text-emerald-300"></i>
+        <span>Bantuan Kasir</span>
+    </a>
 
     <!-- MODAL: LARGE QRIS CHECKOUT -->
     <div id="modal-qris" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
@@ -425,8 +442,8 @@
             
             <div class="space-y-1">
                 <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Setup Manual Script</span>
-                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (Crash-Proof & Auto-Sync)</h3>
-                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. Atur QRIS & PIN, lalu Deploy sebagai <b>Web App (Akses: Anyone)</b>.</p>
+                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (High-Speed & Drive Auto-Save)</h3>
+                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. Foto bukti bayar otomatis disimpan ke Google Drive agar Spreadsheet tidak lambat.</p>
             </div>
 
             <div class="bg-slate-900 text-slate-100 p-4 rounded-2xl text-[11px] font-mono overflow-x-auto relative">
@@ -442,7 +459,8 @@ function doGet(e) {
   // ===================================================
   var MANUAL_CONFIG = {
     qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360",
-    adminPin: "3333"
+    adminPin: "3333",
+    cashierWa: "081234567890"
   };
   // ===================================================
 
@@ -455,7 +473,7 @@ function doGet(e) {
     var defaultItems = [
       { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
       { id: 'v2000', name: 'Voucher Nominal Rp 2.000', price: 2000, stock: 100, icon: '🎟️' },
-      { id: 'v3000', name: 'Voucher Nominal Rp 3.000', price: 3000, stock: 100, icon: '🎟️' },
+      { id: 'v3000', name: 'Voucher Nominal Rp 3.000', price: 3000, stock: 3000, icon: '🎟️' },
       { id: 'v5000', name: 'Voucher Nominal Rp 5.000', price: 5000, stock: 100, icon: '🎟️' },
       { id: 'v10000', name: 'Voucher Nominal Rp 10.000', price: 10000, stock: 100, icon: '🎟️' }
     ];
@@ -479,12 +497,13 @@ function doGet(e) {
     }
   }
 
-  // 2. Ambil Transaksi dari Sheet "TRANSAKSI"
+  // 2. Ambil Transaksi dari Sheet "TRANSAKSI" (Diambil max 200 data terbaru agar super cepat)
   var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
   var orders = [];
   var ordersData = sheetOrders.getDataRange().getDisplayValues();
 
-  for (var j = 1; j < ordersData.length; j++) {
+  var startIdx = Math.max(1, ordersData.length - 200);
+  for (var j = ordersData.length - 1; j >= startIdx; j--) {
     if (ordersData[j][0]) {
       var parsedVouchers = [];
       try {
@@ -513,13 +532,17 @@ function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     qrisUrl: MANUAL_CONFIG.qrisUrl,
     adminPin: MANUAL_CONFIG.adminPin,
+    cashierWa: MANUAL_CONFIG.cashierWa,
     menuItems: menuItems,
     orders: orders
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
+  var lock = LockService.getScriptLock();
   try {
+    lock.waitLock(10000); // Kunci antrean max 10 detik agar transaksi bersamaan tidak bentrok
+
     var data = JSON.parse(e.postData.contents);
     var ss = SpreadsheetApp.getActiveSpreadsheet();
 
@@ -551,12 +574,32 @@ function doPost(e) {
       return ContentService.createTextOutput("Stock Updated");
     }
 
+    // Process Gambar Bukti Pembayaran: Simpan ke Google Drive agar Spreadsheet tidak lambat
+    var proofUrl = "";
+    if (data.paymentProof && data.paymentProof.indexOf("data:image") === 0) {
+      try {
+        var folderName = "BUKTI_PEMBAYARAN_KANTIN";
+        var folders = DriveApp.getFoldersByName(folderName);
+        var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+
+        var base64Data = data.paymentProof.split(",")[1];
+        var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "image/jpeg", "BUKTI_" + data.buyerName + "_" + Date.now() + ".jpg");
+        var file = folder.createFile(blob);
+        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+        proofUrl = "https://lh3.googleusercontent.com/d/" + file.getId();
+      } catch (errDrive) {
+        proofUrl = data.paymentProof; // Fallback jika drive error
+      }
+    } else {
+      proofUrl = data.paymentProof || '';
+    }
+
     // Default Action: Tambah Transaksi Baru & Kurangi Stok Otomatis
     var sheetDefault = getOrCreateSheet(ss, "TRANSAKSI");
     sheetDefault.appendRow([
       data.id, data.date, data.buyerName, data.buyerNisn, data.buyerClass, 
       data.buyerPhone, data.itemsSummary, data.totalAmount, 
-      data.paymentStatus, data.redeemStatus, data.paymentProof || '', JSON.stringify(data.vouchers || [])
+      data.paymentStatus, data.redeemStatus, proofUrl, JSON.stringify(data.vouchers || [])
     ]);
 
     // Update stok jika ada
@@ -584,6 +627,8 @@ function doPost(e) {
     return ContentService.createTextOutput("Order Saved & Stock Deducted");
   } catch(err) {
     return ContentService.createTextOutput("Error: " + err.toString());
+  } finally {
+    lock.releaseLock();
   }
 }
 
@@ -647,7 +692,7 @@ function getOrCreateSheet(ss, name) {
         // =========================================================================
         // 🛠️ PENGATURAN MANUAL WEBHOOK URL GOOGLE APPS SCRIPT
         // =========================================================================
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzAq6R7GJ3PSYhxBMcPF8b-tsKQhFMEpiLO6ifu0aJLoABndlYU8Vgeep47Y05jnC1w/exec"; 
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwd8PcC8lhfy84JBX6hht7uzHzrWNm5BmkZMnub64mI2ItyVL1_UZceHyRDd-qABA9N/exec"; 
         
         let menuItems = [
             { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
@@ -663,6 +708,7 @@ function getOrCreateSheet(ss, name) {
         let currentRole = 'siswa';
         let currentCategoryFilter = 'all';
         let adminPin = String(localStorage.getItem('kantin_admin_pin') || '3333').trim();
+        let cashierWaNumber = String(localStorage.getItem('kantin_cashier_wa') || '081234567890').trim();
         let isAdminUnlocked = false;
         let webhookUrl = DEFAULT_WEBHOOK_URL;
         let currentProofDataUrl = '';
@@ -765,14 +811,7 @@ function getOrCreateSheet(ss, name) {
             if (type === 'error') bgClass = 'bg-red-600 text-white';
 
             toast.className = `fixed bottom-4 left-4 right-4 sm:left-auto sm:right-5 z-50 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center justify-between sm:justify-start gap-2 ${bgClass} transition-all duration-300 transform translate-y-0 opacity-100 max-w-full sm:max-w-sm`;
-            toast.innerHTML = `
-                <span class="truncate">${message}</span>
-                ${type === 'cart-add' ? `
-                    <button onclick="switchTab('cart')" class="ml-2 bg-white text-emerald-800 px-2.5 py-1 rounded-lg font-black text-[10px] uppercase shadow-xs shrink-0">
-                        Bayar QRIS
-                    </button>
-                ` : ''}
-            `;
+            toast.innerHTML = `<span class="truncate">${message}</span>`;
 
             document.body.appendChild(toast);
             setTimeout(() => {
@@ -809,23 +848,29 @@ function getOrCreateSheet(ss, name) {
             const adminBtn = document.getElementById('role-admin-btn');
             const siswaNav = document.getElementById('siswa-nav');
             const adminNav = document.getElementById('admin-nav');
+            const waHelpBtn = document.getElementById('btn-wa-help');
+
+            const activeClass = 'px-2.5 sm:px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-xs font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
+            const inactiveClass = 'px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-500 hover:text-slate-800 font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
 
             if (role === 'siswa') {
                 closeAdminPinModal();
-                if (siswaBtn) siswaBtn.className = 'px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5';
-                if (adminBtn) adminBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5';
+                if (siswaBtn) siswaBtn.className = activeClass;
+                if (adminBtn) adminBtn.className = inactiveClass;
                 if (siswaNav) siswaNav.classList.remove('hidden');
                 if (adminNav) adminNav.classList.add('hidden');
+                if (waHelpBtn) waHelpBtn.classList.remove('hidden');
                 switchTab('menu');
             } else {
                 if (!isAdminUnlocked) {
                     openAdminPinModal();
                     return;
                 }
-                if (siswaBtn) siswaBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200';
-                if (adminBtn) adminBtn.className = 'px-3 py-1.5 rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-200 flex items-center gap-1.5';
+                if (siswaBtn) siswaBtn.className = inactiveClass;
+                if (adminBtn) adminBtn.className = activeClass;
                 if (siswaNav) siswaNav.classList.add('hidden');
                 if (adminNav) adminNav.classList.remove('hidden');
+                if (waHelpBtn) waHelpBtn.classList.add('hidden');
                 switchAdminTab('transactions');
             }
         }
@@ -881,13 +926,15 @@ function getOrCreateSheet(ss, name) {
             currentRole = 'siswa';
             const siswaBtn = document.getElementById('role-siswa-btn');
             const adminBtn = document.getElementById('role-admin-btn');
-            if (siswaBtn) siswaBtn.className = 'px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5';
-            if (adminBtn) adminBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5';
+            if (siswaBtn) siswaBtn.className = 'px-2.5 sm:px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-xs font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
+            if (adminBtn) adminBtn.className = 'px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-500 hover:text-slate-800 font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
             
             const siswaNav = document.getElementById('siswa-nav');
             const adminNav = document.getElementById('admin-nav');
+            const waHelpBtn = document.getElementById('btn-wa-help');
             if (siswaNav) siswaNav.classList.remove('hidden');
             if (adminNav) adminNav.classList.add('hidden');
+            if (waHelpBtn) waHelpBtn.classList.remove('hidden');
 
             return false;
         }
@@ -1167,7 +1214,7 @@ function getOrCreateSheet(ss, name) {
             }
 
             updateCartBadge();
-            showToast(`${item.name} ditambahkan!`, 'cart-add');
+            showToast(`${item.name} berhasil ditambahkan!`, 'success');
         }
 
         function updateCartBadge() {
@@ -1715,6 +1762,11 @@ function getOrCreateSheet(ss, name) {
                             adminPin = String(data.adminPin).trim();
                             localStorage.setItem('kantin_admin_pin', adminPin);
                         }
+                        if (data.cashierWa) {
+                            cashierWaNumber = String(data.cashierWa).trim();
+                            localStorage.setItem('kantin_cashier_wa', cashierWaNumber);
+                            loadCashierWaSetting();
+                        }
                         if (data.menuItems && Array.isArray(data.menuItems) && data.menuItems.length > 0) {
                             menuItems = data.menuItems;
                             localStorage.setItem('kantin_menu', JSON.stringify(menuItems));
@@ -1799,6 +1851,37 @@ function getOrCreateSheet(ss, name) {
             closeModal('modal-script-guide');
         }
 
+        function openWhatsAppHelp(e) {
+            if (e) e.preventDefault();
+            let rawNum = cashierWaNumber.replace(/[^0-9]/g, '');
+            if (rawNum.startsWith('0')) {
+                rawNum = '62' + rawNum.substring(1);
+            }
+            if (!rawNum) rawNum = '6281234567890';
+            
+            const message = encodeURIComponent('Halo Kasir Kantin SARAS Spentig Makassar, saya butuh bantuan mengenai voucher kantin digital.');
+            const waUrl = `https://wa.me/${rawNum}?text=${message}`;
+            window.open(waUrl, '_blank');
+        }
+
+        function saveCashierWa() {
+            const input = document.getElementById('setting-cashier-wa');
+            if (!input) return;
+            const val = input.value.trim();
+            if (!val) {
+                showToast('Masukkan nomor WhatsApp yang valid!', 'error');
+                return;
+            }
+            cashierWaNumber = val;
+            localStorage.setItem('kantin_cashier_wa', val);
+            showToast('Nomor WhatsApp Kasir berhasil disimpan!', 'success');
+        }
+
+        function loadCashierWaSetting() {
+            const input = document.getElementById('setting-cashier-wa');
+            if (input) input.value = cashierWaNumber;
+        }
+
         function copyAppsScriptCode() {
             const codeText = document.getElementById('apps-script-code-block')?.innerText || '';
             if (navigator.clipboard && window.isSecureContext) {
@@ -1825,6 +1908,7 @@ function getOrCreateSheet(ss, name) {
             updateCartBadge();
             renderUserVouchers();
             updateQrisImagePreview();
+            loadCashierWaSetting();
             if (webhookUrl && !webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
                 syncDataFromCloud();
             } else {
