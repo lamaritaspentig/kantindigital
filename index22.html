@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kantin Spentig Makassar - Voucher Digital</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        /* Remove spinner arrows from number inputs */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] { -moz-appearance: textfield; }
+        .ticket-cut-left {
+            mask-image: radial-gradient(circle at 0% 50%, transparent 12px, black 13px);
+        }
+        .ticket-cut-right {
+            mask-image: radial-gradient(circle at 100% 50%, transparent 12px, black 13px);
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
+
+    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-500 text-white flex items-center justify-center font-black text-xl shadow-md shadow-emerald-200 shrink-0">
+                    🎟️
+                </div>
+                <div>
+                    <h1 class="font-black text-slate-800 text-sm sm:text-base leading-tight tracking-tight">Kantin Spentig Makassar</h1>
+                    <p class="text-[10px] sm:text-xs text-slate-500 font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-school text-emerald-600 text-[10px]"></i> UPT SPF SMP Negeri 3 Makassar
+                    </p>
+                </div>
+            </div>
+
+            <!-- Role Switcher -->
+            <div class="bg-slate-100 p-1 rounded-2xl flex items-center text-xs font-bold border border-slate-200/80 shadow-inner">
+                <button onclick="setRole('siswa')" id="role-siswa-btn" class="px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Siswa / Ortu
+                </button>
+                <button onclick="setRole('admin')" id="role-admin-btn" class="px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-shield"></i> Kasir
+                    <i id="admin-lock-icon" class="fa-solid fa-lock text-[10px] text-slate-400"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav id="siswa-nav" class="bg-white border-b border-slate-200 sticky top-[61px] z-30 shadow-xs">
+        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between text-xs sm:text-sm font-semibold">
+            <div class="flex gap-6 overflow-x-auto no-scrollbar">
+                <button onclick="switchTab('menu')" id="nav-btn-menu" class="py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-ticket"></i> Katalog Voucher Kantin
+                </button>
+                <button onclick="switchTab('vouchers')" id="nav-btn-vouchers" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-wallet"></i> Voucher Saya
+                </button>
+            </div>
+            <button onclick="switchTab('cart')" id="nav-btn-cart" class="py-1.5 px-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl transition flex items-center gap-2 relative my-2 border border-emerald-200/60">
+                <i class="fa-solid fa-cart-shopping text-emerald-600"></i>
+                <span class="hidden sm:inline font-bold">Keranjang</span>
+                <span id="cart-badge" class="bg-emerald-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full hidden">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <nav id="admin-nav" class="hidden bg-slate-900 text-slate-300 border-b border-slate-800 sticky top-[61px] z-30 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
+            <div class="flex gap-6 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar">
+                <button onclick="switchAdminTab('transactions')" id="admin-nav-btn-transactions" class="py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-receipt"></i> Data Transaksi & Penukaran
+                </button>
+                <button onclick="switchAdminTab('manage-menu')" id="admin-nav-btn-manage-menu" class="py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-box"></i> Kelola Stok Voucher
+                </button>
+                <button onclick="switchAdminTab('settings')" id="admin-nav-btn-settings" class="py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-gear"></i> Pengaturan Kasir
+                </button>
+            </div>
+
+            <button onclick="lockAdmin()" class="py-1.5 px-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shrink-0 my-2 border border-red-500/30">
+                <i class="fa-solid fa-right-from-bracket"></i> Kunci Kasir
+            </button>
+        </div>
+    </nav>
+
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+        <!-- Info Banner for No-Phone School Policy -->
+        <div class="bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-900 text-white rounded-3xl p-5 shadow-lg shadow-emerald-950/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-emerald-700/30 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
+            <div class="space-y-1.5 relative z-10">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border border-emerald-400/30 tracking-wider">
+                        Beli dari Rumah
+                    </span>
+                    <span class="text-xs text-emerald-200/90 font-medium flex items-center gap-1">
+                        <i class="fa-solid fa-mobile-screen-button text-xs text-amber-400"></i> Bebas HP di Sekolah
+                    </span>
+                </div>
+                <h2 class="font-black text-base sm:text-lg tracking-tight">Sistem Voucher Digital Kantin Spentig Makassar</h2>
+                <p class="text-xs text-slate-200/90 leading-relaxed max-w-2xl">
+                    Orang tua/siswa memesan & bayar voucher fisik via QRIS dari rumah. Di sekolah, siswa cukup sebutkan <b>Nama Lengkap, NISN & Kelas</b> di meja Kasir untuk mengambil voucher fisiknya.
+                </p>
+            </div>
+            <div class="shrink-0 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/15 text-center text-xs font-bold space-y-0.5">
+                <span class="text-emerald-300 text-[10px] uppercase block tracking-wider font-extrabold">SMPN 3 MAKASSAR</span>
+                <span class="text-white text-sm font-black">VOUCHER FISIK</span>
+            </div>
+        </div>
+
+        <section id="view-menu" class="space-y-5">
+            <!-- Filter Pills -->
+            <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+                <button onclick="setCategoryFilter('all')" class="cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition">
+                    Semua Voucher
+                </button>
+                <button onclick="setCategoryFilter('kecil')" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
+                    Nominal Kecil (≤ Rp 3.000)
+                </button>
+                <button onclick="setCategoryFilter('besar')" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
+                    Nominal Besar (≥ Rp 5.000)
+                </button>
+            </div>
+
+            <!-- Items Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="menu-grid">
+                <!-- Dynamically populated -->
+            </div>
+        </section>
+
+        <section id="view-cart" class="hidden max-w-2xl mx-auto space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <h2 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-cart-shopping text-emerald-600"></i> Keranjang Voucher Pembelian
+                    </h2>
+                    <span class="text-xs text-slate-400 font-semibold">Spentig Kantin System</span>
+                </div>
+
+                <div id="cart-empty-state" class="text-center py-10 text-slate-400 space-y-3">
+                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-2xl">🛒</div>
+                    <p class="text-sm font-semibold text-slate-600">Keranjang belanjaan Anda masih kosong.</p>
+                    <button onclick="switchTab('menu')" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md shadow-emerald-200 transition">Pilih Voucher Sekarang</button>
+                </div>
+
+                <div id="cart-items-container" class="space-y-3">
+                    <!-- Cart items dynamically rendered -->
+                </div>
+
+                <div id="cart-checkout-section" class="hidden space-y-6 pt-4 border-t border-slate-200">
+                    <!-- Form Identitas Siswa -->
+                    <div class="space-y-4 bg-slate-50/80 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Identitas Siswa Pembeli (Wajib)</h3>
+                            <span class="text-[10px] text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded-md">Untuk Verifikasi Kasir</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Siswa</label>
+                                <input type="text" id="buyer-name" placeholder="Misal: Andi Muhammad" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">NISN (10 Digit NISN)</label>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" id="buyer-nisn" placeholder="Contoh: 0081234567" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Kelas Siswa (Format Standar)</label>
+                                <input type="text" id="buyer-class" placeholder="Contoh: VII.1, VIII.3, IX.11" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                <p class="text-[10px] text-slate-400 mt-1">Gunakan Romawi & Titik (Misal: VII.1, VIII.4, IX.2)</p>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Nomor HP Orang Tua / Siswa</label>
+                                <input type="tel" id="buyer-phone" placeholder="08xxxxxxxxxx" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Total & Payment Button -->
+                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+                        <div>
+                            <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Total Pembayaran</p>
+                            <p class="text-2xl font-black text-emerald-600" id="cart-total-price">Rp 0</p>
+                        </div>
+                        <button onclick="openQrisModal()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3.5 rounded-2xl font-extrabold text-xs shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 transition transform active:scale-95">
+                            <i class="fa-solid fa-qrcode text-base"></i> Bayar Lewat QRIS Statis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-vouchers" class="hidden space-y-4">
+            <div class="flex justify-between items-center bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs">
+                <div>
+                    <h2 class="font-extrabold text-slate-800 text-base">Voucher Fisik Saya</h2>
+                    <p class="text-xs text-slate-500">Tunjukkan bukti ini atau sebutkan Nama/NISN ke Kasir untuk mengambil voucher fisik</p>
+                </div>
+            </div>
+
+            <div id="vouchers-empty-state" class="text-center py-14 bg-white rounded-3xl border border-slate-200/80 space-y-3">
+                <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-2xl text-amber-600">🎟️</div>
+                <p class="text-sm font-extrabold text-slate-700">Belum Ada Voucher</p>
+                <p class="text-xs text-slate-400 max-w-xs mx-auto">Pesan voucher kantin sekarang untuk ditukarkan menjadi voucher fisik di sekolah.</p>
+                <button onclick="switchTab('menu')" class="mt-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold transition">Beli Voucher</button>
+            </div>
+
+            <div id="vouchers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- User purchased vouchers populated dynamically -->
+            </div>
+        </section>
+
+        <section id="view-admin-transactions" class="hidden space-y-4">
+            <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                        <h2 class="text-base font-extrabold text-slate-800">Data Transaksi & Penukaran Voucher</h2>
+                        <p class="text-xs text-slate-500">Cari nama, NISN, atau kelas siswa untuk menyerahkan voucher fisik di kantin</p>
+                    </div>
+                    <button onclick="exportToExcel()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-4 py-2.5 rounded-xl text-xs font-bold border border-emerald-200 flex items-center gap-2 transition">
+                        <i class="fa-solid fa-file-excel text-emerald-600"></i> Download Excel / CSV
+                    </button>
+                </div>
+
+                <!-- Filter & Search Bar -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                        <input type="text" id="admin-search-input" onkeyup="renderAdminTransactions()" placeholder="Ketik Nama Siswa, NISN, Kelas (misal VII.1), atau Kode Voucher..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                    </div>
+                    <select id="admin-status-filter" onchange="renderAdminTransactions()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 outline-none">
+                        <option value="all">Semua Status Penukaran</option>
+                        <option value="unredeemed">Belum Ditukar</option>
+                        <option value="redeemed">Sudah Ditukar</option>
+                    </select>
+                </div>
+
+                <!-- Transactions Table -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-black text-slate-600 uppercase tracking-wider">
+                            <tr>
+                                <th class="p-3.5">#</th>
+                                <th class="p-3.5">Tanggal</th>
+                                <th class="p-3.5">Siswa, NISN & Kelas</th>
+                                <th class="p-3.5">Rincian Voucher</th>
+                                <th class="p-3.5">Total</th>
+                                <th class="p-3.5">Status Penukaran</th>
+                                <th class="p-3.5 text-right">Aksi Kasir</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-transactions-tbody" class="divide-y divide-slate-100">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-admin-manage-menu" class="hidden space-y-4">
+            <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200">
+                <div>
+                    <h2 class="text-base font-extrabold text-slate-800">Kelola Stok Voucher Kantin</h2>
+                    <p class="text-xs text-slate-500">Atur ketersediaan dan jumlah stok voucher fisik sekolah</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-menu-grid">
+                <!-- Populated dynamically -->
+            </div>
+        </section>
+
+        <section id="view-admin-settings" class="hidden max-w-3xl mx-auto space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-lg shadow-md shrink-0">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-extrabold text-slate-800">Pengaturan Sistem Kasir</h2>
+                        <p class="text-xs text-slate-500">Kelola gambar QRIS resmi kantin, PIN keamanan, dan integrasi Google Sheet</p>
+                    </div>
+                </div>
+
+                <!-- Gambar QRIS -->
+                <div class="space-y-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+                    <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-qrcode text-emerald-600"></i> Pengaturan Gambar QRIS Kantin
+                    </h3>
+                    <div class="flex flex-col sm:flex-row gap-4 items-center">
+                        <div class="w-32 h-32 bg-white rounded-2xl border-2 border-dashed border-slate-300 p-2 shrink-0 flex items-center justify-center shadow-xs">
+                            <img id="qris-settings-preview" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360" class="w-full h-full object-contain">
+                        </div>
+                        <div class="space-y-3 flex-1 w-full text-xs">
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Unggah File Foto QRIS Bank / E-Wallet</label>
+                                <input type="file" id="qris-file-input" onchange="handleQrisUpload(event)" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
+                            </div>
+                            <div class="pt-2 border-t border-slate-200">
+                                <label class="block font-bold text-slate-700 mb-1">Atau Tempel URL Gambar QRIS</label>
+                                <div class="flex gap-2">
+                                    <input type="url" id="qris-url-input" placeholder="https://..." class="flex-1 px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                                    <button onclick="saveQrisUrl()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl font-bold text-xs shrink-0 transition">Simpan URL</button>
+                                </div>
+                            </div>
+                            <button onclick="resetQrisImage()" class="text-slate-500 hover:text-red-600 text-[11px] font-bold underline transition">
+                                <i class="fa-solid fa-rotate-left"></i> Kembalikan QRIS Default
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security PIN Kasir -->
+                <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3">
+                    <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-amber-600"></i> Ganti PIN Keamanan Kasir
+                    </h3>
+                    <div class="flex flex-col sm:flex-row gap-3 items-end">
+                        <div class="flex-1 w-full">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Masukkan PIN Baru (Minimal 4 Angka)</label>
+                            <input type="password" id="new-admin-pin" maxlength="6" placeholder="Misal: 3333" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-500">
+                        </div>
+                        <button onclick="changeAdminPin()" class="bg-slate-900 hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold text-xs shrink-0 w-full sm:w-auto transition">
+                            Simpan PIN Baru
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Google Spreadsheet Webhook -->
+                <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                            <i class="fa-solid fa-database text-emerald-600"></i> Database Terpusat Google Spreadsheet
+                        </h3>
+                        <span id="cloud-sync-status" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600">
+                            <i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-500 leading-relaxed">
+                        Semua Pengaturan Kasir (QRIS, PIN, Stok) dan Data Transaksi tersimpan secara terpusat di Google Sheet sekolah agar tersinkronisasi di semua perangkat.
+                    </p>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Apps Script Webhook URL</label>
+                        <input type="url" id="sheet-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500">
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button onclick="saveSpreadsheetConfig()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs transition">
+                            <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan & Hubungkan
+                        </button>
+                        <button onclick="syncDataFromCloud()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition">
+                            <i class="fa-solid fa-rotate mr-1"></i> Tarik Data Terbaru
+                        </button>
+                        <button onclick="openScriptGuideModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-2.5 rounded-xl font-bold text-xs border border-amber-300 transition">
+                            <i class="fa-solid fa-code mr-1"></i> Kode Google Apps Script
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL: QRIS CHECKOUT -->
+    <div id="modal-qris" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100 text-center relative animate-in fade-in zoom-in duration-200">
+            <button onclick="closeQrisModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="space-y-1">
+                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">QRIS Statis Kantin</span>
+                <h3 class="text-base font-extrabold text-slate-800">Scan & Bayar Sekarang</h3>
+                <p class="text-xs text-slate-500">Gunakan GoPay, OVO, DANA, ShopeePay, atau M-Banking</p>
+            </div>
+
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                <div class="w-48 h-48 bg-white mx-auto rounded-2xl border border-slate-200 p-2 shadow-inner flex items-center justify-center">
+                    <img id="qris-modal-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360" alt="QRIS Kantin" class="w-full h-full object-contain">
+                </div>
+                <div>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Total Tagihan</p>
+                    <p class="text-xl font-black text-emerald-600" id="qris-modal-total">Rp 0</p>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200 text-left space-y-1">
+                <p class="text-[11px] font-extrabold text-amber-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info text-amber-600"></i> Cara Pembayaran:
+                </p>
+                <ol class="text-[10px] text-amber-800 font-medium space-y-0.5 list-decimal list-inside leading-relaxed">
+                    <li>Buka aplikasi E-Wallet / Mobile Banking Anda</li>
+                    <li>Scan Kode QRIS di atas dan ketik nominal <b id="qris-modal-total-text">Rp 0</b></li>
+                    <li>Setelah bayar, unggah foto bukti bayar (opsional) lalu klik konfirmasi</li>
+                </ol>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-left space-y-2">
+                <label class="block text-[11px] font-extrabold text-slate-700 flex items-center justify-between">
+                    <span><i class="fa-solid fa-receipt text-emerald-600 mr-1"></i> Unggah Bukti Pembayaran</span>
+                    <span class="text-[9px] text-slate-400 font-normal">Foto / Screenshot</span>
+                </label>
+                <input type="file" id="payment-proof-input" accept="image/*" onchange="handleProofUpload(event)" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200 cursor-pointer">
+                <div id="proof-preview-container" class="hidden relative mt-2 rounded-xl border border-slate-300 overflow-hidden bg-slate-100 max-h-36 flex items-center justify-center p-1">
+                    <img id="payment-proof-preview-img" src="" class="max-h-32 object-contain rounded-lg">
+                    <button type="button" onclick="removeProofImage()" class="absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-md"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <button onclick="confirmCheckoutOrder(event)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-extrabold text-xs shadow-md shadow-emerald-200 flex items-center justify-center gap-2 transition">
+                <i class="fa-solid fa-circle-check text-sm"></i> Saya Sudah Bayar
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: KASIR PIN VERIFICATION -->
+    <div id="modal-admin-pin" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl space-y-4 border border-slate-100 text-center relative">
+            <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl mx-auto shadow-md">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <h3 class="text-sm font-extrabold text-slate-800">Verifikasi PIN Kasir</h3>
+                <p class="text-xs text-slate-500 mt-1">Masukkan PIN Keamanan untuk membuka dashboard Kasir</p>
+            </div>
+            
+            <form onsubmit="verifyAdminPin(event)" class="space-y-3">
+                <input type="password" id="input-admin-pin" maxlength="6" placeholder="Masukkan PIN" class="w-full text-center tracking-widest text-lg font-bold py-2.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
+                <p id="pin-error-msg" class="text-[11px] text-red-500 font-semibold hidden">PIN salah! Coba lagi (Default: 3333)</p>
+                
+                <div class="flex gap-2">
+                    <button type="button" onclick="setRole('siswa')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-xs transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition">
+                        Masuk Kasir
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: GOOGLE APPS SCRIPT CODE GUIDE -->
+    <div id="modal-script-guide" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative max-h-[85vh] overflow-y-auto">
+            <button onclick="closeScriptGuideModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="space-y-1">
+                <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Panduan Setup Database</span>
+                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (Database 2-Arah)</h3>
+                <p class="text-xs text-slate-500">Salin kode ini ke Google Sheet: <b>Ekstensi &gt; Apps Script</b>, lalu Deploy sebagai <b>Web App (Akses: Anyone)</b>.</p>
+            </div>
+
+            <div class="bg-slate-900 text-slate-100 p-4 rounded-2xl text-[11px] font-mono overflow-x-auto relative">
+                <button onclick="copyAppsScriptCode()" class="absolute top-3 right-3 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg text-[10px] font-bold shadow-xs">
+                    <i class="fa-solid fa-copy"></i> Copy Kode
+                </button>
+                <pre id="apps-script-code-block" class="whitespace-pre-wrap leading-relaxed">
+function doGet(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheetConfig = getOrCreateSheet(ss, "CONFIG");
+  var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
+  
+  var config = {};
+  var configData = sheetConfig.getDataRange().getValues();
+  for (var i = 1; i < configData.length; i++) {
+    if (configData[i][0]) config[configData[i][0]] = configData[i][1];
+  }
+  
+  var orders = [];
+  var ordersData = sheetOrders.getDataRange().getValues();
+  for (var j = 1; j < ordersData.length; j++) {
+    if (ordersData[j][0]) {
+      orders.push({
+        id: ordersData[j][0],
+        date: ordersData[j][1],
+        buyerName: ordersData[j][2],
+        buyerNisn: ordersData[j][3],
+        buyerClass: ordersData[j][4],
+        buyerPhone: ordersData[j][5],
+        itemsSummary: ordersData[j][6],
+        totalAmount: Number(ordersData[j][7]),
+        paymentStatus: ordersData[j][8],
+        redeemStatus: ordersData[j][9],
+        vouchers: JSON.parse(ordersData[j][10] || '[]')
+      });
+    }
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({
+    qrisUrl: config.qrisUrl || '',
+    adminPin: config.adminPin || '3333',
+    menuItems: JSON.parse(config.menuItems || '[]'),
+    orders: orders
+  })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    if (data.action === "update_config") {
+      var sheetConfig = getOrCreateSheet(ss, "CONFIG");
+      if (data.qrisUrl !== undefined) setConfigValue(sheetConfig, "qrisUrl", data.qrisUrl);
+      if (data.adminPin !== undefined) setConfigValue(sheetConfig, "adminPin", data.adminPin);
+      if (data.menuItems !== undefined) setConfigValue(sheetConfig, "menuItems", JSON.stringify(data.menuItems));
+      return ContentService.createTextOutput("Config Saved");
+    } 
+    
+    // Default: New Transaction
+    var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
+    sheetOrders.appendRow([
+      data.id, data.date, data.buyerName, data.buyerNisn, data.buyerClass, 
+      data.buyerPhone, data.itemsSummary, data.totalAmount, 
+      data.paymentStatus, data.redeemStatus, JSON.stringify(data.vouchers || [])
+    ]);
+    
+    return ContentService.createTextOutput("Order Saved");
+  } catch(err) {
+    return ContentService.createTextOutput("Error: " + err.toString());
+  }
+}
+
+function getOrCreateSheet(ss, name) {
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    if (name === "CONFIG") {
+      sheet.appendRow(["KEY", "VALUE"]);
+    } else if (name === "TRANSAKSI") {
+      sheet.appendRow(["ORDER_ID", "TANGGAL", "NAMA_SISWA", "NISN", "KELAS", "NO_HP", "ITEMS", "TOTAL", "STATUS_BAYAR", "STATUS_TUKAR", "VOUCHERS_JSON"]);
+    }
+  }
+  return sheet;
+}
+
+function setConfigValue(sheet, key, value) {
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (data[i][0] === key) {
+      sheet.getRange(i + 1, 2).setValue(value);
+      return;
+    }
+  }
+  sheet.appendRow([key, value]);
+}
+                </pre>
+            </div>
+
+            <button onclick="closeScriptGuideModal()" class="w-full bg-slate-900 text-white py-3 rounded-2xl font-extrabold text-xs">
+                Tutup Panduan
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-view-proof" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative text-center">
+            <button onclick="closeViewProofModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            
+            <div class="space-y-1">
+                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Verifikasi Kasir</span>
+                <h3 class="text-base font-extrabold text-slate-800" id="proof-modal-title">Bukti Pembayaran Siswa</h3>
+                <p class="text-xs text-slate-500" id="proof-modal-subtitle">-</p>
+            </div>
+
+            <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200 max-h-[60vh] overflow-y-auto flex items-center justify-center">
+                <img id="proof-modal-img" src="" alt="Bukti Transfer" class="max-w-full rounded-xl object-contain shadow-xs">
+            </div>
+
+            <button onclick="closeViewProofModal()" class="w-full bg-slate-900 hover:bg-black text-white py-3 rounded-2xl font-extrabold text-xs transition">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- GLOBAL STATE VARIABLES ---
+        const DEFAULT_WEBHOOK_URL = ""; // Optional pre-configured Apps Script URL
+        
+        let menuItems = [
+            { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
+            { id: 'v2000', name: 'Voucher Nominal Rp 2.000', price: 2000, stock: 100, icon: '🎟️' },
+            { id: 'v3000', name: 'Voucher Nominal Rp 3.000', price: 3000, stock: 100, icon: '🎟️' },
+            { id: 'v5000', name: 'Voucher Nominal Rp 5.000', price: 5000, stock: 100, icon: '🎟️' },
+            { id: 'v10000', name: 'Voucher Nominal Rp 10.000', price: 10000, stock: 100, icon: '🎟️' }
+        ];
+
+        let cart = [];
+        let orders = [];
+        let myOrderIds = [];
+        let currentRole = 'siswa';
+        let currentCategoryFilter = 'all';
+        let adminPin = localStorage.getItem('kantin_admin_pin') || '3333';
+        let isAdminUnlocked = false;
+        let webhookUrl = localStorage.getItem('kantin_sheet_webhook') || DEFAULT_WEBHOOK_URL;
+        let currentProofDataUrl = '';
+
+        try {
+            const savedMenu = localStorage.getItem('kantin_menu');
+            if (savedMenu) menuItems = JSON.parse(savedMenu);
+
+            const savedOrders = localStorage.getItem('kantin_orders');
+            if (savedOrders) orders = JSON.parse(savedOrders);
+
+            const savedMyOrders = localStorage.getItem('kantin_my_orders');
+            if (savedMyOrders) myOrderIds = JSON.parse(savedMyOrders);
+        } catch(e) {
+            console.error('Local Storage load error:', e);
+        }
+
+        function formatRupiah(amount) {
+            return 'Rp ' + (amount || 0).toLocaleString('id-ID');
+        }
+
+        function getVoucherTheme(price) {
+            const p = Number(price) || 0;
+            if (p === 10000) {
+                return {
+                    bgCard: 'bg-purple-100/95',
+                    borderCard: 'border-purple-300',
+                    bgInner: 'bg-purple-50/90',
+                    borderInner: 'border-purple-200',
+                    textTitle: 'text-purple-950',
+                    textSub: 'text-purple-900'
+                };
+            } else if (p === 5000) {
+                return {
+                    bgCard: 'bg-amber-100/95',
+                    borderCard: 'border-amber-300',
+                    bgInner: 'bg-amber-50/90',
+                    borderInner: 'border-amber-200',
+                    textTitle: 'text-amber-950',
+                    textSub: 'text-amber-900'
+                };
+            } else if (p === 3000) {
+                return {
+                    bgCard: 'bg-teal-100/95',
+                    borderCard: 'border-teal-300',
+                    bgInner: 'bg-teal-50/90',
+                    borderInner: 'border-teal-200',
+                    textTitle: 'text-teal-950',
+                    textSub: 'text-teal-900'
+                };
+            } else if (p === 2000) {
+                return {
+                    bgCard: 'bg-slate-200/95',
+                    borderCard: 'border-slate-300',
+                    bgInner: 'bg-slate-50/90',
+                    borderInner: 'border-slate-300',
+                    textTitle: 'text-slate-950',
+                    textSub: 'text-slate-800'
+                };
+            } else { // 1000
+                return {
+                    bgCard: 'bg-stone-200/95',
+                    borderCard: 'border-stone-300',
+                    bgInner: 'bg-stone-50/90',
+                    borderInner: 'border-stone-300',
+                    textTitle: 'text-stone-950',
+                    textSub: 'text-stone-800'
+                };
+            }
+        }
+
+        function generateVoucherId() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let randomCode = '';
+            for (let i = 0; i < 3; i++) {
+                randomCode += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return 'KNTN-SRS' + randomCode;
+        }
+
+        function showToast(message, type = 'info') {
+            const existingToast = document.getElementById('global-toast');
+            if (existingToast) existingToast.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'global-toast';
+            
+            let bgClass = 'bg-slate-900 text-white';
+            if (type === 'success') bgClass = 'bg-emerald-600 text-white';
+            if (type === 'error') bgClass = 'bg-red-600 text-white';
+
+            toast.className = `fixed bottom-5 right-5 z-50 px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 ${bgClass} transition-all duration-300 transform translate-y-0 opacity-100 max-w-sm`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                ${type === 'cart-add' ? `
+                    <button onclick="switchTab('cart')" class="ml-2 bg-white text-emerald-800 px-2.5 py-1 rounded-lg font-black text-[10px] uppercase shadow-xs">
+                        Bayar QRIS
+                    </button>
+                ` : ''}
+            `;
+
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('kantin_menu', JSON.stringify(menuItems));
+                localStorage.setItem('kantin_orders', JSON.stringify(orders));
+                localStorage.setItem('kantin_my_orders', JSON.stringify(myOrderIds));
+            } catch(e) {
+                console.error('Save error:', e);
+            }
+            updateCartBadge();
+        }
+
+        function hideAllViews() {
+            const viewIds = [
+                'view-menu', 'view-cart', 'view-vouchers', 
+                'view-admin-transactions', 'view-admin-manage-menu', 'view-admin-settings'
+            ];
+            viewIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+        }
+
+        function setRole(role) {
+            currentRole = role;
+            const siswaBtn = document.getElementById('role-siswa-btn');
+            const adminBtn = document.getElementById('role-admin-btn');
+            const siswaNav = document.getElementById('siswa-nav');
+            const adminNav = document.getElementById('admin-nav');
+
+            if (role === 'siswa') {
+                siswaBtn.className = 'px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5';
+                adminBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5';
+                siswaNav.classList.remove('hidden');
+                adminNav.classList.add('hidden');
+                switchTab('menu');
+            } else {
+                if (!isAdminUnlocked) {
+                    document.getElementById('modal-admin-pin')?.classList.remove('hidden');
+                    return;
+                }
+                siswaBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200';
+                adminBtn.className = 'px-3 py-1.5 rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-200 flex items-center gap-1.5';
+                siswaNav.classList.add('hidden');
+                adminNav.classList.remove('hidden');
+                switchAdminTab('transactions');
+            }
+        }
+
+        function verifyAdminPin(e) {
+            if (e) e.preventDefault();
+            const pinInput = document.getElementById('input-admin-pin')?.value;
+            const errorMsg = document.getElementById('pin-error-msg');
+
+            if (pinInput === adminPin) {
+                isAdminUnlocked = true;
+                if (errorMsg) errorMsg.classList.add('hidden');
+                document.getElementById('input-admin-pin').value = '';
+                document.getElementById('modal-admin-pin').classList.add('hidden');
+                
+                const lockIcon = document.getElementById('admin-lock-icon');
+                if (lockIcon) lockIcon.className = 'fa-solid fa-lock-open text-[10px] text-emerald-400';
+
+                setRole('admin');
+            } else {
+                if (errorMsg) errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function lockAdmin() {
+            isAdminUnlocked = false;
+            const lockIcon = document.getElementById('admin-lock-icon');
+            if (lockIcon) lockIcon.className = 'fa-solid fa-lock text-[10px] text-slate-400';
+            showToast('Sistem Kasir Terkunci', 'info');
+            setRole('siswa');
+        }
+
+        function switchTab(tab) {
+            hideAllViews();
+            
+            ['nav-btn-menu', 'nav-btn-vouchers', 'nav-btn-cart'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.className = 'py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap';
+                }
+            });
+
+            if (tab === 'menu') {
+                document.getElementById('view-menu')?.classList.remove('hidden');
+                const activeBtn = document.getElementById('nav-btn-menu');
+                if (activeBtn) activeBtn.className = 'py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap';
+                renderMenu();
+            } else if (tab === 'cart') {
+                document.getElementById('view-cart')?.classList.remove('hidden');
+                const activeBtn = document.getElementById('nav-btn-cart');
+                if (activeBtn) activeBtn.className = 'py-1.5 px-3.5 bg-emerald-100 text-emerald-800 font-bold rounded-xl flex items-center gap-2 relative my-2 border border-emerald-300';
+                renderCart();
+            } else if (tab === 'vouchers') {
+                document.getElementById('view-vouchers')?.classList.remove('hidden');
+                const activeBtn = document.getElementById('nav-btn-vouchers');
+                if (activeBtn) activeBtn.className = 'py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap';
+                renderUserVouchers();
+            }
+        }
+
+        function switchAdminTab(tab) {
+            hideAllViews();
+
+            ['admin-nav-btn-transactions', 'admin-nav-btn-manage-menu', 'admin-nav-btn-settings'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.className = 'py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap';
+            });
+
+            if (tab === 'transactions') {
+                document.getElementById('view-admin-transactions')?.classList.remove('hidden');
+                const btn = document.getElementById('admin-nav-btn-transactions');
+                if (btn) btn.className = 'py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                renderAdminTransactions();
+            } else if (tab === 'manage-menu') {
+                document.getElementById('view-admin-manage-menu')?.classList.remove('hidden');
+                const btn = document.getElementById('admin-nav-btn-manage-menu');
+                if (btn) btn.className = 'py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                renderAdminMenu();
+            } else if (tab === 'settings') {
+                document.getElementById('view-admin-settings')?.classList.remove('hidden');
+                const btn = document.getElementById('admin-nav-btn-settings');
+                if (btn) btn.className = 'py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                const webhookInput = document.getElementById('sheet-webhook-url');
+                if (webhookInput) webhookInput.value = webhookUrl || '';
+            }
+        }
+
+        function setCategoryFilter(filter) {
+            currentCategoryFilter = filter;
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => {
+                btn.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition';
+            });
+
+            if (event && event.currentTarget) {
+                event.currentTarget.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
+            }
+            renderMenu();
+        }
+
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            if (!grid) return;
+
+            let filtered = menuItems;
+            if (currentCategoryFilter === 'kecil') {
+                filtered = menuItems.filter(m => m.price <= 3000);
+            } else if (currentCategoryFilter === 'besar') {
+                filtered = menuItems.filter(m => m.price >= 5000);
+            }
+
+            grid.innerHTML = filtered.map(item => {
+                const theme = getVoucherTheme(item.price);
+                return `
+                <div class="${theme.bgCard} rounded-3xl border-2 ${theme.borderCard} p-5 flex flex-col justify-between shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-4xl p-2 bg-white/80 rounded-2xl border ${theme.borderInner}">${item.icon}</span>
+                            <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${item.stock > 0 ? 'bg-emerald-600 text-white' : 'bg-red-100 text-red-700'}">
+                                ${item.stock > 0 ? `Stok: ${item.stock}` : 'Habis'}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-[10px] font-extrabold uppercase ${theme.textSub} tracking-wider">Kantin Spentig</span>
+                            <h3 class="font-extrabold ${theme.textTitle} text-base leading-snug">${item.name}</h3>
+                        </div>
+                        <p class="text-2xl font-black text-blue-700">${formatRupiah(item.price)}</p>
+                    </div>
+
+                    <button onclick="addToCart('${item.id}')" ${item.stock <= 0 ? 'disabled' : ''} class="mt-5 w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white py-3 rounded-2xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Tambah Ke Keranjang
+                    </button>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function addToCart(itemId) {
+            const item = menuItems.find(m => m.id === itemId);
+            if (!item || item.stock <= 0) {
+                showToast('Stok voucher sedang tidak tersedia!', 'error');
+                return;
+            }
+
+            const cartItem = cart.find(c => c.id === itemId);
+            if (cartItem) {
+                if (cartItem.qty + 1 > item.stock) {
+                    showToast('Jumlah melebihi stok yang tersedia!', 'error');
+                    return;
+                }
+                cartItem.qty++;
+            } else {
+                cart.push({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    qty: 1
+                });
+            }
+
+            updateCartBadge();
+            showToast(`${item.name} ditambahkan!`, 'cart-add');
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cart-badge');
+            if (!badge) return;
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+
+            if (totalQty > 0) {
+                badge.innerText = totalQty;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function renderCart() {
+            const emptyState = document.getElementById('cart-empty-state');
+            const itemsContainer = document.getElementById('cart-items-container');
+            const checkoutSection = document.getElementById('cart-checkout-section');
+            const totalPriceEl = document.getElementById('cart-total-price');
+
+            if (!itemsContainer) return;
+
+            if (cart.length === 0) {
+                if (emptyState) emptyState.classList.remove('hidden');
+                if (itemsContainer) itemsContainer.innerHTML = '';
+                if (checkoutSection) checkoutSection.classList.add('hidden');
+                return;
+            }
+
+            if (emptyState) emptyState.classList.add('hidden');
+            if (checkoutSection) checkoutSection.classList.remove('hidden');
+
+            itemsContainer.innerHTML = cart.map(item => `
+                <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-xs sm:text-sm">${item.name}</h4>
+                        <p class="text-xs font-black text-emerald-600 mt-0.5">${formatRupiah(item.price)}</p>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="changeCartQty('${item.id}', -1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-xs font-extrabold hover:bg-slate-100 transition shadow-xs">-</button>
+                        <span class="text-xs font-black px-1.5">${item.qty}</span>
+                        <button onclick="changeCartQty('${item.id}', 1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-xs font-extrabold hover:bg-slate-100 transition shadow-xs">+</button>
+                        <button onclick="removeFromCart('${item.id}')" class="text-slate-400 hover:text-red-500 ml-2 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            const grandTotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            if (totalPriceEl) totalPriceEl.innerText = formatRupiah(grandTotal);
+        }
+
+        function changeCartQty(itemId, delta) {
+            const cartItem = cart.find(c => c.id === itemId);
+            if (!cartItem) return;
+
+            const menuItem = menuItems.find(m => m.id === itemId);
+
+            if (delta > 0 && menuItem && cartItem.qty + 1 > menuItem.stock) {
+                showToast('Jumlah melebihi stok yang tersedia!', 'error');
+                return;
+            }
+
+            cartItem.qty += delta;
+            if (cartItem.qty <= 0) {
+                removeFromCart(itemId);
+            } else {
+                renderCart();
+                updateCartBadge();
+            }
+        }
+
+        function removeFromCart(itemId) {
+            cart = cart.filter(c => c.id !== itemId);
+            renderCart();
+            updateCartBadge();
+        }
+
+        function openQrisModal() {
+            if (cart.length === 0) {
+                showToast('Keranjang Anda masih kosong!', 'error');
+                return;
+            }
+
+            const name = document.getElementById('buyer-name')?.value.trim();
+            const nisn = document.getElementById('buyer-nisn')?.value.trim();
+            const buyerClass = document.getElementById('buyer-class')?.value.trim();
+            const phone = document.getElementById('buyer-phone')?.value.trim();
+
+            if (!name || !nisn || !buyerClass || !phone) {
+                showToast('Harap lengkapi Nama, NISN, Kelas, serta Nomor HP Siswa!', 'error');
+                return;
+            }
+
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const totalText = formatRupiah(totalPrice);
+
+            updateQrisImagePreview();
+            document.getElementById('qris-modal-total').innerText = totalText;
+            document.getElementById('qris-modal-total-text').innerText = totalText;
+            document.getElementById('modal-qris').classList.remove('hidden');
+        }
+
+        function closeQrisModal() {
+            document.getElementById('modal-qris')?.classList.add('hidden');
+            removeProofImage();
+        }
+
+        function handleProofUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentProofDataUrl = e.target.result;
+                    const previewImg = document.getElementById('payment-proof-preview-img');
+                    const previewContainer = document.getElementById('proof-preview-container');
+                    if (previewImg && previewContainer) {
+                        previewImg.src = currentProofDataUrl;
+                        previewContainer.classList.remove('hidden');
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeProofImage() {
+            currentProofDataUrl = '';
+            const fileInput = document.getElementById('payment-proof-input');
+            if (fileInput) fileInput.value = '';
+            const previewContainer = document.getElementById('proof-preview-container');
+            if (previewContainer) previewContainer.classList.add('hidden');
+        }
+
+        function confirmCheckoutOrder(e) {
+            if (e) e.preventDefault();
+
+            const name = document.getElementById('buyer-name')?.value.trim();
+            const nisn = document.getElementById('buyer-nisn')?.value.trim();
+            const buyerClass = document.getElementById('buyer-class')?.value.trim();
+            const phone = document.getElementById('buyer-phone')?.value.trim();
+
+            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const itemsSummary = cart.map(i => `${i.name} (x${i.qty})`).join(', ');
+
+            const generatedVouchers = [];
+            cart.forEach(cartItem => {
+                for (let i = 0; i < cartItem.qty; i++) {
+                    const vCode = generateVoucherId();
+                    generatedVouchers.push({
+                        voucherCode: vCode,
+                        itemName: cartItem.name,
+                        nominal: cartItem.price,
+                        redeemed: false,
+                        date: new Date().toLocaleString('id-ID')
+                    });
+
+                    const mItem = menuItems.find(m => m.id === cartItem.id);
+                    if (mItem) {
+                        mItem.stock = Math.max(0, mItem.stock - 1);
+                    }
+                }
+            });
+
+            const orderId = 'ORD-' + Date.now();
+            const newOrder = {
+                id: orderId,
+                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                buyerName: name,
+                buyerNisn: nisn,
+                buyerClass: buyerClass,
+                buyerPhone: phone,
+                itemsSummary: itemsSummary,
+                totalAmount: totalAmount,
+                paymentStatus: 'Terbayar (QRIS)',
+                redeemStatus: 'Belum Ditukar',
+                paymentProof: currentProofDataUrl || '',
+                vouchers: generatedVouchers
+            };
+
+            orders.unshift(newOrder);
+            if (!myOrderIds.includes(orderId)) {
+                myOrderIds.unshift(orderId);
+            }
+
+            // Sync Webhook
+            sendToGoogleSheets(newOrder);
+
+            cart = [];
+            saveData();
+            closeQrisModal();
+
+            showToast('Pembayaran Berhasil! Voucher Anda telah diterbitkan.', 'success');
+            switchTab('vouchers');
+        }
+
+        function sendToGoogleSheets(orderData) {
+            if (!webhookUrl) return;
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            }).catch(err => console.log('Spreadsheet sync:', err));
+        }
+
+        function renderUserVouchers() {
+            const grid = document.getElementById('vouchers-grid');
+            const emptyState = document.getElementById('vouchers-empty-state');
+            if (!grid) return;
+
+            const myOrders = orders.filter(o => myOrderIds.includes(o.id));
+
+            let allVouchers = [];
+            myOrders.forEach(order => {
+                if (order.vouchers && Array.isArray(order.vouchers)) {
+                    order.vouchers.forEach(v => {
+                        allVouchers.push({
+                            ...v,
+                            buyerName: order.buyerName,
+                            buyerNisn: order.buyerNisn,
+                            buyerClass: order.buyerClass
+                        });
+                    });
+                }
+            });
+
+            if (allVouchers.length === 0) {
+                if (emptyState) emptyState.classList.remove('hidden');
+                grid.innerHTML = '';
+                return;
+            }
+
+            if (emptyState) emptyState.classList.add('hidden');
+
+            grid.innerHTML = allVouchers.map(v => {
+                const theme = getVoucherTheme(v.nominal);
+                return `
+                <div class="${theme.bgCard} rounded-3xl border-2 ${v.redeemed ? 'border-slate-300 opacity-60' : theme.borderCard + ' shadow-lg'} p-4 relative overflow-hidden transition-all duration-200">
+                    <div class="${theme.bgInner} rounded-2xl p-3 border ${theme.borderInner} space-y-3">
+                        
+                        <div class="flex justify-between items-start border-b ${theme.borderInner} pb-2">
+                            <div>
+                                <p class="text-[9px] font-black uppercase tracking-wider ${theme.textSub}">KANTIN VOUCHER</p>
+                                <p class="text-[11px] font-black ${theme.textTitle} uppercase">VOUCHER BELANJA</p>
+                            </div>
+                            <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${v.redeemed ? 'bg-slate-300 text-slate-700' : 'bg-emerald-600 text-white shadow-xs'}">
+                                ${v.redeemed ? 'Sudah Ditukar' : 'Siap Ditukar'}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between gap-2">
+                            <div>
+                                <p class="text-[9px] font-extrabold ${theme.textSub} uppercase">Nominal</p>
+                                <p class="text-2xl font-black text-blue-700 leading-none tracking-tight">RP ${v.nominal.toLocaleString('id-ID')}</p>
+                                <div class="mt-2 space-y-0.5">
+                                    <p class="text-xs font-black text-slate-900 leading-tight">${v.buyerName}</p>
+                                    <p class="text-[10px] font-bold ${theme.textSub}">Kelas: ${v.buyerClass} ${v.buyerNisn ? `• NISN: ${v.buyerNisn}` : ''}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-white p-2 rounded-2xl border ${theme.borderInner} text-center shrink-0 shadow-xs">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${v.voucherCode}" alt="QR" class="w-16 h-16 object-contain mx-auto">
+                                <p class="text-[9px] font-mono font-extrabold text-slate-800 mt-1">${v.voucherCode}</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t ${theme.borderInner} flex justify-between items-center text-[9px] font-extrabold ${theme.textSub}">
+                            <span>Expired: 18 JULI 2029</span>
+                            <span>SPENTIG MAKASSAR</span>
+                        </div>
+                    </div>
+                    <div class="text-center mt-2">
+                        <span class="text-[9px] font-black uppercase tracking-wider ${theme.textSub}">UPT SPF SMP NEGERI 3 MAKASSAR</span>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function renderAdminTransactions() {
+            const tbody = document.getElementById('admin-transactions-tbody');
+            if (!tbody) return;
+
+            const query = (document.getElementById('admin-search-input')?.value || '').toLowerCase().trim();
+            const filter = document.getElementById('admin-status-filter')?.value || 'all';
+
+            let filteredOrders = orders;
+
+            if (query) {
+                filteredOrders = filteredOrders.filter(o => 
+                    o.buyerName.toLowerCase().includes(query) ||
+                    (o.buyerNisn && o.buyerNisn.toLowerCase().includes(query)) ||
+                    o.buyerClass.toLowerCase().includes(query) ||
+                    o.buyerPhone.toLowerCase().includes(query) ||
+                    (o.vouchers && o.vouchers.some(v => v.voucherCode.toLowerCase().includes(query)))
+                );
+            }
+
+            if (filter === 'unredeemed') {
+                filteredOrders = filteredOrders.filter(o => o.vouchers && o.vouchers.some(v => !v.redeemed));
+            } else if (filter === 'redeemed') {
+                filteredOrders = filteredOrders.filter(o => o.vouchers && o.vouchers.every(v => v.redeemed));
+            }
+
+            if (filteredOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filteredOrders.map((o, idx) => {
+                const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
+                const isAllRedeemed = unredeemedCount === 0;
+
+                return `
+                    <tr class="hover:bg-slate-50/80 transition">
+                        <td class="p-3.5 text-xs font-bold text-slate-500">${idx + 1}</td>
+                        <td class="p-3.5 text-xs font-extrabold text-slate-800">${o.date}</td>
+                        <td class="p-3.5">
+                            <p class="text-xs font-extrabold text-slate-800">${o.buyerName}</p>
+                            <p class="text-[11px] font-semibold text-slate-600">Kelas ${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
+                            <p class="text-[10px] text-slate-400 font-medium">HP: ${o.buyerPhone}</p>
+                        </td>
+                        <td class="p-3.5">
+                            <p class="text-xs font-bold text-slate-700">${o.itemsSummary}</p>
+                            <div class="flex flex-wrap gap-1 mt-1">
+                                ${(o.vouchers || []).map(v => `
+                                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
+                                        ${v.voucherCode}
+                                    </span>
+                                `).join('')}
+                            </div>
+                            ${o.paymentProof ? `
+                                <button onclick="viewPaymentProof('${o.id}')" class="mt-2 text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-extrabold px-2 py-1 rounded-lg border border-blue-200 flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-image text-blue-600"></i> Lihat Bukti Bayar
+                                </button>
+                            ` : `
+                                <span class="mt-1 block text-[10px] text-slate-400 italic">Tanpa Foto Bukti</span>
+                            `}
+                        </td>
+                        <td class="p-3.5 text-xs font-black text-emerald-600">${formatRupiah(o.totalAmount)}</td>
+                        <td class="p-3.5">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${isAllRedeemed ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-900'}">
+                                ${isAllRedeemed ? 'Sudah Ditukar' : `${unredeemedCount} Belum Ditukar`}
+                            </span>
+                        </td>
+                        <td class="p-3.5 text-right">
+                            ${!isAllRedeemed ? `
+                                <button onclick="processRedeemVoucher('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 ml-auto shadow-xs">
+                                    <i class="fa-solid fa-check-double"></i> Serahkan Voucher
+                                </button>
+                            ` : `
+                                <span class="text-slate-400 text-xs font-bold flex items-center gap-1 justify-end"><i class="fa-solid fa-check text-emerald-500"></i> Selesai</span>
+                            `}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function viewPaymentProof(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order || !order.paymentProof) return;
+
+            const modalTitle = document.getElementById('proof-modal-title');
+            const modalSubtitle = document.getElementById('proof-modal-subtitle');
+            const modalImg = document.getElementById('proof-modal-img');
+
+            if (modalTitle) modalTitle.innerText = `Bukti Pembayaran: ${order.buyerName}`;
+            if (modalSubtitle) modalSubtitle.innerText = `Kelas ${order.buyerClass} • ${order.date} • ${formatRupiah(order.totalAmount)}`;
+            if (modalImg) modalImg.src = order.paymentProof;
+
+            document.getElementById('modal-view-proof')?.classList.remove('hidden');
+        }
+
+        function closeViewProofModal() {
+            document.getElementById('modal-view-proof')?.classList.add('hidden');
+        }
+
+        function processRedeemVoucher(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            if (order.vouchers) {
+                order.vouchers.forEach(v => v.redeemed = true);
+            }
+            order.redeemStatus = 'Sudah Ditukar';
+
+            saveData();
+            renderAdminTransactions();
+            showToast(`Voucher fisik untuk ${order.buyerName} berhasil diserahkan!`, 'success');
+        }
+
+        function renderAdminMenu() {
+            const grid = document.getElementById('admin-menu-grid');
+            if (!grid) return;
+
+            grid.innerHTML = menuItems.map(item => `
+                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-3xl">${item.icon || '🎟️'}</span>
+                            <span class="text-xs bg-slate-100 font-extrabold px-2.5 py-1 rounded-lg text-slate-700">Stok: ${item.stock}</span>
+                        </div>
+                        <h3 class="font-extrabold text-slate-800 text-sm">${item.name}</h3>
+                        <p class="text-xs text-emerald-600 font-black mt-1">${formatRupiah(item.price)}</p>
+                    </div>
+                    <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 mt-3">
+                        <button onclick="editMenuItem('${item.id}')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1.5 rounded-xl font-bold transition">
+                            <i class="fa-solid fa-pen"></i> Edit Stok
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editMenuItem(id) {
+            const item = menuItems.find(m => m.id === id);
+            if (!item) return;
+
+            const newStock = prompt(`Masukkan jumlah stok baru untuk ${item.name}:`, item.stock);
+            if (newStock !== null && !isNaN(newStock)) {
+                item.stock = parseInt(newStock) || 0;
+                saveData();
+                renderAdminMenu();
+                renderMenu();
+                showToast('Stok voucher berhasil diperbarui!', 'success');
+            }
+        }
+
+        function updateSyncStatus(isOnline) {
+            const statusBadge = document.getElementById('cloud-sync-status');
+            if (!statusBadge) return;
+            if (isOnline) {
+                statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
+                statusBadge.innerHTML = '<i class="fa-solid fa-cloud text-[10px] mr-1"></i> Terhubung Cloud';
+            } else {
+                statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600';
+                statusBadge.innerHTML = '<i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)';
+            }
+        }
+
+        function syncDataFromCloud() {
+            if (!webhookUrl) {
+                showToast('Webhook URL Google Sheet belum diisi!', 'error');
+                updateSyncStatus(false);
+                return;
+            }
+
+            showToast('Menghubungkan ke Google Sheet...', 'info');
+            fetch(webhookUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (data) {
+                        if (data.qrisUrl) {
+                            localStorage.setItem('kantin_qris_image', data.qrisUrl);
+                            updateQrisImagePreview();
+                        }
+                        if (data.adminPin) {
+                            adminPin = data.adminPin;
+                            localStorage.setItem('kantin_admin_pin', data.adminPin);
+                        }
+                        if (data.menuItems && Array.isArray(data.menuItems) && data.menuItems.length > 0) {
+                            menuItems = data.menuItems;
+                            localStorage.setItem('kantin_menu', JSON.stringify(menuItems));
+                            renderMenu();
+                        }
+                        if (data.orders && Array.isArray(data.orders)) {
+                            orders = data.orders;
+                            localStorage.setItem('kantin_orders', JSON.stringify(orders));
+                            renderAdminTransactions();
+                            renderUserVouchers();
+                        }
+                        updateSyncStatus(true);
+                        showToast('Data berhasil disinkronisasi dari Cloud Spreadsheet!', 'success');
+                    }
+                })
+                .catch(err => {
+                    console.log('Cloud Sync Error:', err);
+                    updateSyncStatus(false);
+                    showToast('Gagal menarik data dari Google Sheet (periksa Webhook URL)', 'error');
+                });
+        }
+
+        function saveConfigToCloud(configPayload) {
+            if (!webhookUrl) return;
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'update_config',
+                    ...configPayload
+                })
+            }).catch(err => console.log('Config Push Error:', err));
+        }
+
+        function handleQrisUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const qrisDataUrl = e.target.result;
+                    localStorage.setItem('kantin_qris_image', qrisDataUrl);
+                    updateQrisImagePreview();
+                    saveConfigToCloud({ qrisUrl: qrisDataUrl });
+                    showToast('Gambar QRIS berhasil diunggah & disimpan di Cloud!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveQrisUrl() {
+            const url = document.getElementById('qris-url-input')?.value.trim();
+            if (url) {
+                localStorage.setItem('kantin_qris_image', url);
+                updateQrisImagePreview();
+                saveConfigToCloud({ qrisUrl: url });
+                showToast('URL Gambar QRIS disetujui & disimpan di Cloud Database!', 'success');
+            }
+        }
+
+        function resetQrisImage() {
+            localStorage.removeItem('kantin_qris_image');
+            updateQrisImagePreview();
+            showToast('Gambar QRIS dikembalikan ke default', 'info');
+        }
+
+        function updateQrisImagePreview() {
+            const defaultQris = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360";
+            const savedQris = localStorage.getItem('kantin_qris_image') || defaultQris;
+            
+            const modalQrisImg = document.getElementById('qris-modal-img');
+            if (modalQrisImg) modalQrisImg.src = savedQris;
+
+            const previewImg = document.getElementById('qris-settings-preview');
+            if (previewImg) previewImg.src = savedQris;
+        }
+
+        function changeAdminPin() {
+            const newPin = document.getElementById('new-admin-pin')?.value.trim();
+            if (!newPin || newPin.length < 4) {
+                showToast('PIN minimal 4 digit angka!', 'error');
+                return;
+            }
+            adminPin = newPin;
+            localStorage.setItem('kantin_admin_pin', newPin);
+            document.getElementById('new-admin-pin').value = '';
+            
+            saveConfigToCloud({ adminPin: newPin });
+            showToast('PIN Kasir berhasil diperbarui & disimpan di Cloud Database!', 'success');
+        }
+
+        function saveSpreadsheetConfig() {
+            const url = document.getElementById('sheet-webhook-url')?.value.trim();
+            webhookUrl = url;
+            localStorage.setItem('kantin_sheet_webhook', url);
+            showToast('Webhook URL tersimpan! Memulai sinkronisasi...', 'success');
+            syncDataFromCloud();
+        }
+
+        function exportToExcel() {
+            if (orders.length === 0) {
+                showToast('Belum ada data transaksi untuk diexport!', 'error');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Tanggal,Kode Voucher,Nama Siswa,NISN,Kelas,No HP,Item,Total,Status Bayar,Status Ditukar\n";
+
+            orders.forEach(o => {
+                const vCodes = (o.vouchers || []).map(v => v.voucherCode).join(';');
+                csvContent += `"${o.date}","${vCodes}","${o.buyerName}","${o.buyerNisn || ''}","${o.buyerClass}","${o.buyerPhone}","${o.itemsSummary}","${o.totalAmount}","${o.paymentStatus}","${o.redeemStatus}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_Transaksi_Kantin_${Date.now()}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Laporan berhasil diunduh sebagai file CSV/Excel!', 'success');
+        }
+
+        function openScriptGuideModal() {
+            document.getElementById('modal-script-guide')?.classList.remove('hidden');
+        }
+
+        function closeScriptGuideModal() {
+            document.getElementById('modal-script-guide')?.classList.add('hidden');
+        }
+
+        function copyAppsScriptCode() {
+            const codeText = document.getElementById('apps-script-code-block')?.innerText || '';
+            const tempInput = document.createElement('textarea');
+            tempInput.value = codeText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            showToast('Kode Google Apps Script berhasil disalin!', 'success');
+        }
+
+        window.onload = function() {
+            switchTab('menu');
+            updateCartBadge();
+            renderUserVouchers();
+            updateQrisImagePreview();
+            if (webhookUrl) {
+                syncDataFromCloud();
+            } else {
+                updateSyncStatus(false);
+            }
+        };
+    </script>
+</body>
+</html>
