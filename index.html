@@ -76,20 +76,20 @@
 
     <!-- Admin / Cashier Navigation -->
     <nav id="admin-nav" class="hidden bg-slate-900 text-slate-300 border-b border-slate-800 sticky top-[61px] z-30 shadow-md">
-        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
-            <div class="flex gap-6 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar">
-                <button onclick="switchAdminTab('transactions')" id="admin-nav-btn-transactions" class="py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-receipt"></i> Data Transaksi & Penukaran
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 py-2.5 sm:py-0">
+            <div class="flex gap-4 sm:gap-6 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar py-1">
+                <button onclick="switchAdminTab('transactions')" id="admin-nav-btn-transactions" class="py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-receipt"></i> Data Transaksi
                 </button>
-                <button onclick="switchAdminTab('manage-menu')" id="admin-nav-btn-manage-menu" class="py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-box"></i> Kelola Stok Voucher
+                <button onclick="switchAdminTab('manage-menu')" id="admin-nav-btn-manage-menu" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-box"></i> Stok Voucher
                 </button>
-                <button onclick="switchAdminTab('settings')" id="admin-nav-btn-settings" class="py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-gear"></i> Pengaturan Kasir
+                <button onclick="switchAdminTab('settings')" id="admin-nav-btn-settings" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-gear"></i> Pengaturan
                 </button>
             </div>
 
-            <button onclick="lockAdmin()" class="py-1.5 px-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition shrink-0 my-2 border border-red-500/30">
+            <button onclick="lockAdmin()" class="py-2 px-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shrink-0 border border-red-500/30">
                 <i class="fa-solid fa-right-from-bracket"></i> Kunci Kasir
             </button>
         </div>
@@ -97,7 +97,7 @@
 
     <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6">
 
-        <!-- Info Banner for No-Phone School Policy -->
+        <!-- Info Banner -->
         <div class="bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-900 text-white rounded-3xl p-5 shadow-lg shadow-emerald-950/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-emerald-700/30 relative overflow-hidden">
             <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
             <div class="space-y-1.5 relative z-10">
@@ -111,7 +111,7 @@
                 </div>
                 <h2 class="font-black text-base sm:text-lg tracking-tight">Sistem Voucher Digital Kantin SARAS Spentig Makassar</h2>
                 <p class="text-xs text-slate-200/90 leading-relaxed max-w-2xl">
-                    Orang tua/siswa memesan & bayar voucher fisik via QRIS dari rumah. Di sekolah, siswa cukup sebutkan <b>Nama Lengkap, NISN & Kelas</b> di meja Kasir untuk mengambil voucher fisiknya.
+                    Orang tua/siswa memesan & bayar voucher fisik via QRIS dari rumah. Di sekolah, siswa cukup sebutkan <b>Nama Lengkap, Kelas & NISN</b> di meja Kasir untuk mengambil voucher fisiknya.
                 </p>
             </div>
         </div>
@@ -170,16 +170,16 @@
                                 <input type="text" id="buyer-name" placeholder="Misal: Andi Muhammad" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">NISN (10 Digit NISN)</label>
-                                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" id="buyer-nisn" placeholder="Contoh: 0081234567" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Kelas Siswa (Format Standar)</label>
+                                <input type="text" id="buyer-class" placeholder="Contoh: VII.1, VIII.3, IX.11" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                <p class="text-[10px] text-slate-400 mt-1">Gunakan Romawi & Titik (Misal: VII.1, VIII.4, IX.2)</p>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                             <div>
-                                <label class="block text-xs font-bold text-slate-700 mb-1">Kelas Siswa (Format Standar)</label>
-                                <input type="text" id="buyer-class" placeholder="Contoh: VII.1, VIII.3, IX.11" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                                <p class="text-[10px] text-slate-400 mt-1">Gunakan Romawi & Titik (Misal: VII.1, VIII.4, IX.2)</p>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">NISN (10 Digit NISN)</label>
+                                <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" id="buyer-nisn" placeholder="Contoh: 0081234567" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-700 mb-1">Nomor HP Orang Tua / Siswa</label>
@@ -195,7 +195,7 @@
                             <p class="text-2xl font-black text-emerald-600" id="cart-total-price">Rp 0</p>
                         </div>
                         <button onclick="openQrisModal()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3.5 rounded-2xl font-extrabold text-xs shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 transition transform active:scale-95">
-                            <i class="fa-solid fa-qrcode text-base"></i> Bayar Lewat QRIS Statis
+                            <i class="fa-solid fa-qrcode text-base"></i> Bayar Lewat QRIS
                         </button>
                     </div>
                 </div>
@@ -207,7 +207,7 @@
             <div class="flex justify-between items-center bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs">
                 <div>
                     <h2 class="font-extrabold text-slate-800 text-base">Voucher Fisik Saya</h2>
-                    <p class="text-xs text-slate-500">Tunjukkan bukti ini atau sebutkan Nama/NISN ke Kasir untuk mengambil voucher fisik</p>
+                    <p class="text-xs text-slate-500">Tunjukkan bukti ini atau sebutkan Nama, Kelas & NISN ke Kasir untuk mengambil voucher fisik</p>
                 </div>
             </div>
 
@@ -225,13 +225,13 @@
 
         <!-- VIEW: ADMIN TRANSACTIONS -->
         <section id="view-admin-transactions" class="hidden space-y-4">
-            <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
+            <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
                     <div>
                         <h2 class="text-base font-extrabold text-slate-800">Data Transaksi & Penukaran Voucher</h2>
-                        <p class="text-xs text-slate-500">Cari nama, NISN, atau kelas siswa untuk menyerahkan voucher fisik di kantin</p>
+                        <p class="text-xs text-slate-500">Cari nama, kelas, atau NISN siswa untuk menyerahkan voucher fisik di kantin</p>
                     </div>
-                    <button onclick="exportToExcel()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-4 py-2.5 rounded-xl text-xs font-bold border border-emerald-200 flex items-center gap-2 transition">
+                    <button onclick="exportToExcel()" class="w-full sm:w-auto bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-4 py-2.5 rounded-xl text-xs font-bold border border-emerald-200 flex items-center justify-center gap-2 transition">
                         <i class="fa-solid fa-file-excel text-emerald-600"></i> Download Excel / CSV
                     </button>
                 </div>
@@ -240,9 +240,9 @@
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-                        <input type="text" id="admin-search-input" onkeyup="renderAdminTransactions()" placeholder="Ketik Nama Siswa, NISN, Kelas (misal VII.1), atau Kode Voucher..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                        <input type="text" id="admin-search-input" onkeyup="renderAdminTransactions()" placeholder="Ketik Nama Siswa, Kelas (misal VII.1), NISN, atau Kode Voucher..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 transition">
                     </div>
-                    <select id="admin-status-filter" onchange="renderAdminTransactions()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 outline-none">
+                    <select id="admin-status-filter" onchange="renderAdminTransactions()" class="w-full sm:w-auto bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 outline-none">
                         <option value="all">Semua Status (Tukar & Bayar)</option>
                         <option value="unredeemed">Voucher Belum Ditukar</option>
                         <option value="redeemed">Voucher Sudah Ditukar</option>
@@ -251,14 +251,19 @@
                     </select>
                 </div>
 
-                <!-- Transactions Table -->
-                <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <!-- Tampilan Card untuk HP (Mobile View) -->
+                <div id="admin-transactions-mobile" class="space-y-3.5 md:hidden">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Tampilan Tabel untuk Desktop -->
+                <div class="hidden md:block overflow-x-auto rounded-2xl border border-slate-200">
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-black text-slate-600 uppercase tracking-wider">
                             <tr>
                                 <th class="p-3.5">#</th>
                                 <th class="p-3.5">Tanggal</th>
-                                <th class="p-3.5">Siswa, NISN & Kelas</th>
+                                <th class="p-3.5">Siswa, Kelas & NISN</th>
                                 <th class="p-3.5">Rincian Voucher</th>
                                 <th class="p-3.5">Total</th>
                                 <th class="p-3.5">Status Pembayaran</th>
@@ -335,7 +340,7 @@
             </button>
             
             <div class="space-y-1">
-                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider">QRIS Statis Kantin</span>
+                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider">QRIS Kantin</span>
                 <h3 class="text-lg font-extrabold text-slate-800">Scan & Bayar Sekarang</h3>
                 <p class="text-xs text-slate-500">Gunakan GoPay, OVO, DANA, ShopeePay, atau M-Banking</p>
             </div>
@@ -357,18 +362,18 @@
                 <ol class="text-xs text-amber-800 font-medium space-y-1 list-decimal list-inside leading-relaxed">
                     <li>Buka aplikasi E-Wallet / Mobile Banking Anda</li>
                     <li>Scan Kode QRIS di atas dan ketik nominal <b id="qris-modal-total-text">Rp 0</b></li>
-                    <li>Setelah bayar, unggah foto bukti bayar (opsional) lalu klik konfirmasi</li>
+                    <li>Setelah bayar, unggah foto bukti bayar <b class="text-red-600">(Wajib)</b> lalu klik konfirmasi</li>
                 </ol>
             </div>
 
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-left space-y-2">
                 <label class="block text-xs font-extrabold text-slate-700 flex items-center justify-between">
-                    <span><i class="fa-solid fa-receipt text-emerald-600 mr-1"></i> Unggah Bukti Pembayaran</span>
-                    <span class="text-[10px] text-slate-400 font-normal">Foto / Screenshot</span>
+                    <span><i class="fa-solid fa-receipt text-emerald-600 mr-1"></i> Unggah Bukti Pembayaran <span class="text-red-500">*</span></span>
+                    <span class="text-[10px] text-red-600 font-black bg-red-100 px-2 py-0.5 rounded-md">Wajib Foto / Screenshot</span>
                 </label>
                 <input type="file" id="payment-proof-input" accept="image/*" onchange="handleProofUpload(event)" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200 cursor-pointer">
                 <div id="proof-preview-container" class="hidden relative mt-2 rounded-xl border border-slate-300 overflow-hidden bg-slate-100 max-h-40 flex items-center justify-center p-1">
-                    <img id="payment-proof-preview-img" src="" class="max-h-36 object-contain rounded-lg">
+                    <img id="payment-proof-preview-img" src="" class="max-h-36 object-contain rounded-lg" alt="Preview Bukti Transfer">
                     <button type="button" onclick="removeProofImage()" class="absolute top-2 right-2 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-md"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
@@ -447,7 +452,6 @@ function doGet(e) {
   var menuItems = [];
 
   if (stokData.length <= 1) {
-    // Inisialisasi default jika sheet STOK masih kosong
     var defaultItems = [
       { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
       { id: 'v2000', name: 'Voucher Nominal Rp 2.000', price: 2000, stock: 100, icon: '🎟️' },
@@ -642,14 +646,13 @@ function getOrCreateSheet(ss, name) {
     <script>
         // =========================================================================
         // 🛠️ PENGATURAN MANUAL WEBHOOK URL GOOGLE APPS SCRIPT
-        // Tempelkan URL Webhook hasil Deploy Google Apps Script Anda di bawah ini:
         // =========================================================================
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwQ_J_AlOnEfftNqBfApLyAGWKSys0PialfuHr6K6mOK6dbl17HsKtuPyeW6eNyWvmk/exec"; 
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzAq6R7GJ3PSYhxBMcPF8b-tsKQhFMEpiLO6ifu0aJLoABndlYU8Vgeep47Y05jnC1w/exec"; 
         
         let menuItems = [
             { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
             { id: 'v2000', name: 'Voucher Nominal Rp 2.000', price: 2000, stock: 100, icon: '🎟️' },
-            { id: 'v3000', name: 'Voucher Nominal Rp 3.000', price: 3000, stock: 100, icon: '🎟️' },
+            { id: 'v3000', name: 'Voucher Nominal Rp 3.000', price: 3000, stock: 3000, icon: '🎟️' },
             { id: 'v5000', name: 'Voucher Nominal Rp 5.000', price: 5000, stock: 100, icon: '🎟️' },
             { id: 'v10000', name: 'Voucher Nominal Rp 10.000', price: 10000, stock: 100, icon: '🎟️' }
         ];
@@ -761,11 +764,11 @@ function getOrCreateSheet(ss, name) {
             if (type === 'success') bgClass = 'bg-emerald-600 text-white';
             if (type === 'error') bgClass = 'bg-red-600 text-white';
 
-            toast.className = `fixed bottom-5 right-5 z-50 px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 ${bgClass} transition-all duration-300 transform translate-y-0 opacity-100 max-w-sm`;
+            toast.className = `fixed bottom-4 left-4 right-4 sm:left-auto sm:right-5 z-50 px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center justify-between sm:justify-start gap-2 ${bgClass} transition-all duration-300 transform translate-y-0 opacity-100 max-w-full sm:max-w-sm`;
             toast.innerHTML = `
-                <span>${message}</span>
+                <span class="truncate">${message}</span>
                 ${type === 'cart-add' ? `
-                    <button onclick="switchTab('cart')" class="ml-2 bg-white text-emerald-800 px-2.5 py-1 rounded-lg font-black text-[10px] uppercase shadow-xs">
+                    <button onclick="switchTab('cart')" class="ml-2 bg-white text-emerald-800 px-2.5 py-1 rounded-lg font-black text-[10px] uppercase shadow-xs shrink-0">
                         Bayar QRIS
                     </button>
                 ` : ''}
@@ -985,17 +988,122 @@ function getOrCreateSheet(ss, name) {
             }
         }
 
-        function setCategoryFilter(filter, el) {
-            currentCategoryFilter = filter;
-            const buttons = document.querySelectorAll('.cat-btn');
-            buttons.forEach(btn => {
-                btn.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition';
+        function setCategoryFilter(category, btn) {
+            currentCategoryFilter = category;
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition';
             });
-
-            if (el) {
-                el.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
+            if (btn) {
+                btn.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
             }
             renderMenu();
+        }
+
+        function renderAdminMenu() {
+            const grid = document.getElementById('admin-menu-grid');
+            if (!grid) return;
+
+            grid.innerHTML = menuItems.map(item => `
+                <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl p-2 bg-slate-50 rounded-2xl border border-slate-200">${item.icon}</span>
+                        <div>
+                            <h3 class="font-extrabold text-slate-800 text-sm">${item.name}</h3>
+                            <p class="text-xs font-black text-emerald-600">${formatRupiah(item.price)}</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5 pt-2 border-t border-slate-100">
+                        <label class="block text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">Jumlah Stok Voucher</label>
+                        <div class="flex items-center gap-2">
+                            <button onclick="changeAdminStock('${item.id}', -10)" class="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">-10</button>
+                            <button onclick="changeAdminStock('${item.id}', -1)" class="w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center">-1</button>
+                            <input type="number" value="${item.stock}" min="0" onchange="updateAdminStockDirect('${item.id}', this.value)" class="w-full text-center py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-black text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
+                            <button onclick="changeAdminStock('${item.id}', 1)" class="w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center">+</button>
+                            <button onclick="changeAdminStock('${item.id}', 10)" class="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">+10</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changeAdminStock(itemId, delta) {
+            const item = menuItems.find(m => m.id === itemId);
+            if (!item) return;
+            item.stock = Math.max(0, item.stock + delta);
+            saveData();
+            renderAdminMenu();
+            renderMenu();
+            syncStockToCloud();
+            showToast(`Stok ${item.name} diperbarui menjadi ${item.stock}`, 'info');
+        }
+
+        function updateAdminStockDirect(itemId, val) {
+            const item = menuItems.find(m => m.id === itemId);
+            if (!item) return;
+            item.stock = Math.max(0, parseInt(val) || 0);
+            saveData();
+            renderAdminMenu();
+            renderMenu();
+            syncStockToCloud();
+            showToast(`Stok ${item.name} diperbarui menjadi ${item.stock}`, 'info');
+        }
+
+        function viewPaymentProof(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order || !order.paymentProof) {
+                showToast('Bukti pembayaran tidak ditemukan!', 'error');
+                return;
+            }
+
+            const titleEl = document.getElementById('proof-modal-title');
+            const subtitleEl = document.getElementById('proof-modal-subtitle');
+            const imgEl = document.getElementById('proof-modal-img');
+            const confirmBtn = document.getElementById('proof-modal-confirm-btn');
+
+            if (titleEl) titleEl.innerText = `Bukti Pembayaran: ${order.buyerName}`;
+            if (subtitleEl) subtitleEl.innerText = `Kelas ${order.buyerClass} • NISN: ${order.buyerNisn || '-'}`;
+            if (imgEl) imgEl.src = order.paymentProof;
+
+            if (confirmBtn) {
+                if (order.paymentStatus === 'Sudah Bayar') {
+                    confirmBtn.classList.add('hidden');
+                } else {
+                    confirmBtn.classList.remove('hidden');
+                    confirmBtn.onclick = function() {
+                        togglePaymentStatus(order.id);
+                        closeViewProofModal();
+                    };
+                }
+            }
+
+            openModal('modal-view-proof');
+        }
+
+        function closeViewProofModal() {
+            closeModal('modal-view-proof');
+        }
+
+        function processRedeemVoucher(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            if (order.paymentStatus === 'Belum Bayar') {
+                showToast('Pesanan belum dibayar! Verifikasi pembayaran terlebih dahulu.', 'error');
+                return;
+            }
+
+            order.redeemStatus = 'Sudah Ditukar';
+            if (order.vouchers && Array.isArray(order.vouchers)) {
+                order.vouchers.forEach(v => v.redeemed = true);
+            }
+
+            saveData();
+            syncOrdersToCloud();
+            renderAdminTransactions();
+            renderUserVouchers();
+
+            showToast(`Voucher fisik untuk ${order.buyerName} berhasil diserahkan!`, 'success');
         }
 
         function renderMenu() {
@@ -1222,6 +1330,11 @@ function getOrCreateSheet(ss, name) {
         function confirmCheckoutOrder(e) {
             if (e) e.preventDefault();
 
+            if (!currentProofDataUrl) {
+                showToast('Harap unggah bukti pembayaran terlebih dahulu!', 'error');
+                return;
+            }
+
             const name = document.getElementById('buyer-name')?.value.trim();
             const nisn = document.getElementById('buyer-nisn')?.value.trim();
             const buyerClass = document.getElementById('buyer-class')?.value.trim();
@@ -1393,12 +1506,10 @@ function getOrCreateSheet(ss, name) {
                             </div>
                         </div>
 
-                        <div class="pt-2 border-t ${theme.borderInner} flex justify-end items-center text-[9px] font-extrabold ${theme.textSub}">
+                        <div class="pt-2 border-t ${theme.borderInner} flex justify-between items-center text-[9px] font-extrabold ${theme.textSub}">
                             <span>KANTIN SARAS SPENTIG</span>
+                            <span class="uppercase">SPENTIG MAKASSAR</span>
                         </div>
-                    </div>
-                    <div class="text-center mt-2">
-                        <span class="text-[9px] font-black uppercase tracking-wider ${theme.textSub}">UPT SPF SMP NEGERI 3 MAKASSAR</span>
                     </div>
                 </div>
             `;
@@ -1407,8 +1518,8 @@ function getOrCreateSheet(ss, name) {
 
         function renderAdminTransactions() {
             const tbody = document.getElementById('admin-transactions-tbody');
-            if (!tbody) return;
-
+            const mobileContainer = document.getElementById('admin-transactions-mobile');
+            
             const query = (document.getElementById('admin-search-input')?.value || '').toLowerCase().trim();
             const filter = document.getElementById('admin-status-filter')?.value || 'all';
 
@@ -1434,156 +1545,141 @@ function getOrCreateSheet(ss, name) {
                 filteredOrders = filteredOrders.filter(o => o.paymentStatus !== 'Belum Bayar');
             }
 
+            const emptyHtml = `<div class="text-center py-10 bg-slate-50 rounded-2xl border border-slate-200 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</div>`;
+
             if (filteredOrders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</td></tr>`;
+                if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</td></tr>`;
+                if (mobileContainer) mobileContainer.innerHTML = emptyHtml;
                 return;
             }
 
-            tbody.innerHTML = filteredOrders.map((o, idx) => {
-                const isAllRedeemed = o.redeemStatus === 'Sudah Ditukar' || (o.vouchers ? o.vouchers.every(v => v.redeemed) : false);
-                const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
-                const isUnpaid = o.paymentStatus === 'Belum Bayar';
+            // 1. Render Mobile View
+            if (mobileContainer) {
+                mobileContainer.innerHTML = filteredOrders.map((o, idx) => {
+                    const isAllRedeemed = o.redeemStatus === 'Sudah Ditukar' || (o.vouchers ? o.vouchers.every(v => v.redeemed) : false);
+                    const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
+                    const isUnpaid = o.paymentStatus === 'Belum Bayar';
 
-                return `
-                    <tr class="hover:bg-slate-50/80 transition">
-                        <td class="p-3.5 text-xs font-bold text-slate-500">${idx + 1}</td>
-                        <td class="p-3.5 text-xs font-extrabold text-slate-800">${o.date}</td>
-                        <td class="p-3.5">
-                            <p class="text-xs font-extrabold text-slate-800">${o.buyerName}</p>
-                            <p class="text-[11px] font-semibold text-slate-600">Kelas ${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
-                            <p class="text-[10px] text-slate-400 font-medium">HP: ${o.buyerPhone}</p>
-                        </td>
-                        <td class="p-3.5">
-                            <p class="text-xs font-bold text-slate-700">${o.itemsSummary}</p>
-                            <div class="flex flex-wrap gap-1 mt-1">
-                                ${(o.vouchers || []).map(v => `
-                                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed || isAllRedeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
-                                        ${v.voucherCode}
-                                    </span>
-                                `).join('')}
+                    return `
+                        <div class="bg-slate-50/90 p-4 rounded-2xl border border-slate-200/90 space-y-3 shadow-xs">
+                            <div class="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-black bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md">#${idx + 1}</span>
+                                    <span class="text-[11px] font-bold text-slate-500"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>${o.date}</span>
+                                </div>
+                                <span class="text-sm font-black text-emerald-600">${formatRupiah(o.totalAmount)}</span>
                             </div>
-                            ${o.paymentProof ? `
-                                <button onclick="viewPaymentProof('${o.id}')" class="mt-2 text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-extrabold px-2 py-1 rounded-lg border border-blue-200 flex items-center gap-1 transition">
-                                    <i class="fa-solid fa-image text-blue-600"></i> Lihat Bukti Bayar
-                                </button>
-                            ` : `
-                                <span class="mt-1 block text-[10px] text-slate-400 italic">Tanpa Foto Bukti</span>
-                            `}
-                        </td>
-                        <td class="p-3.5 text-xs font-black text-emerald-600">${formatRupiah(o.totalAmount)}</td>
-                        <td class="p-3.5">
-                            <button onclick="togglePaymentStatus('${o.id}')" title="Klik untuk mengubah status pembayaran" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase cursor-pointer transition hover:scale-105 ${isUnpaid ? 'bg-red-100 text-red-700 border border-red-300 hover:bg-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'}">
-                                <i class="fa-solid ${isUnpaid ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-check text-emerald-600'}"></i>
-                                ${isUnpaid ? 'Belum Bayar' : 'Sudah Bayar'}
-                            </button>
-                        </td>
-                        <td class="p-3.5">
-                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${isAllRedeemed ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-900'}">
-                                ${isAllRedeemed ? 'Sudah Ditukar' : `${unredeemedCount} Belum Ditukar`}
-                            </span>
-                        </td>
-                        <td class="p-3.5 text-right">
-                            ${!isAllRedeemed ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 ml-auto shadow-xs">
-                                    <i class="fa-solid fa-check-double"></i> Serahkan Voucher
-                                </button>
-                            ` : `
-                                <span class="text-slate-400 text-xs font-bold flex items-center gap-1 justify-end"><i class="fa-solid fa-check text-emerald-500"></i> Selesai</span>
-                            `}
-                        </td>
-                    </tr>
-                `;
-            }).join('');
-        }
 
-        function viewPaymentProof(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order || !order.paymentProof) return;
+                            <div class="space-y-0.5">
+                                <h4 class="text-sm font-black text-slate-800 leading-snug">${o.buyerName}</h4>
+                                <p class="text-xs font-semibold text-slate-600">Kelas ${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
+                                <p class="text-[11px] font-medium text-slate-400">No. HP: ${o.buyerPhone}</p>
+                            </div>
 
-            const modalTitle = document.getElementById('proof-modal-title');
-            const modalSubtitle = document.getElementById('proof-modal-subtitle');
-            const modalImg = document.getElementById('proof-modal-img');
-            const confirmBtn = document.getElementById('proof-modal-confirm-btn');
+                            <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2">
+                                <p class="text-xs font-bold text-slate-700">${o.itemsSummary}</p>
+                                <div class="flex flex-wrap gap-1">
+                                    ${(o.vouchers || []).map(v => `
+                                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed || isAllRedeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
+                                            ${v.voucherCode}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                                ${o.paymentProof ? `
+                                    <button onclick="viewPaymentProof('${o.id}')" class="w-full mt-1.5 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 font-extrabold py-2 px-3 rounded-xl border border-blue-200 flex items-center justify-center gap-1.5 transition">
+                                        <i class="fa-solid fa-image text-blue-600"></i> Lihat Bukti Bayar
+                                    </button>
+                                ` : `
+                                    <span class="block text-[10px] text-slate-400 italic pt-0.5">Tanpa Foto Bukti</span>
+                                `}
+                            </div>
 
-            if (modalTitle) modalTitle.innerText = `Bukti Pembayaran: ${order.buyerName}`;
-            if (modalSubtitle) modalSubtitle.innerText = `Kelas ${order.buyerClass} • ${order.date} • ${formatRupiah(order.totalAmount)}`;
-            if (modalImg) modalImg.src = order.paymentProof; 
+                            <div class="flex items-center justify-between gap-2 pt-1">
+                                <div class="flex items-center gap-1.5 flex-wrap">
+                                    <button onclick="togglePaymentStatus('${o.id}')" title="Ubah status bayar" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase cursor-pointer transition ${isUnpaid ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
+                                        <i class="fa-solid ${isUnpaid ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-check text-emerald-600'}"></i>
+                                        ${isUnpaid ? 'Belum Bayar' : 'Sudah Bayar'}
+                                    </button>
 
-            if (confirmBtn) {
-                if (order.paymentStatus === 'Belum Bayar') {
-                    confirmBtn.style.display = 'flex';
-                    confirmBtn.onclick = function() {
-                        togglePaymentStatus(orderId);
-                        closeViewProofModal();
-                    };
-                } else {
-                    confirmBtn.style.display = 'none';
-                }
-            }
+                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${isAllRedeemed ? 'bg-slate-200 text-slate-600' : 'bg-amber-100 text-amber-900'}">
+                                        ${isAllRedeemed ? 'Sudah Ditukar' : `${unredeemedCount} Belum Ditukar`}
+                                    </span>
+                                </div>
+                            </div>
 
-            openModal('modal-view-proof');
-        }
-
-        function closeViewProofModal() {
-            closeModal('modal-view-proof');
-        }
-
-        function processRedeemVoucher(orderId) {
-            const orderIndex = orders.findIndex(o => o.id === orderId);
-            if (orderIndex === -1) return;
-
-            if (orders[orderIndex].paymentStatus === 'Belum Bayar') {
-                showToast('Status siswa belum bayar! Ubah status pembayaran menjadi Sudah Bayar terlebih dahulu.', 'error');
-                return;
-            }
-
-            orders[orderIndex].redeemStatus = 'Sudah Ditukar';
-            if (orders[orderIndex].vouchers) {
-                orders[orderIndex].vouchers.forEach(v => v.redeemed = true);
-            }
-
-            saveData();
-            syncOrdersToCloud();
-            renderAdminTransactions();
-            renderUserVouchers();
-            showToast(`Voucher fisik untuk ${orders[orderIndex].buyerName} berhasil diserahkan!`, 'success');
-        }
-
-        function renderAdminMenu() {
-            const grid = document.getElementById('admin-menu-grid');
-            if (!grid) return;
-
-            grid.innerHTML = menuItems.map(item => `
-                <div class="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-3xl">${item.icon || '🎟️'}</span>
-                            <span class="text-xs bg-slate-100 font-extrabold px-2.5 py-1 rounded-lg text-slate-700">Stok: ${item.stock}</span>
+                            <div class="pt-1">
+                                ${!isAllRedeemed ? `
+                                    <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-xs">
+                                        <i class="fa-solid fa-check-double"></i> Serahkan Voucher Fisik
+                                    </button>
+                                ` : `
+                                    <div class="w-full bg-slate-200/80 text-slate-600 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Transaksi Selesai
+                                    </div>
+                                `}
+                            </div>
                         </div>
-                        <h3 class="font-extrabold text-slate-800 text-sm">${item.name}</h3>
-                        <p class="text-xs text-emerald-600 font-black mt-1">${formatRupiah(item.price)}</p>
-                    </div>
-                    <div class="pt-3 border-t border-slate-100 flex justify-end gap-2 mt-3">
-                        <button onclick="editMenuItem('${item.id}')" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-1.5 rounded-xl font-bold transition">
-                            <i class="fa-solid fa-pen"></i> Edit Stok
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
+                    `;
+                }).join('');
+            }
 
-        function editMenuItem(id) {
-            const item = menuItems.find(m => m.id === id);
-            if (!item) return;
+            // 2. Render Desktop Table View
+            if (tbody) {
+                tbody.innerHTML = filteredOrders.map((o, idx) => {
+                    const isAllRedeemed = o.redeemStatus === 'Sudah Ditukar' || (o.vouchers ? o.vouchers.every(v => v.redeemed) : false);
+                    const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
+                    const isUnpaid = o.paymentStatus === 'Belum Bayar';
 
-            const newStock = prompt(`Masukkan jumlah stok baru untuk ${item.name}:`, item.stock);
-            if (newStock !== null && !isNaN(newStock)) {
-                item.stock = parseInt(newStock) || 0;
-                saveData();
-                syncStockToCloud();
-                renderAdminMenu();
-                renderMenu();
-                showToast('Stok voucher berhasil diperbarui di cloud!', 'success');
+                    return `
+                        <tr class="hover:bg-slate-50/80 transition">
+                            <td class="p-3.5 text-xs font-bold text-slate-500">${idx + 1}</td>
+                            <td class="p-3.5 text-xs font-extrabold text-slate-800">${o.date}</td>
+                            <td class="p-3.5">
+                                <p class="text-xs font-extrabold text-slate-800">${o.buyerName}</p>
+                                <p class="text-[11px] font-semibold text-slate-600">Kelas ${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
+                                <p class="text-[10px] text-slate-400 font-medium">No. HP: ${o.buyerPhone}</p>
+                            </td>
+                            <td class="p-3.5">
+                                <p class="text-xs font-bold text-slate-700">${o.itemsSummary}</p>
+                                <div class="flex flex-wrap gap-1 mt-1">
+                                    ${(o.vouchers || []).map(v => `
+                                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed || isAllRedeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
+                                            ${v.voucherCode}
+                                        </span>
+                                    `).join('')}
+                                </div>
+                                ${o.paymentProof ? `
+                                    <button onclick="viewPaymentProof('${o.id}')" class="mt-2 text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-extrabold px-2 py-1 rounded-lg border border-blue-200 flex items-center gap-1 transition">
+                                        <i class="fa-solid fa-image text-blue-600"></i> Lihat Bukti Bayar
+                                    </button>
+                                ` : `
+                                    <span class="mt-1 block text-[10px] text-slate-400 italic">Tanpa Foto Bukti</span>
+                                `}
+                            </td>
+                            <td class="p-3.5 text-xs font-black text-emerald-600">${formatRupiah(o.totalAmount)}</td>
+                            <td class="p-3.5">
+                                <button onclick="togglePaymentStatus('${o.id}')" title="Klik untuk mengubah status pembayaran" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase cursor-pointer transition hover:scale-105 ${isUnpaid ? 'bg-red-100 text-red-700 border border-red-300 hover:bg-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'}">
+                                    <i class="fa-solid ${isUnpaid ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-check text-emerald-600'}"></i>
+                                    ${isUnpaid ? 'Belum Bayar' : 'Sudah Bayar'}
+                                </button>
+                            </td>
+                            <td class="p-3.5">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${isAllRedeemed ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-900'}">
+                                    ${isAllRedeemed ? 'Sudah Ditukar' : `${unredeemedCount} Belum Ditukar`}
+                                </span>
+                            </td>
+                            <td class="p-3.5 text-right">
+                                ${!isAllRedeemed ? `
+                                    <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 ml-auto shadow-xs">
+                                        <i class="fa-solid fa-check-double"></i> Serahkan Voucher
+                                    </button>
+                                ` : `
+                                    <span class="text-slate-400 text-xs font-bold flex items-center gap-1 justify-end"><i class="fa-solid fa-check text-emerald-500"></i> Selesai</span>
+                                `}
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
             }
         }
 
@@ -1606,7 +1702,7 @@ function getOrCreateSheet(ss, name) {
                 return;
             }
 
-            showToast('Menghubungkan ke Google Sheet...', 'info');
+            showToast('Menghubungkan Cloud...', 'info');
             fetch(webhookUrl)
                 .then(res => res.json())
                 .then(data => {
@@ -1635,13 +1731,13 @@ function getOrCreateSheet(ss, name) {
                             renderUserVouchers();
                         }
                         updateSyncStatus(true);
-                        showToast('Data berhasil disinkronisasi dari Cloud Spreadsheet!', 'success');
+                        showToast('Sync Cloud Berhasil! ☁️', 'success');
                     }
                 })
                 .catch(err => {
                     console.log('Cloud Sync Error:', err);
                     updateSyncStatus(false);
-                    showToast('Gagal menarik data dari Google Sheet (periksa Webhook URL)', 'error');
+                    showToast('Sync Cloud Gagal!', 'error');
                 });
         }
 
@@ -1683,13 +1779,15 @@ function getOrCreateSheet(ss, name) {
                 csvContent += `"${o.date}","${vCodes}","${cleanName}","'${o.buyerNisn || ''}","${cleanClass}","'${o.buyerPhone || ''}","${cleanItems}","${o.totalAmount}","${o.paymentStatus || 'Belum Bayar'}","${o.redeemStatus || 'Belum Ditukar'}"\n`;
             });
 
-            const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", url);
             link.setAttribute("download", `Laporan_Transaksi_Kantin_${Date.now()}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            URL.revokeObjectURL(url);
             showToast('Laporan berhasil diunduh sebagai file CSV/Excel!', 'success');
         }
 
@@ -1703,8 +1801,18 @@ function getOrCreateSheet(ss, name) {
 
         function copyAppsScriptCode() {
             const codeText = document.getElementById('apps-script-code-block')?.innerText || '';
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(codeText).then(() => {
+                    showToast('Kode Google Apps Script berhasil disalin!', 'success');
+                }).catch(() => fallbackCopyCode(codeText));
+            } else {
+                fallbackCopyCode(codeText);
+            }
+        }
+
+        function fallbackCopyCode(text) {
             const tempInput = document.createElement('textarea');
-            tempInput.value = codeText;
+            tempInput.value = text;
             document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand('copy');
