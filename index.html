@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kantin Spentig Makassar - Voucher Digital</title>
+    <title>Kantin SARAS Spentig Makassar - Voucher Digital</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -12,11 +12,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
         body { font-family: 'Inter', sans-serif; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        /* Remove spinner arrows from number inputs */
+        /* Hide spinner arrows from number inputs */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
             -webkit-appearance: none; 
@@ -34,7 +35,7 @@
                     🎟️
                 </div>
                 <div>
-                    <h1 class="font-black text-slate-800 text-sm sm:text-base leading-tight tracking-tight">Kantin Spentig Makassar</h1>
+                    <h1 class="font-black text-slate-800 text-sm sm:text-base leading-tight tracking-tight">Kantin SARAS Spentig Makassar</h1>
                     <p class="text-[10px] sm:text-xs text-slate-500 font-semibold flex items-center gap-1">
                         <i class="fa-solid fa-school text-emerald-600 text-[10px]"></i> UPT SPF SMP Negeri 3 Makassar
                     </p>
@@ -54,9 +55,10 @@
         </div>
     </header>
 
+    <!-- Student Navigation -->
     <nav id="siswa-nav" class="bg-white border-b border-slate-200 sticky top-[61px] z-30 shadow-xs">
-        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between text-xs sm:text-sm font-semibold">
-            <div class="flex gap-6 overflow-x-auto no-scrollbar">
+        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between text-xs sm:text-sm font-semibold gap-2">
+            <div class="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar">
                 <button onclick="switchTab('menu')" id="nav-btn-menu" class="py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-ticket"></i> Katalog Voucher Kantin
                 </button>
@@ -64,14 +66,15 @@
                     <i class="fa-solid fa-wallet"></i> Voucher Saya
                 </button>
             </div>
-            <button onclick="switchTab('cart')" id="nav-btn-cart" class="py-1.5 px-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl transition flex items-center gap-2 relative my-2 border border-emerald-200/60">
-                <i class="fa-solid fa-cart-shopping text-emerald-600"></i>
-                <span class="hidden sm:inline font-bold">Keranjang</span>
+            <button onclick="switchTab('cart')" id="nav-btn-cart" class="py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl transition flex items-center gap-2 my-2 border border-emerald-200/80 shrink-0 font-bold">
+                <i id="cart-icon" class="fa-solid fa-cart-shopping text-emerald-600 text-sm"></i>
+                <span class="hidden sm:inline">Keranjang</span>
                 <span id="cart-badge" class="bg-emerald-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full hidden">0</span>
             </button>
         </div>
     </nav>
 
+    <!-- Admin / Cashier Navigation -->
     <nav id="admin-nav" class="hidden bg-slate-900 text-slate-300 border-b border-slate-800 sticky top-[61px] z-30 shadow-md">
         <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
             <div class="flex gap-6 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar">
@@ -106,14 +109,10 @@
                         <i class="fa-solid fa-mobile-screen-button text-xs text-amber-400"></i> Bebas HP di Sekolah
                     </span>
                 </div>
-                <h2 class="font-black text-base sm:text-lg tracking-tight">Sistem Voucher Digital Kantin Spentig Makassar</h2>
+                <h2 class="font-black text-base sm:text-lg tracking-tight">Sistem Voucher Digital Kantin SARAS Spentig Makassar</h2>
                 <p class="text-xs text-slate-200/90 leading-relaxed max-w-2xl">
                     Orang tua/siswa memesan & bayar voucher fisik via QRIS dari rumah. Di sekolah, siswa cukup sebutkan <b>Nama Lengkap, NISN & Kelas</b> di meja Kasir untuk mengambil voucher fisiknya.
                 </p>
-            </div>
-            <div class="shrink-0 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/15 text-center text-xs font-bold space-y-0.5">
-                <span class="text-emerald-300 text-[10px] uppercase block tracking-wider font-extrabold">SMPN 3 MAKASSAR</span>
-                <span class="text-white text-sm font-black">VOUCHER FISIK</span>
             </div>
         </div>
 
@@ -145,7 +144,7 @@
                     <h2 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
                         <i class="fa-solid fa-cart-shopping text-emerald-600"></i> Keranjang Voucher Pembelian
                     </h2>
-                    <span class="text-xs text-slate-400 font-semibold">Spentig Kantin System</span>
+                    <span class="text-xs text-slate-400 font-semibold">Kantin SARAS Spentig System</span>
                 </div>
 
                 <div id="cart-empty-state" class="text-center py-10 text-slate-400 space-y-3">
@@ -244,9 +243,11 @@
                         <input type="text" id="admin-search-input" onkeyup="renderAdminTransactions()" placeholder="Ketik Nama Siswa, NISN, Kelas (misal VII.1), atau Kode Voucher..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 transition">
                     </div>
                     <select id="admin-status-filter" onchange="renderAdminTransactions()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 outline-none">
-                        <option value="all">Semua Status Penukaran</option>
-                        <option value="unredeemed">Belum Ditukar</option>
-                        <option value="redeemed">Sudah Ditukar</option>
+                        <option value="all">Semua Status (Tukar & Bayar)</option>
+                        <option value="unredeemed">Voucher Belum Ditukar</option>
+                        <option value="redeemed">Voucher Sudah Ditukar</option>
+                        <option value="unpaid">⚠️ Belum Bayar</option>
+                        <option value="paid">✅ Sudah Bayar</option>
                     </select>
                 </div>
 
@@ -260,6 +261,7 @@
                                 <th class="p-3.5">Siswa, NISN & Kelas</th>
                                 <th class="p-3.5">Rincian Voucher</th>
                                 <th class="p-3.5">Total</th>
+                                <th class="p-3.5">Status Pembayaran</th>
                                 <th class="p-3.5">Status Penukaran</th>
                                 <th class="p-3.5 text-right">Aksi Kasir</th>
                             </tr>
@@ -277,7 +279,7 @@
             <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200">
                 <div>
                     <h2 class="text-base font-extrabold text-slate-800">Kelola Stok Voucher Kantin</h2>
-                    <p class="text-xs text-slate-500">Atur ketersediaan dan jumlah stok voucher fisik sekolah</p>
+                    <p class="text-xs text-slate-500">Atur ketersediaan dan jumlah stok voucher fisik sekolah (Tersinkronisasi ke Google Sheet)</p>
                 </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-menu-grid">
@@ -293,52 +295,8 @@
                         <i class="fa-solid fa-gear"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-extrabold text-slate-800">Pengaturan Sistem Kasir</h2>
-                        <p class="text-xs text-slate-500">Kelola gambar QRIS resmi kantin, PIN keamanan, dan integrasi Google Sheet</p>
-                    </div>
-                </div>
-
-                <!-- Gambar QRIS -->
-                <div class="space-y-4 p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80">
-                    <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                        <i class="fa-solid fa-qrcode text-emerald-600"></i> Pengaturan Gambar QRIS Kantin
-                    </h3>
-                    <div class="flex flex-col sm:flex-row gap-4 items-center">
-                        <div class="w-32 h-32 bg-white rounded-2xl border-2 border-dashed border-slate-300 p-2 shrink-0 flex items-center justify-center shadow-xs">
-                            <img id="qris-settings-preview" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360" class="w-full h-full object-contain">
-                        </div>
-                        <div class="space-y-3 flex-1 w-full text-xs">
-                            <div>
-                                <label class="block font-bold text-slate-700 mb-1">Unggah File Foto QRIS Bank / E-Wallet</label>
-                                <input type="file" id="qris-file-input" onchange="handleQrisUpload(event)" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer">
-                            </div>
-                            <div class="pt-2 border-t border-slate-200">
-                                <label class="block font-bold text-slate-700 mb-1">Atau Tempel URL Gambar QRIS</label>
-                                <div class="flex gap-2">
-                                    <input type="url" id="qris-url-input" placeholder="https://..." class="flex-1 px-3.5 py-2 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500">
-                                    <button onclick="saveQrisUrl()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl font-bold text-xs shrink-0 transition">Simpan URL</button>
-                                </div>
-                            </div>
-                            <button onclick="resetQrisImage()" class="text-slate-500 hover:text-red-600 text-[11px] font-bold underline transition">
-                                <i class="fa-solid fa-rotate-left"></i> Kembalikan QRIS Default
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Security PIN Kasir -->
-                <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3">
-                    <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                        <i class="fa-solid fa-shield-halved text-amber-600"></i> Ganti PIN Keamanan Kasir
-                    </h3>
-                    <div class="flex flex-col sm:flex-row gap-3 items-end">
-                        <div class="flex-1 w-full">
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Masukkan PIN Baru (Minimal 4 Angka)</label>
-                            <input type="password" id="new-admin-pin" maxlength="6" placeholder="Misal: 3333" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-amber-500">
-                        </div>
-                        <button onclick="changeAdminPin()" class="bg-slate-900 hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold text-xs shrink-0 w-full sm:w-auto transition">
-                            Simpan PIN Baru
-                        </button>
+                        <h2 class="text-base font-extrabold text-slate-800">Pengaturan Kasir & Google Sheet</h2>
+                        <p class="text-xs text-slate-500">Sinkronisasi data terpusat dari Google Apps Script</p>
                     </div>
                 </div>
 
@@ -346,28 +304,21 @@
                 <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3">
                     <div class="flex items-center justify-between">
                         <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                            <i class="fa-solid fa-database text-emerald-600"></i> Database Terpusat Google Spreadsheet
+                            <i class="fa-solid fa-database text-emerald-600"></i> Database Terpusat Google Apps Script
                         </h3>
                         <span id="cloud-sync-status" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600">
                             <i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)
                         </span>
                     </div>
                     <p class="text-xs text-slate-500 leading-relaxed">
-                        Semua Pengaturan Kasir (QRIS, PIN, Stok) dan Data Transaksi tersimpan secara terpusat di Google Sheet sekolah agar tersinkronisasi di semua perangkat.
+                        URL Webhook telah dikunci secara terpusat di dalam kodingan (variabel <code>DEFAULT_WEBHOOK_URL</code>).
                     </p>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">Apps Script Webhook URL</label>
-                        <input type="url" id="sheet-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500">
-                    </div>
                     <div class="flex flex-wrap gap-2 pt-1">
-                        <button onclick="saveSpreadsheetConfig()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs transition">
-                            <i class="fa-solid fa-floppy-disk mr-1"></i> Simpan & Hubungkan
-                        </button>
                         <button onclick="syncDataFromCloud()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition">
                             <i class="fa-solid fa-rotate mr-1"></i> Tarik Data Terbaru
                         </button>
                         <button onclick="openScriptGuideModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-2.5 rounded-xl font-bold text-xs border border-amber-300 transition">
-                            <i class="fa-solid fa-code mr-1"></i> Kode Google Apps Script
+                            <i class="fa-solid fa-code mr-1"></i> Panduan Kode Google Apps Script
                         </button>
                     </div>
                 </div>
@@ -376,54 +327,54 @@
 
     </main>
 
-    <!-- MODAL: QRIS CHECKOUT -->
+    <!-- MODAL: LARGE QRIS CHECKOUT -->
     <div id="modal-qris" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-4 border border-slate-100 text-center relative animate-in fade-in zoom-in duration-200">
-            <button onclick="closeQrisModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
-                <i class="fa-solid fa-xmark text-lg"></i>
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5 border border-slate-100 text-center relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeQrisModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-2">
+                <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             
             <div class="space-y-1">
-                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">QRIS Statis Kantin</span>
-                <h3 class="text-base font-extrabold text-slate-800">Scan & Bayar Sekarang</h3>
+                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider">QRIS Statis Kantin</span>
+                <h3 class="text-lg font-extrabold text-slate-800">Scan & Bayar Sekarang</h3>
                 <p class="text-xs text-slate-500">Gunakan GoPay, OVO, DANA, ShopeePay, atau M-Banking</p>
             </div>
 
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
-                <div class="w-48 h-48 bg-white mx-auto rounded-2xl border border-slate-200 p-2 shadow-inner flex items-center justify-center">
-                    <img id="qris-modal-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360" alt="QRIS Kantin" class="w-full h-full object-contain">
+            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200/80 space-y-3">
+                <div class="w-64 h-64 sm:w-72 sm:h-72 bg-white mx-auto rounded-2xl border border-slate-200 p-3 shadow-inner flex items-center justify-center">
+                    <img id="qris-modal-img" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360" alt="QRIS Kantin" class="w-full h-full object-contain">
                 </div>
                 <div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Total Tagihan</p>
-                    <p class="text-xl font-black text-emerald-600" id="qris-modal-total">Rp 0</p>
+                    <p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Tagihan</p>
+                    <p class="text-2xl sm:text-3xl font-black text-emerald-600" id="qris-modal-total">Rp 0</p>
                 </div>
             </div>
 
-            <div class="bg-amber-50 p-3.5 rounded-2xl border border-amber-200 text-left space-y-1">
-                <p class="text-[11px] font-extrabold text-amber-900 flex items-center gap-1.5">
+            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-left space-y-1.5">
+                <p class="text-xs font-extrabold text-amber-900 flex items-center gap-1.5">
                     <i class="fa-solid fa-circle-info text-amber-600"></i> Cara Pembayaran:
                 </p>
-                <ol class="text-[10px] text-amber-800 font-medium space-y-0.5 list-decimal list-inside leading-relaxed">
+                <ol class="text-xs text-amber-800 font-medium space-y-1 list-decimal list-inside leading-relaxed">
                     <li>Buka aplikasi E-Wallet / Mobile Banking Anda</li>
                     <li>Scan Kode QRIS di atas dan ketik nominal <b id="qris-modal-total-text">Rp 0</b></li>
                     <li>Setelah bayar, unggah foto bukti bayar (opsional) lalu klik konfirmasi</li>
                 </ol>
             </div>
 
-            <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-left space-y-2">
-                <label class="block text-[11px] font-extrabold text-slate-700 flex items-center justify-between">
+            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-left space-y-2">
+                <label class="block text-xs font-extrabold text-slate-700 flex items-center justify-between">
                     <span><i class="fa-solid fa-receipt text-emerald-600 mr-1"></i> Unggah Bukti Pembayaran</span>
-                    <span class="text-[9px] text-slate-400 font-normal">Foto / Screenshot</span>
+                    <span class="text-[10px] text-slate-400 font-normal">Foto / Screenshot</span>
                 </label>
-                <input type="file" id="payment-proof-input" accept="image/*" onchange="handleProofUpload(event)" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[11px] file:font-bold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200 cursor-pointer">
-                <div id="proof-preview-container" class="hidden relative mt-2 rounded-xl border border-slate-300 overflow-hidden bg-slate-100 max-h-36 flex items-center justify-center p-1">
-                    <img id="payment-proof-preview-img" src="" class="max-h-32 object-contain rounded-lg">
-                    <button type="button" onclick="removeProofImage()" class="absolute top-1 right-1 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow-md"><i class="fa-solid fa-xmark"></i></button>
+                <input type="file" id="payment-proof-input" accept="image/*" onchange="handleProofUpload(event)" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200 cursor-pointer">
+                <div id="proof-preview-container" class="hidden relative mt-2 rounded-xl border border-slate-300 overflow-hidden bg-slate-100 max-h-40 flex items-center justify-center p-1">
+                    <img id="payment-proof-preview-img" src="" class="max-h-36 object-contain rounded-lg">
+                    <button type="button" onclick="removeProofImage()" class="absolute top-2 right-2 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-md"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
 
-            <button onclick="confirmCheckoutOrder(event)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-extrabold text-xs shadow-md shadow-emerald-200 flex items-center justify-center gap-2 transition">
-                <i class="fa-solid fa-circle-check text-sm"></i> Saya Sudah Bayar
+            <button onclick="confirmCheckoutOrder(event)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-200 flex items-center justify-center gap-2 transition">
+                <i class="fa-solid fa-circle-check text-base"></i> Saya Sudah Bayar
             </button>
         </div>
     </div>
@@ -463,9 +414,9 @@
             </button>
             
             <div class="space-y-1">
-                <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Panduan Setup Database</span>
-                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (Database 2-Arah)</h3>
-                <p class="text-xs text-slate-500">Salin kode ini ke Google Sheet: <b>Ekstensi &gt; Apps Script</b>, lalu Deploy sebagai <b>Web App (Akses: Anyone)</b>.</p>
+                <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Setup Manual Script</span>
+                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (Crash-Proof & Auto-Sync)</h3>
+                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. Atur QRIS & PIN, lalu Deploy sebagai <b>Web App (Akses: Anyone)</b>.</p>
             </div>
 
             <div class="bg-slate-900 text-slate-100 p-4 rounded-2xl text-[11px] font-mono overflow-x-auto relative">
@@ -475,39 +426,85 @@
                 <pre id="apps-script-code-block" class="whitespace-pre-wrap leading-relaxed">
 function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var sheetConfig = getOrCreateSheet(ss, "CONFIG");
-  var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
-  
-  var config = {};
-  var configData = sheetConfig.getDataRange().getValues();
-  for (var i = 1; i < configData.length; i++) {
-    if (configData[i][0]) config[configData[i][0]] = configData[i][1];
+
+  // ===================================================
+  // PENGATURAN MANUAL KANTIN (EDIT DI SINI)
+  // ===================================================
+  var MANUAL_CONFIG = {
+    qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360",
+    adminPin: "3333"
+  };
+  // ===================================================
+
+  // 1. Ambil/Inisialisasi Stok dari Sheet "STOK"
+  var sheetStok = getOrCreateSheet(ss, "STOK");
+  var stokData = sheetStok.getDataRange().getDisplayValues();
+  var menuItems = [];
+
+  if (stokData.length <= 1) {
+    // Inisialisasi default jika sheet STOK masih kosong
+    var defaultItems = [
+      { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
+      { id: 'v2000', name: 'Voucher Nominal Rp 2.000', price: 2000, stock: 100, icon: '🎟️' },
+      { id: 'v3000', name: 'Voucher Nominal Rp 3.000', price: 3000, stock: 100, icon: '🎟️' },
+      { id: 'v5000', name: 'Voucher Nominal Rp 5.000', price: 5000, stock: 100, icon: '🎟️' },
+      { id: 'v10000', name: 'Voucher Nominal Rp 10.000', price: 10000, stock: 100, icon: '🎟️' }
+    ];
+    sheetStok.clearContents();
+    sheetStok.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
+    defaultItems.forEach(function(item) {
+      sheetStok.appendRow([item.id, item.name, item.price, item.stock, item.icon]);
+    });
+    menuItems = defaultItems;
+  } else {
+    for (var i = 1; i < stokData.length; i++) {
+      if (stokData[i][0]) {
+        menuItems.push({
+          id: String(stokData[i][0]),
+          name: String(stokData[i][1]),
+          price: Number(stokData[i][2]),
+          stock: Number(stokData[i][3]),
+          icon: String(stokData[i][4] || '🎟️')
+        });
+      }
+    }
   }
-  
+
+  // 2. Ambil Transaksi dari Sheet "TRANSAKSI"
+  var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
   var orders = [];
-  var ordersData = sheetOrders.getDataRange().getValues();
+  var ordersData = sheetOrders.getDataRange().getDisplayValues();
+
   for (var j = 1; j < ordersData.length; j++) {
     if (ordersData[j][0]) {
+      var parsedVouchers = [];
+      try {
+        parsedVouchers = JSON.parse(ordersData[j][11] || '[]');
+      } catch (err) {
+        parsedVouchers = [];
+      }
+
       orders.push({
-        id: ordersData[j][0],
-        date: ordersData[j][1],
-        buyerName: ordersData[j][2],
-        buyerNisn: ordersData[j][3],
-        buyerClass: ordersData[j][4],
-        buyerPhone: ordersData[j][5],
-        itemsSummary: ordersData[j][6],
+        id: String(ordersData[j][0]),
+        date: String(ordersData[j][1]),
+        buyerName: String(ordersData[j][2]),
+        buyerNisn: String(ordersData[j][3]),
+        buyerClass: String(ordersData[j][4]),
+        buyerPhone: String(ordersData[j][5]),
+        itemsSummary: String(ordersData[j][6]),
         totalAmount: Number(ordersData[j][7]),
-        paymentStatus: ordersData[j][8],
-        redeemStatus: ordersData[j][9],
-        vouchers: JSON.parse(ordersData[j][10] || '[]')
+        paymentStatus: String(ordersData[j][8]),
+        redeemStatus: String(ordersData[j][9]),
+        paymentProof: String(ordersData[j][10] || ''),
+        vouchers: parsedVouchers
       });
     }
   }
-  
+
   return ContentService.createTextOutput(JSON.stringify({
-    qrisUrl: config.qrisUrl || '',
-    adminPin: String(config.adminPin || '3333'),
-    menuItems: JSON.parse(config.menuItems || '[]'),
+    qrisUrl: MANUAL_CONFIG.qrisUrl,
+    adminPin: MANUAL_CONFIG.adminPin,
+    menuItems: menuItems,
     orders: orders
   })).setMimeType(ContentService.MimeType.JSON);
 }
@@ -516,42 +513,75 @@ function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    
-    if (data.action === "update_config") {
-      var sheetConfig = getOrCreateSheet(ss, "CONFIG");
-      if (data.qrisUrl !== undefined) setConfigValue(sheetConfig, "qrisUrl", data.qrisUrl);
-      if (data.adminPin !== undefined) setConfigValue(sheetConfig, "adminPin", String(data.adminPin));
-      if (data.menuItems !== undefined) setConfigValue(sheetConfig, "menuItems", JSON.stringify(data.menuItems));
-      return ContentService.createTextOutput("Config Saved");
-    } 
 
+    // Action: Update Transaksi Keseluruhan
     if (data.action === "update_orders") {
       var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
-      sheetOrders.clearContents();
-      sheetOrders.appendRow(["ORDER_ID", "TANGGAL", "NAMA_SISWA", "NISN", "KELAS", "NO_HP", "ITEMS", "TOTAL", "STATUS_BAYAR", "STATUS_TUKAR", "VOUCHERS_JSON"]);
+      clearSheetDataRows(sheetOrders);
       if (data.orders && Array.isArray(data.orders)) {
         data.orders.forEach(function(o) {
           sheetOrders.appendRow([
             o.id, o.date, o.buyerName, o.buyerNisn, o.buyerClass,
             o.buyerPhone, o.itemsSummary, o.totalAmount,
-            o.paymentStatus, o.redeemStatus, JSON.stringify(o.vouchers || [])
+            o.paymentStatus, o.redeemStatus, o.paymentProof || '', JSON.stringify(o.vouchers || [])
           ]);
         });
       }
       return ContentService.createTextOutput("Orders Updated");
     }
-    
-    // Default: New Single Transaction
-    var sheetOrdersDefault = getOrCreateSheet(ss, "TRANSAKSI");
-    sheetOrdersDefault.appendRow([
+
+    // Action: Update Stok Keseluruhan
+    if (data.action === "update_stock") {
+      var sheetStok = getOrCreateSheet(ss, "STOK");
+      clearSheetDataRows(sheetStok);
+      if (data.menuItems && Array.isArray(data.menuItems)) {
+        data.menuItems.forEach(function(m) {
+          sheetStok.appendRow([m.id, m.name, m.price, m.stock, m.icon || '🎟️']);
+        });
+      }
+      return ContentService.createTextOutput("Stock Updated");
+    }
+
+    // Default Action: Tambah Transaksi Baru & Kurangi Stok Otomatis
+    var sheetDefault = getOrCreateSheet(ss, "TRANSAKSI");
+    sheetDefault.appendRow([
       data.id, data.date, data.buyerName, data.buyerNisn, data.buyerClass, 
       data.buyerPhone, data.itemsSummary, data.totalAmount, 
-      data.paymentStatus, data.redeemStatus, JSON.stringify(data.vouchers || [])
+      data.paymentStatus, data.redeemStatus, data.paymentProof || '', JSON.stringify(data.vouchers || [])
     ]);
-    
-    return ContentService.createTextOutput("Order Saved");
+
+    // Update stok jika ada
+    if (data.vouchers && Array.isArray(data.vouchers)) {
+      var sheetStok = getOrCreateSheet(ss, "STOK");
+      var stokData = sheetStok.getDataRange().getDisplayValues();
+      
+      var usage = {};
+      data.vouchers.forEach(function(v) {
+        var nominal = v.nominal;
+        var itemId = 'v' + nominal;
+        usage[itemId] = (usage[itemId] || 0) + 1;
+      });
+
+      for (var i = 1; i < stokData.length; i++) {
+        var currentId = String(stokData[i][0]);
+        if (usage[currentId]) {
+          var currentStock = Number(stokData[i][3]);
+          var newStock = Math.max(0, currentStock - usage[currentId]);
+          sheetStok.getRange(i + 1, 4).setValue(newStock);
+        }
+      }
+    }
+
+    return ContentService.createTextOutput("Order Saved & Stock Deducted");
   } catch(err) {
     return ContentService.createTextOutput("Error: " + err.toString());
+  }
+}
+
+function clearSheetDataRows(sheet) {
+  var lastRow = sheet.getLastRow();
+  if (lastRow > 1) {
+    sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
   }
 }
 
@@ -559,24 +589,13 @@ function getOrCreateSheet(ss, name) {
   var sheet = ss.getSheetByName(name);
   if (!sheet) {
     sheet = ss.insertSheet(name);
-    if (name === "CONFIG") {
-      sheet.appendRow(["KEY", "VALUE"]);
-    } else if (name === "TRANSAKSI") {
-      sheet.appendRow(["ORDER_ID", "TANGGAL", "NAMA_SISWA", "NISN", "KELAS", "NO_HP", "ITEMS", "TOTAL", "STATUS_BAYAR", "STATUS_TUKAR", "VOUCHERS_JSON"]);
+    if (name === "TRANSAKSI") {
+      sheet.appendRow(["ORDER_ID", "TANGGAL", "NAMA_SISWA", "NISN", "KELAS", "NO_HP", "ITEMS", "TOTAL", "STATUS_BAYAR", "STATUS_TUKAR", "BUKTI_PEMBAYARAN", "VOUCHERS_JSON"]);
+    } else if (name === "STOK") {
+      sheet.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
     }
   }
   return sheet;
-}
-
-function setConfigValue(sheet, key, value) {
-  var data = sheet.getDataRange().getValues();
-  for (var i = 1; i < data.length; i++) {
-    if (data[i][0] === key) {
-      sheet.getRange(i + 1, 2).setValue(value);
-      return;
-    }
-  }
-  sheet.appendRow([key, value]);
 }
                 </pre>
             </div>
@@ -604,15 +623,23 @@ function setConfigValue(sheet, key, value) {
                 <img id="proof-modal-img" src="" alt="Bukti Transfer" class="max-w-full rounded-xl object-contain shadow-xs">
             </div>
 
-            <button onclick="closeViewProofModal()" class="w-full bg-slate-900 hover:bg-black text-white py-3 rounded-2xl font-extrabold text-xs transition">
-                Tutup
-            </button>
+            <div id="proof-modal-actions" class="flex gap-2">
+                <button id="proof-modal-confirm-btn" onclick="" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-circle-check"></i> Konfirmasi Sudah Bayar
+                </button>
+                <button onclick="closeViewProofModal()" class="flex-1 bg-slate-900 hover:bg-black text-white py-3 rounded-2xl font-extrabold text-xs transition">
+                    Tutup
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- GLOBAL STATE VARIABLES ---
-        const DEFAULT_WEBHOOK_URL = ""; 
+        // =========================================================================
+        // 🛠️ PENGATURAN MANUAL WEBHOOK URL GOOGLE APPS SCRIPT
+        // Tempelkan URL Webhook hasil Deploy Google Apps Script Anda di bawah ini:
+        // =========================================================================
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbznkglSA8yyW3Bud025e7ckoZCUp8t0ZLX_f-dTz6ur1xsZwKaNfdK750rrE-4FyhB0/exec"; 
         
         let menuItems = [
             { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
@@ -629,7 +656,7 @@ function setConfigValue(sheet, key, value) {
         let currentCategoryFilter = 'all';
         let adminPin = String(localStorage.getItem('kantin_admin_pin') || '3333').trim();
         let isAdminUnlocked = false;
-        let webhookUrl = localStorage.getItem('kantin_sheet_webhook') || DEFAULT_WEBHOOK_URL;
+        let webhookUrl = DEFAULT_WEBHOOK_URL;
         let currentProofDataUrl = '';
 
         try {
@@ -645,7 +672,6 @@ function setConfigValue(sheet, key, value) {
             console.error('Local Storage load error:', e);
         }
 
-        // --- HELPER UTILITY FUNCTIONS ---
         function formatRupiah(amount) {
             return 'Rp ' + (amount || 0).toLocaleString('id-ID');
         }
@@ -777,7 +803,7 @@ function setConfigValue(sheet, key, value) {
             const adminNav = document.getElementById('admin-nav');
 
             if (role === 'siswa') {
-                closeModal('modal-admin-pin');
+                closeAdminPinModal();
                 if (siswaBtn) siswaBtn.className = 'px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5';
                 if (adminBtn) adminBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5';
                 if (siswaNav) siswaNav.classList.remove('hidden');
@@ -821,7 +847,6 @@ function setConfigValue(sheet, key, value) {
             const pinInput = document.getElementById('input-admin-pin');
             if (pinInput) pinInput.value = '';
 
-            // Force visual toggle back to Siswa / Ortu
             currentRole = 'siswa';
             const siswaBtn = document.getElementById('role-siswa-btn');
             const adminBtn = document.getElementById('role-admin-btn');
@@ -875,27 +900,34 @@ function setConfigValue(sheet, key, value) {
         function switchTab(tab) {
             hideAllViews();
             
-            ['nav-btn-menu', 'nav-btn-vouchers', 'nav-btn-cart'].forEach(id => {
+            ['nav-btn-menu', 'nav-btn-vouchers'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
                     btn.className = 'py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap';
                 }
             });
 
+            const cartBtn = document.getElementById('nav-btn-cart');
+            const cartIcon = document.getElementById('cart-icon');
+
             if (tab === 'menu') {
                 document.getElementById('view-menu')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('nav-btn-menu');
                 if (activeBtn) activeBtn.className = 'py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap';
+                if (cartBtn) cartBtn.className = 'py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold rounded-xl transition flex items-center gap-2 my-2 border border-emerald-200/80 shrink-0';
+                if (cartIcon) cartIcon.className = 'fa-solid fa-cart-shopping text-emerald-600 text-sm';
                 renderMenu();
             } else if (tab === 'cart') {
                 document.getElementById('view-cart')?.classList.remove('hidden');
-                const activeBtn = document.getElementById('nav-btn-cart');
-                if (activeBtn) activeBtn.className = 'py-1.5 px-3.5 bg-emerald-100 text-emerald-800 font-bold rounded-xl flex items-center gap-2 relative my-2 border border-emerald-300';
+                if (cartBtn) cartBtn.className = 'py-1.5 px-3 bg-emerald-600 text-white font-bold rounded-xl transition flex items-center gap-2 my-2 border border-emerald-600 shadow-md shadow-emerald-200 shrink-0';
+                if (cartIcon) cartIcon.className = 'fa-solid fa-cart-shopping text-white text-sm';
                 renderCart();
             } else if (tab === 'vouchers') {
                 document.getElementById('view-vouchers')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('nav-btn-vouchers');
                 if (activeBtn) activeBtn.className = 'py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap';
+                if (cartBtn) cartBtn.className = 'py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold rounded-xl transition flex items-center gap-2 my-2 border border-emerald-200/80 shrink-0';
+                if (cartIcon) cartIcon.className = 'fa-solid fa-cart-shopping text-emerald-600 text-sm';
                 renderUserVouchers();
             }
         }
@@ -922,8 +954,6 @@ function setConfigValue(sheet, key, value) {
                 document.getElementById('view-admin-settings')?.classList.remove('hidden');
                 const btn = document.getElementById('admin-nav-btn-settings');
                 if (btn) btn.className = 'py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
-                const webhookInput = document.getElementById('sheet-webhook-url');
-                if (webhookInput) webhookInput.value = webhookUrl || '';
             }
         }
 
@@ -963,7 +993,7 @@ function setConfigValue(sheet, key, value) {
                             </span>
                         </div>
                         <div>
-                            <span class="text-[10px] font-extrabold uppercase ${theme.textSub} tracking-wider">Kantin Spentig</span>
+                            <span class="text-[10px] font-extrabold uppercase ${theme.textSub} tracking-wider">Kantin SARAS Spentig</span>
                             <h3 class="font-extrabold ${theme.textTitle} text-base leading-snug">${item.name}</h3>
                         </div>
                         <p class="text-2xl font-black text-blue-700">${formatRupiah(item.price)}</p>
@@ -1119,13 +1149,35 @@ function setConfigValue(sheet, key, value) {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    currentProofDataUrl = e.target.result;
-                    const previewImg = document.getElementById('payment-proof-preview-img');
-                    const previewContainer = document.getElementById('proof-preview-container');
-                    if (previewImg && previewContainer) {
-                        previewImg.src = currentProofDataUrl;
-                        previewContainer.classList.remove('hidden');
-                    }
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const maxDim = 600;
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > maxDim || h > maxDim) {
+                            if (w > h) {
+                                h = Math.round((h * maxDim) / w);
+                                w = maxDim;
+                            } else {
+                                w = Math.round((w * maxDim) / h);
+                                h = maxDim;
+                            }
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        currentProofDataUrl = canvas.toDataURL('image/jpeg', 0.6);
+
+                        const previewImg = document.getElementById('payment-proof-preview-img');
+                        const previewContainer = document.getElementById('proof-preview-container');
+                        if (previewImg && previewContainer) {
+                            previewImg.src = currentProofDataUrl;
+                            previewContainer.classList.remove('hidden');
+                        }
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -1179,7 +1231,7 @@ function setConfigValue(sheet, key, value) {
                 buyerPhone: phone,
                 itemsSummary: itemsSummary,
                 totalAmount: totalAmount,
-                paymentStatus: 'Terbayar (QRIS)',
+                paymentStatus: 'Belum Bayar',
                 redeemStatus: 'Belum Ditukar',
                 paymentProof: currentProofDataUrl || '',
                 vouchers: generatedVouchers
@@ -1190,25 +1242,55 @@ function setConfigValue(sheet, key, value) {
                 myOrderIds.unshift(orderId);
             }
 
-            // Sync Webhook
+            // Sync ke Google Sheets
             sendToGoogleSheets(newOrder);
 
             cart = [];
             saveData();
             closeQrisModal();
 
-            showToast('Pembayaran Berhasil! Voucher Anda telah diterbitkan.', 'success');
+            showToast('Pesanan berhasil dibuat! Menunggu verifikasi pembayaran oleh Kasir.', 'success');
             switchTab('vouchers');
         }
 
         function sendToGoogleSheets(orderData) {
-            if (!webhookUrl) return;
+            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) return;
             fetch(webhookUrl, {
                 method: 'POST',
                 mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
-            }).catch(err => console.log('Spreadsheet sync:', err));
+            }).catch(err => console.log('Spreadsheet sync error:', err));
+        }
+
+        function syncStockToCloud() {
+            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) return;
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'update_stock',
+                    menuItems: menuItems
+                })
+            }).catch(err => console.log('Stock Cloud Push Error:', err));
+        }
+
+        function togglePaymentStatus(orderId) {
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            if (orderIndex === -1) return;
+
+            const currentStatus = orders[orderIndex].paymentStatus;
+            const newStatus = (currentStatus === 'Belum Bayar') ? 'Sudah Bayar' : 'Belum Bayar';
+            
+            orders[orderIndex].paymentStatus = newStatus;
+
+            saveData();
+            syncOrdersToCloud();
+            renderAdminTransactions();
+            renderUserVouchers();
+
+            showToast(`Status pembayaran ${orders[orderIndex].buyerName} diubah menjadi "${newStatus}"`, 'info');
         }
 
         function renderUserVouchers() {
@@ -1226,7 +1308,9 @@ function setConfigValue(sheet, key, value) {
                             ...v,
                             buyerName: order.buyerName,
                             buyerNisn: order.buyerNisn,
-                            buyerClass: order.buyerClass
+                            buyerClass: order.buyerClass,
+                            paymentStatus: order.paymentStatus || 'Sudah Bayar',
+                            orderRedeemStatus: order.redeemStatus
                         });
                     });
                 }
@@ -1241,19 +1325,28 @@ function setConfigValue(sheet, key, value) {
             if (emptyState) emptyState.classList.add('hidden');
 
             grid.innerHTML = allVouchers.map(v => {
+                const isRedeemed = v.redeemed || v.orderRedeemStatus === 'Sudah Ditukar';
+                const isUnpaid = v.paymentStatus === 'Belum Bayar';
                 const theme = getVoucherTheme(v.nominal);
                 return `
-                <div class="${theme.bgCard} rounded-3xl border-2 ${v.redeemed ? 'border-slate-300 opacity-60' : theme.borderCard + ' shadow-lg'} p-4 relative overflow-hidden transition-all duration-200">
+                <div class="${theme.bgCard} rounded-3xl border-2 ${isRedeemed ? 'border-slate-300 opacity-60' : theme.borderCard + ' shadow-lg'} p-4 relative overflow-hidden transition-all duration-200">
                     <div class="${theme.bgInner} rounded-2xl p-3 border ${theme.borderInner} space-y-3">
                         
                         <div class="flex justify-between items-start border-b ${theme.borderInner} pb-2">
                             <div>
-                                <p class="text-[9px] font-black uppercase tracking-wider ${theme.textSub}">KANTIN VOUCHER</p>
+                                <p class="text-[9px] font-black uppercase tracking-wider ${theme.textSub}">KANTIN SARAS VOUCHER</p>
                                 <p class="text-[11px] font-black ${theme.textTitle} uppercase">VOUCHER BELANJA</p>
                             </div>
-                            <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${v.redeemed ? 'bg-slate-300 text-slate-700' : 'bg-emerald-600 text-white shadow-xs'}">
-                                ${v.redeemed ? 'Sudah Ditukar' : 'Siap Ditukar'}
-                            </span>
+                            <div class="flex flex-col items-end gap-1">
+                                <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${isRedeemed ? 'bg-slate-300 text-slate-700' : 'bg-emerald-600 text-white shadow-xs'}">
+                                    ${isRedeemed ? 'Sudah Ditukar' : 'Siap Ditukar'}
+                                </span>
+                                ${isUnpaid ? `
+                                    <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase bg-red-100 text-red-700 border border-red-300">
+                                        Belum Bayar
+                                    </span>
+                                ` : ''}
+                            </div>
                         </div>
 
                         <div class="flex items-center justify-between gap-2">
@@ -1272,9 +1365,8 @@ function setConfigValue(sheet, key, value) {
                             </div>
                         </div>
 
-                        <div class="pt-2 border-t ${theme.borderInner} flex justify-between items-center text-[9px] font-extrabold ${theme.textSub}">
-                            <span>Expired: 18 JULI 2029</span>
-                            <span>SPENTIG MAKASSAR</span>
+                        <div class="pt-2 border-t ${theme.borderInner} flex justify-end items-center text-[9px] font-extrabold ${theme.textSub}">
+                            <span>KANTIN SARAS SPENTIG</span>
                         </div>
                     </div>
                     <div class="text-center mt-2">
@@ -1305,19 +1397,24 @@ function setConfigValue(sheet, key, value) {
             }
 
             if (filter === 'unredeemed') {
-                filteredOrders = filteredOrders.filter(o => o.vouchers && o.vouchers.some(v => !v.redeemed));
+                filteredOrders = filteredOrders.filter(o => o.redeemStatus !== 'Sudah Ditukar' && o.vouchers && o.vouchers.some(v => !v.redeemed));
             } else if (filter === 'redeemed') {
-                filteredOrders = filteredOrders.filter(o => o.vouchers && o.vouchers.every(v => v.redeemed));
+                filteredOrders = filteredOrders.filter(o => o.redeemStatus === 'Sudah Ditukar' || (o.vouchers && o.vouchers.every(v => v.redeemed)));
+            } else if (filter === 'unpaid') {
+                filteredOrders = filteredOrders.filter(o => o.paymentStatus === 'Belum Bayar');
+            } else if (filter === 'paid') {
+                filteredOrders = filteredOrders.filter(o => o.paymentStatus !== 'Belum Bayar');
             }
 
             if (filteredOrders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filteredOrders.map((o, idx) => {
+                const isAllRedeemed = o.redeemStatus === 'Sudah Ditukar' || (o.vouchers ? o.vouchers.every(v => v.redeemed) : false);
                 const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
-                const isAllRedeemed = unredeemedCount === 0;
+                const isUnpaid = o.paymentStatus === 'Belum Bayar';
 
                 return `
                     <tr class="hover:bg-slate-50/80 transition">
@@ -1332,7 +1429,7 @@ function setConfigValue(sheet, key, value) {
                             <p class="text-xs font-bold text-slate-700">${o.itemsSummary}</p>
                             <div class="flex flex-wrap gap-1 mt-1">
                                 ${(o.vouchers || []).map(v => `
-                                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
+                                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed || isAllRedeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
                                         ${v.voucherCode}
                                     </span>
                                 `).join('')}
@@ -1347,13 +1444,19 @@ function setConfigValue(sheet, key, value) {
                         </td>
                         <td class="p-3.5 text-xs font-black text-emerald-600">${formatRupiah(o.totalAmount)}</td>
                         <td class="p-3.5">
+                            <button onclick="togglePaymentStatus('${o.id}')" title="Klik untuk mengubah status pembayaran" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase cursor-pointer transition hover:scale-105 ${isUnpaid ? 'bg-red-100 text-red-700 border border-red-300 hover:bg-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'}">
+                                <i class="fa-solid ${isUnpaid ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-check text-emerald-600'}"></i>
+                                ${isUnpaid ? 'Belum Bayar' : 'Sudah Bayar'}
+                            </button>
+                        </td>
+                        <td class="p-3.5">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${isAllRedeemed ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-900'}">
                                 ${isAllRedeemed ? 'Sudah Ditukar' : `${unredeemedCount} Belum Ditukar`}
                             </span>
                         </td>
                         <td class="p-3.5 text-right">
                             ${!isAllRedeemed ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 ml-auto shadow-xs">
+                                <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 ml-auto shadow-xs">
                                     <i class="fa-solid fa-check-double"></i> Serahkan Voucher
                                 </button>
                             ` : `
@@ -1372,10 +1475,23 @@ function setConfigValue(sheet, key, value) {
             const modalTitle = document.getElementById('proof-modal-title');
             const modalSubtitle = document.getElementById('proof-modal-subtitle');
             const modalImg = document.getElementById('proof-modal-img');
+            const confirmBtn = document.getElementById('proof-modal-confirm-btn');
 
             if (modalTitle) modalTitle.innerText = `Bukti Pembayaran: ${order.buyerName}`;
             if (modalSubtitle) modalSubtitle.innerText = `Kelas ${order.buyerClass} • ${order.date} • ${formatRupiah(order.totalAmount)}`;
-            if (modalImg) modalImg.src = order.paymentProof;
+            if (modalImg) modalImg.src = order.paymentProof; 
+
+            if (confirmBtn) {
+                if (order.paymentStatus === 'Belum Bayar') {
+                    confirmBtn.style.display = 'flex';
+                    confirmBtn.onclick = function() {
+                        togglePaymentStatus(orderId);
+                        closeViewProofModal();
+                    };
+                } else {
+                    confirmBtn.style.display = 'none';
+                }
+            }
 
             openModal('modal-view-proof');
         }
@@ -1385,18 +1501,24 @@ function setConfigValue(sheet, key, value) {
         }
 
         function processRedeemVoucher(orderId) {
-            const order = orders.find(o => o.id === orderId);
-            if (!order) return;
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            if (orderIndex === -1) return;
 
-            if (order.vouchers) {
-                order.vouchers.forEach(v => v.redeemed = true);
+            if (orders[orderIndex].paymentStatus === 'Belum Bayar') {
+                showToast('Status siswa belum bayar! Ubah status pembayaran menjadi Sudah Bayar terlebih dahulu.', 'error');
+                return;
             }
-            order.redeemStatus = 'Sudah Ditukar';
+
+            orders[orderIndex].redeemStatus = 'Sudah Ditukar';
+            if (orders[orderIndex].vouchers) {
+                orders[orderIndex].vouchers.forEach(v => v.redeemed = true);
+            }
 
             saveData();
             syncOrdersToCloud();
             renderAdminTransactions();
-            showToast(`Voucher fisik untuk ${order.buyerName} berhasil diserahkan!`, 'success');
+            renderUserVouchers();
+            showToast(`Voucher fisik untuk ${orders[orderIndex].buyerName} berhasil diserahkan!`, 'success');
         }
 
         function renderAdminMenu() {
@@ -1430,10 +1552,10 @@ function setConfigValue(sheet, key, value) {
             if (newStock !== null && !isNaN(newStock)) {
                 item.stock = parseInt(newStock) || 0;
                 saveData();
-                saveConfigToCloud({ menuItems: menuItems });
+                syncStockToCloud();
                 renderAdminMenu();
                 renderMenu();
-                showToast('Stok voucher berhasil diperbarui!', 'success');
+                showToast('Stok voucher berhasil diperbarui di cloud!', 'success');
             }
         }
 
@@ -1450,8 +1572,8 @@ function setConfigValue(sheet, key, value) {
         }
 
         function syncDataFromCloud() {
-            if (!webhookUrl) {
-                showToast('Webhook URL Google Sheet belum diisi!', 'error');
+            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
+                showToast('Isi URL Webhook di kodingan (DEFAULT_WEBHOOK_URL)!', 'error');
                 updateSyncStatus(false);
                 return;
             }
@@ -1492,7 +1614,7 @@ function setConfigValue(sheet, key, value) {
         }
 
         function syncOrdersToCloud() {
-            if (!webhookUrl) return;
+            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) return;
             fetch(webhookUrl, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -1504,81 +1626,12 @@ function setConfigValue(sheet, key, value) {
             }).catch(err => console.log('Orders Cloud Push Error:', err));
         }
 
-        function saveConfigToCloud(configPayload) {
-            if (!webhookUrl) return;
-            fetch(webhookUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'update_config',
-                    ...configPayload
-                })
-            }).catch(err => console.log('Config Push Error:', err));
-        }
-
-        function handleQrisUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const qrisDataUrl = e.target.result;
-                    localStorage.setItem('kantin_qris_image', qrisDataUrl);
-                    updateQrisImagePreview();
-                    saveConfigToCloud({ qrisUrl: qrisDataUrl });
-                    showToast('Gambar QRIS berhasil diunggah & disimpan di Cloud!', 'success');
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function saveQrisUrl() {
-            const url = document.getElementById('qris-url-input')?.value.trim();
-            if (url) {
-                localStorage.setItem('kantin_qris_image', url);
-                updateQrisImagePreview();
-                saveConfigToCloud({ qrisUrl: url });
-                showToast('URL Gambar QRIS disetujui & disimpan di Cloud Database!', 'success');
-            }
-        }
-
-        function resetQrisImage() {
-            localStorage.removeItem('kantin_qris_image');
-            updateQrisImagePreview();
-            showToast('Gambar QRIS dikembalikan ke default', 'info');
-        }
-
         function updateQrisImagePreview() {
-            const defaultQris = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360";
+            const defaultQris = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914KANTIN%20SEHAT5303360";
             const savedQris = localStorage.getItem('kantin_qris_image') || defaultQris;
             
             const modalQrisImg = document.getElementById('qris-modal-img');
             if (modalQrisImg) modalQrisImg.src = savedQris;
-
-            const previewImg = document.getElementById('qris-settings-preview');
-            if (previewImg) previewImg.src = savedQris;
-        }
-
-        function changeAdminPin() {
-            const newPin = document.getElementById('new-admin-pin')?.value.trim();
-            if (!newPin || newPin.length < 4) {
-                showToast('PIN minimal 4 digit angka!', 'error');
-                return;
-            }
-            adminPin = String(newPin).trim();
-            localStorage.setItem('kantin_admin_pin', adminPin);
-            document.getElementById('new-admin-pin').value = '';
-            
-            saveConfigToCloud({ adminPin: adminPin });
-            showToast('PIN Kasir berhasil diperbarui & disimpan di Cloud Database!', 'success');
-        }
-
-        function saveSpreadsheetConfig() {
-            const url = document.getElementById('sheet-webhook-url')?.value.trim();
-            webhookUrl = url;
-            localStorage.setItem('kantin_sheet_webhook', url);
-            showToast('Webhook URL tersimpan! Memulai sinkronisasi...', 'success');
-            syncDataFromCloud();
         }
 
         function exportToExcel() {
@@ -1587,15 +1640,18 @@ function setConfigValue(sheet, key, value) {
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,";
+            let csvContent = "\uFEFF"; // UTF-8 BOM
             csvContent += "Tanggal,Kode Voucher,Nama Siswa,NISN,Kelas,No HP,Item,Total,Status Bayar,Status Ditukar\n";
 
             orders.forEach(o => {
                 const vCodes = (o.vouchers || []).map(v => v.voucherCode).join(';');
-                csvContent += `"${o.date}","${vCodes}","${o.buyerName}","${o.buyerNisn || ''}","${o.buyerClass}","${o.buyerPhone}","${o.itemsSummary}","${o.totalAmount}","${o.paymentStatus}","${o.redeemStatus}"\n`;
+                const cleanName = (o.buyerName || '').replace(/"/g, '""');
+                const cleanClass = (o.buyerClass || '').replace(/"/g, '""');
+                const cleanItems = (o.itemsSummary || '').replace(/"/g, '""');
+                csvContent += `"${o.date}","${vCodes}","${cleanName}","'${o.buyerNisn || ''}","${cleanClass}","'${o.buyerPhone || ''}","${cleanItems}","${o.totalAmount}","${o.paymentStatus}","${o.redeemStatus}"\n`;
             });
 
-            const encodedUri = encodeURI(csvContent);
+            const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", `Laporan_Transaksi_Kantin_${Date.now()}.csv`);
@@ -1629,7 +1685,7 @@ function setConfigValue(sheet, key, value) {
             updateCartBadge();
             renderUserVouchers();
             updateQrisImagePreview();
-            if (webhookUrl) {
+            if (webhookUrl && !webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
                 syncDataFromCloud();
             } else {
                 updateSyncStatus(false);
