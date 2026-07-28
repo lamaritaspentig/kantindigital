@@ -14,6 +14,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        html { 
+            overflow-y: scroll; 
+            scrollbar-gutter: stable; 
+        }
         body { font-family: 'Inter', sans-serif; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -61,7 +65,7 @@
                 <button onclick="switchTab('menu')" id="nav-btn-menu" class="py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-ticket"></i> Katalog Voucher Kantin
                 </button>
-                <button onclick="switchTab('vouchers')" id="nav-btn-vouchers" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap">
+                <button onclick="switchTab('vouchers')" id="nav-btn-vouchers" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-wallet"></i> Voucher Saya
                 </button>
             </div>
@@ -80,24 +84,30 @@
                 <button onclick="switchAdminTab('transactions')" id="admin-nav-btn-transactions" class="py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-receipt"></i> Data Transaksi
                 </button>
-                <button onclick="switchAdminTab('manage-menu')" id="admin-nav-btn-manage-menu" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
+                <button onclick="switchAdminTab('manage-menu')" id="admin-nav-btn-manage-menu" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-box"></i> Stok Voucher
                 </button>
-                <button onclick="switchAdminTab('settings')" id="admin-nav-btn-settings" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap">
+                <button onclick="switchAdminTab('settings')" id="admin-nav-btn-settings" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-gear"></i> Pengaturan
                 </button>
             </div>
 
-            <button onclick="lockAdmin()" class="py-2 px-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition shrink-0 border border-red-500/30">
-                <i class="fa-solid fa-right-from-bracket"></i> Kunci Kasir
-            </button>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleNotificationSound()" id="btn-sound-toggle" title="Notifikasi Suara Pesanan Baru" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400"></i>
+                    <span class="hidden md:inline">Suara: On</span>
+                </button>
+                <button onclick="lockAdmin()" class="py-2 px-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-red-500/30">
+                    <i class="fa-solid fa-right-from-bracket"></i> Kunci Kasir
+                </button>
+            </div>
         </div>
     </nav>
 
     <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6 pb-24 sm:pb-12">
 
-        <!-- Info Banner -->
-        <div class="bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-900 text-white rounded-3xl p-5 shadow-lg shadow-emerald-950/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-emerald-700/30 relative overflow-hidden">
+        <!-- Info Banner Siswa -->
+        <div id="banner-siswa" class="bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-900 text-white rounded-3xl p-5 shadow-lg shadow-emerald-950/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-emerald-700/30 relative overflow-hidden">
             <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
             <div class="space-y-2 relative z-10">
                 <div class="flex items-center gap-2 flex-wrap">
@@ -109,6 +119,62 @@
                 <p class="text-xs text-slate-200/90 leading-relaxed max-w-2xl">
                     Orang tua/siswa memesan & bayar voucher fisik via QRIS dari rumah. Di sekolah, siswa cukup sebutkan <b>Nama Lengkap, Kelas & NISN</b> di meja Kasir untuk mengambil voucher fisiknya.
                 </p>
+            </div>
+        </div>
+
+        <!-- Banner Ringkasan Laporan & Omset Kasir -->
+        <div id="banner-admin" class="hidden bg-slate-900 text-white rounded-3xl p-5 shadow-xl border border-slate-800 space-y-4 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3 relative z-10">
+                <div>
+                    <h2 class="font-black text-base sm:text-lg tracking-tight flex items-center gap-2">
+                        <i class="fa-solid fa-chart-line text-emerald-400"></i> Ringkasan Laporan & Omset Kasir
+                    </h2>
+                    <p class="text-xs text-slate-400">Pantauan omset harian, statistik penukaran voucher & status stok kantin</p>
+                </div>
+                <span id="summary-today-date" class="text-[11px] font-extrabold bg-slate-800 text-emerald-400 px-3 py-1 rounded-full border border-slate-700/80 self-start sm:self-auto flex items-center gap-1.5">
+                    <i class="fa-regular fa-calendar text-emerald-400"></i> Hari Ini
+                </span>
+            </div>
+
+            <!-- 4 Stat Cards Grid -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 relative z-10">
+                <!-- Stat 1: Omset Hari Ini -->
+                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                        <i class="fa-solid fa-wallet text-emerald-400"></i> Omset Hari Ini
+                    </p>
+                    <p id="stat-omset-today" class="text-lg sm:text-xl font-black text-emerald-400 tracking-tight">Rp 0</p>
+                    <p id="stat-omset-count" class="text-[10px] text-slate-400 font-semibold">0 Transaksi Lunas</p>
+                </div>
+
+                <!-- Stat 2: Voucher Terjual -->
+                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                        <i class="fa-solid fa-ticket text-blue-400"></i> Terjual Hari Ini
+                    </p>
+                    <p id="stat-vouchers-sold" class="text-lg sm:text-xl font-black text-blue-400 tracking-tight">0 Lembar</p>
+                    <p class="text-[10px] text-slate-400 font-semibold">Voucher Dipesan</p>
+                </div>
+
+                <!-- Stat 3: Belum Ditukar -->
+                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                        <i class="fa-solid fa-hand-holding-dollar text-amber-400"></i> Belum Ditukar
+                    </p>
+                    <p id="stat-vouchers-unredeemed" class="text-lg sm:text-xl font-black text-amber-400 tracking-tight">0 Lembar</p>
+                    <p class="text-[10px] text-slate-400 font-semibold">Siap Diambil Siswa</p>
+                </div>
+
+                <!-- Stat 4: Stok Tipis -->
+                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                        <i class="fa-solid fa-boxes-stacked text-purple-400"></i> Stok Tipis (≤10)
+                    </p>
+                    <p id="stat-low-stock" class="text-lg sm:text-xl font-black text-purple-400 tracking-tight">0 Jenis</p>
+                    <p id="stat-low-stock-sub" class="text-[10px] text-slate-400 font-semibold">Semua Stok Aman</p>
+                </div>
             </div>
         </div>
 
@@ -134,7 +200,7 @@
         </section>
 
         <!-- VIEW: SHOPPING CART -->
-        <section id="view-cart" class="hidden space-y-6">
+        <section id="view-cart" class="hidden space-y-6 max-w-6xl mx-auto w-full">
             <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-4">
                     <h2 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
@@ -297,7 +363,7 @@
         </section>
 
         <!-- VIEW: ADMIN SETTINGS -->
-        <section id="view-admin-settings" class="hidden space-y-6">
+        <section id="view-admin-settings" class="hidden space-y-6 max-w-6xl mx-auto w-full">
             <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
                 <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
                     <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-lg shadow-md shrink-0">
@@ -326,8 +392,25 @@
                         </div>
                     </div>
 
-                    <!-- Google Spreadsheet Webhook -->
+                    <!-- Auto-Lock & Audio Settings Card -->
                     <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                                <i class="fa-solid fa-shield-halved text-emerald-600 text-sm"></i> Keamanan & Notifikasi Kasir
+                            </h3>
+                            <p class="text-xs text-slate-500 leading-relaxed">
+                                Fitur <b>Auto-Lock</b> otomatis mengunci Kasir jika tidak ada aktivitas selama 5 menit. Suara notifikasi memberitahu jika ada order baru.
+                            </p>
+                        </div>
+                        <div class="pt-2 flex flex-wrap gap-2">
+                            <button onclick="playNotificationSound()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                                <i class="fa-solid fa-volume-high"></i> Tes Suara Notifikasi
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Google Spreadsheet Webhook -->
+                    <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between md:col-span-2">
                         <div class="space-y-2">
                             <div class="flex items-center justify-between gap-2">
                                 <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
@@ -459,8 +542,8 @@
             
             <div class="space-y-1">
                 <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Setup Manual Script</span>
-                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (High-Speed & Secure)</h3>
-                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. Foto bukti bayar otomatis disimpan ke Google Drive dan data tersimpan aman.</p>
+                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (Secure & Private)</h3>
+                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. Data transaksi siswa dikunci aman dan foto bukti bayar otomatis disimpan ke Google Drive.</p>
             </div>
 
             <div class="bg-slate-900 text-slate-100 p-4 rounded-2xl text-[11px] font-mono overflow-x-auto relative">
@@ -476,7 +559,7 @@ function doGet(e) {
   // ===================================================
   var MANUAL_CONFIG = {
     qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360",
-    adminPin: "3333",
+    adminPin: "3333", // PIN Kasir Rahasia
     cashierWa: "081234567890"
   };
   // ===================================================
@@ -514,7 +597,7 @@ function doGet(e) {
     }
   }
 
-  // 2. Proteksi Akses Transaksi: Hanya kirim data transaksi jika PIN valid
+  // 2. Keamanan: Hanya kirim data transaksi jika PIN Kasir valid
   var reqPin = String(e && e.parameter && e.parameter.pin || '').trim();
   var orders = [];
 
@@ -550,6 +633,7 @@ function doGet(e) {
     }
   }
 
+  // PIN Kasir TIDAK PERNAH dikirim dalam respon JSON!
   return ContentService.createTextOutput(JSON.stringify({
     qrisUrl: MANUAL_CONFIG.qrisUrl,
     cashierWa: MANUAL_CONFIG.cashierWa,
@@ -850,6 +934,11 @@ function getOrCreateSheet(ss, name) {
                 if (siswaNav) siswaNav.classList.remove('hidden');
                 if (adminNav) adminNav.classList.add('hidden');
                 if (waHelpBtn) waHelpBtn.classList.remove('hidden');
+                
+                document.getElementById('banner-siswa')?.classList.remove('hidden');
+                document.getElementById('banner-admin')?.classList.add('hidden');
+
+                applyAdminButtonVisibility();
                 switchTab('menu');
             } else if (role === 'admin') {
                 if (!isAdminUnlocked) {
@@ -867,7 +956,14 @@ function getOrCreateSheet(ss, name) {
                 if (siswaNav) siswaNav.classList.add('hidden');
                 if (adminNav) adminNav.classList.remove('hidden');
                 if (waHelpBtn) waHelpBtn.classList.remove('hidden');
+                
+                document.getElementById('banner-siswa')?.classList.add('hidden');
+                document.getElementById('banner-admin')?.classList.remove('hidden');
+
+                applyAdminButtonVisibility();
+                resetInactivityTimer();
                 switchAdminTab('transactions');
+                renderAdminSummary();
             }
         }
 
@@ -885,7 +981,7 @@ function getOrCreateSheet(ss, name) {
                 closeModal('modal-admin-pin');
                 showToast('Akses Kasir Terverifikasi!', 'success');
                 setRole('admin');
-                syncDataFromCloud(false); // Ambil data transaksi cloud menggunakan PIN kasir
+                syncDataFromCloud(false);
             } else {
                 if (errorMsg) errorMsg.classList.remove('hidden');
                 showToast('PIN Kasir Salah!', 'error');
@@ -939,6 +1035,13 @@ function getOrCreateSheet(ss, name) {
         let autoSyncTimer = null;
         let logoClickCount = 0;
         let logoClickTimer = null;
+        
+        // Features 4, 5, 6 States
+        let isSoundEnabled = localStorage.getItem('kantin_sound_enabled') !== 'false';
+        let knownOrderIdsSet = new Set();
+        let inactivityTimer = null;
+        const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 Menit Auto-Lock
+
         let isCashierBtnHidden = localStorage.getItem('kantin_hide_cashier_btn') !== 'false';
 
         try {
@@ -946,13 +1049,96 @@ function getOrCreateSheet(ss, name) {
             if (savedMenu) menuItems = JSON.parse(savedMenu);
 
             const savedOrders = localStorage.getItem('kantin_orders');
-            if (savedOrders) orders = JSON.parse(savedOrders);
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
+                orders.forEach(o => knownOrderIdsSet.add(String(o.id)));
+            }
 
             const savedMyOrders = localStorage.getItem('kantin_my_orders');
             if (savedMyOrders) myOrderIds = JSON.parse(savedMyOrders);
         } catch(e) {
             console.error('Local Storage load error:', e);
         }
+
+        // =========================================================================
+        // 🔊 FEATURE 6: SOUND NOTIFICATION SYSTEM (WEB AUDIO API)
+        // =========================================================================
+        function playNotificationSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+
+                gain.gain.setValueAtTime(0.25, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.35);
+            } catch(e) {
+                console.log('Audio notification error:', e);
+            }
+        }
+
+        function toggleNotificationSound() {
+            isSoundEnabled = !isSoundEnabled;
+            localStorage.setItem('kantin_sound_enabled', isSoundEnabled ? 'true' : 'false');
+            updateSoundToggleButton();
+            if (isSoundEnabled) {
+                playNotificationSound();
+                showToast('Notifikasi Suara Diaktifkan 🔊', 'info');
+            } else {
+                showToast('Notifikasi Suara Dimatikan 🔇', 'info');
+            }
+        }
+
+        function updateSoundToggleButton() {
+            const btn = document.getElementById('btn-sound-toggle');
+            const icon = document.getElementById('sound-icon');
+            if (!btn || !icon) return;
+
+            if (isSoundEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-emerald-400';
+                btn.innerHTML = `<i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400"></i><span class="hidden md:inline">Suara: On</span>`;
+                btn.className = 'py-2 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700';
+            } else {
+                btn.innerHTML = `<i id="sound-icon" class="fa-solid fa-volume-xmark text-slate-400"></i><span class="hidden md:inline">Suara: Off</span>`;
+                btn.className = 'py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700';
+            }
+        }
+
+        // =========================================================================
+        // ⏱️ FEATURE 5: AUTO-LOCK INACTIVITY TIMER (5 MENIT)
+        // =========================================================================
+        function resetInactivityTimer() {
+            if (inactivityTimer) clearTimeout(inactivityTimer);
+            if (currentRole === 'admin' && isAdminUnlocked) {
+                inactivityTimer = setTimeout(() => {
+                    if (currentRole === 'admin' && isAdminUnlocked) {
+                        lockAdmin();
+                        showToast('Kasir otomatis terkunci karena tidak ada aktivitas (5 menit)', 'info');
+                    }
+                }, INACTIVITY_TIMEOUT_MS);
+            }
+        }
+
+        ['mousemove', 'keydown', 'click', 'touchstart'].forEach(evt => {
+            window.addEventListener(evt, () => {
+                if (currentRole === 'admin' && isAdminUnlocked) {
+                    resetInactivityTimer();
+                }
+            }, { passive: true });
+        });
 
         function handleLogoSecretClick() {
             logoClickCount++;
@@ -997,6 +1183,7 @@ function getOrCreateSheet(ss, name) {
 
         function lockAdmin() {
             isAdminUnlocked = false;
+            if (inactivityTimer) clearTimeout(inactivityTimer);
             const lockIcon = document.getElementById('admin-lock-icon');
             if (lockIcon) lockIcon.className = 'fa-solid fa-lock text-[10px] text-slate-400';
             showToast('Sistem Kasir Terkunci', 'info');
@@ -1009,7 +1196,7 @@ function getOrCreateSheet(ss, name) {
             ['nav-btn-menu', 'nav-btn-vouchers'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
-                    btn.className = 'py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap';
+                    btn.className = 'py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold flex items-center gap-2 whitespace-nowrap';
                 }
             });
 
@@ -1032,8 +1219,6 @@ function getOrCreateSheet(ss, name) {
                 document.getElementById('view-vouchers')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('nav-btn-vouchers');
                 if (activeBtn) activeBtn.className = 'py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap';
-                if (cartBtn) cartBtn.className = 'py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold rounded-xl transition flex items-center gap-2 my-2 border border-emerald-200/80 shrink-0';
-                if (cartIcon) cartIcon.className = 'fa-solid fa-cart-shopping text-emerald-600 text-sm';
                 renderUserVouchers();
             }
         }
@@ -1043,35 +1228,95 @@ function getOrCreateSheet(ss, name) {
 
             ['admin-nav-btn-transactions', 'admin-nav-btn-manage-menu', 'admin-nav-btn-settings'].forEach(id => {
                 const btn = document.getElementById(id);
-                if (btn) btn.className = 'py-2 sm:py-3 border-b-2 border-transparent hover:text-white flex items-center gap-2 whitespace-nowrap';
+                if (btn) {
+                    btn.className = 'py-2 sm:py-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap';
+                }
             });
 
             if (tab === 'transactions') {
                 document.getElementById('view-admin-transactions')?.classList.remove('hidden');
-                const btn = document.getElementById('admin-nav-btn-transactions');
-                if (btn) btn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                const activeBtn = document.getElementById('admin-nav-btn-transactions');
+                if (activeBtn) activeBtn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
                 renderAdminTransactions();
             } else if (tab === 'manage-menu') {
                 document.getElementById('view-admin-manage-menu')?.classList.remove('hidden');
-                const btn = document.getElementById('admin-nav-btn-manage-menu');
-                if (btn) btn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                const activeBtn = document.getElementById('admin-nav-btn-manage-menu');
+                if (activeBtn) activeBtn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
                 renderAdminMenu();
             } else if (tab === 'settings') {
                 document.getElementById('view-admin-settings')?.classList.remove('hidden');
-                const btn = document.getElementById('admin-nav-btn-settings');
-                if (btn) btn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                const activeBtn = document.getElementById('admin-nav-btn-settings');
+                if (activeBtn) activeBtn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
             }
         }
 
-        function setCategoryFilter(category, btn) {
+        function setCategoryFilter(category, element) {
             currentCategoryFilter = category;
-            document.querySelectorAll('.cat-btn').forEach(b => {
-                b.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition';
+            const buttons = document.querySelectorAll('.cat-btn');
+            buttons.forEach(btn => {
+                btn.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition';
             });
-            if (btn) {
-                btn.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
+            if (element) {
+                element.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
             }
             renderMenu();
+        }
+
+        function renderAdminSummary() {
+            const todayStr = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+            
+            const dateBadge = document.getElementById('summary-today-date');
+            if (dateBadge) dateBadge.innerHTML = `<i class="fa-regular fa-calendar text-emerald-400"></i> ${todayStr}`;
+
+            let todayOmset = 0;
+            let todayPaidTxCount = 0;
+            let todayVouchersSold = 0;
+            let totalUnredeemedVouchers = 0;
+
+            orders.forEach(o => {
+                const isPaid = o.paymentStatus === 'Sudah Bayar';
+                const isToday = String(o.date || '').includes(todayStr) || String(o.date || '').startsWith(todayStr);
+
+                if (isToday && isPaid) {
+                    todayOmset += Number(o.totalAmount || 0);
+                    todayPaidTxCount++;
+                }
+
+                if (o.vouchers && Array.isArray(o.vouchers)) {
+                    o.vouchers.forEach(v => {
+                        if (isToday && isPaid) {
+                            todayVouchersSold++;
+                        }
+                        if (isPaid && (!v.redeemed && o.redeemStatus !== 'Sudah Ditukar')) {
+                            totalUnredeemedVouchers++;
+                        }
+                    });
+                }
+            });
+
+            const lowStockItems = menuItems.filter(m => m.stock <= 10);
+
+            const statOmset = document.getElementById('stat-omset-today');
+            const statOmsetSub = document.getElementById('stat-omset-count');
+            const statSold = document.getElementById('stat-vouchers-sold');
+            const statUnredeemed = document.getElementById('stat-vouchers-unredeemed');
+            const statLowStock = document.getElementById('stat-low-stock');
+            const statLowStockSub = document.getElementById('stat-low-stock-sub');
+
+            if (statOmset) statOmset.innerText = formatRupiah(todayOmset);
+            if (statOmsetSub) statOmsetSub.innerText = `${todayPaidTxCount} Transaksi Lunas Hari Ini`;
+            if (statSold) statSold.innerText = `${todayVouchersSold} Lembar`;
+            if (statUnredeemed) statUnredeemed.innerText = `${totalUnredeemedVouchers} Lembar`;
+            if (statLowStock) statLowStock.innerText = `${lowStockItems.length} Jenis`;
+            if (statLowStockSub) {
+                if (lowStockItems.length > 0) {
+                    statLowStockSub.innerText = `Stok Tipis: ${lowStockItems.map(i => formatRupiah(i.price)).join(', ')}`;
+                    statLowStockSub.className = 'text-[10px] text-amber-400 font-bold truncate';
+                } else {
+                    statLowStockSub.innerText = 'Semua Stok Aman';
+                    statLowStockSub.className = 'text-[10px] text-slate-400 font-semibold';
+                }
+            }
         }
 
         function renderAdminMenu() {
@@ -1079,24 +1324,25 @@ function getOrCreateSheet(ss, name) {
             if (!grid) return;
 
             grid.innerHTML = menuItems.map(item => `
-                <div class="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
-                    <div class="flex items-center gap-3">
-                        <span class="text-3xl p-2 bg-slate-50 rounded-2xl border border-slate-200">${item.icon}</span>
-                        <div>
-                            <h3 class="font-extrabold text-slate-800 text-sm">${item.name}</h3>
-                            <p class="text-xs font-black text-emerald-600">${formatRupiah(item.price)}</p>
-                        </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-3 shadow-xs">
+                    <div class="flex items-center justify-between">
+                        <span class="text-3xl">${item.icon}</span>
+                        <span class="text-xs font-black ${item.stock > 0 ? 'text-emerald-600' : 'text-red-500'}">
+                            Stok: ${item.stock}
+                        </span>
                     </div>
 
-                    <div class="space-y-1.5 pt-2 border-t border-slate-100">
-                        <label class="block text-[11px] font-extrabold text-slate-600 uppercase tracking-wider">Jumlah Stok Voucher</label>
-                        <div class="flex items-center gap-2">
-                            <button onclick="changeAdminStock('${item.id}', -10)" class="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">-10</button>
-                            <button onclick="changeAdminStock('${item.id}', -1)" class="w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center">-1</button>
-                            <input type="number" value="${item.stock}" min="0" onchange="updateAdminStockDirect('${item.id}', this.value)" class="w-full text-center py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-black text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500">
-                            <button onclick="changeAdminStock('${item.id}', 1)" class="w-9 h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center">+</button>
-                            <button onclick="changeAdminStock('${item.id}', 10)" class="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition">+10</button>
-                        </div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-sm">${item.name}</h4>
+                        <p class="text-xs font-bold text-slate-500">${formatRupiah(item.price)}</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
+                        <button onclick="changeAdminStock('${item.id}', -10)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">-10</button>
+                        <button onclick="changeAdminStock('${item.id}', -1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">-1</button>
+                        <input type="number" value="${item.stock}" onchange="updateAdminStockDirect('${item.id}', this.value)" class="w-16 text-center font-bold text-xs py-1 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-emerald-500">
+                        <button onclick="changeAdminStock('${item.id}', 1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">+1</button>
+                        <button onclick="changeAdminStock('${item.id}', 10)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">+10</button>
                     </div>
                 </div>
             `).join('');
@@ -1109,6 +1355,7 @@ function getOrCreateSheet(ss, name) {
             saveData();
             renderAdminMenu();
             renderMenu();
+            renderAdminSummary();
             syncStockToCloud();
             showToast(`Stok ${item.name} (${formatRupiah(item.price)}) diperbarui menjadi ${item.stock}`, 'info');
         }
@@ -1120,6 +1367,7 @@ function getOrCreateSheet(ss, name) {
             saveData();
             renderAdminMenu();
             renderMenu();
+            renderAdminSummary();
             syncStockToCloud();
             showToast(`Stok ${item.name} (${formatRupiah(item.price)}) diperbarui menjadi ${item.stock}`, 'info');
         }
@@ -1159,6 +1407,9 @@ function getOrCreateSheet(ss, name) {
             closeModal('modal-view-proof');
         }
 
+        // =========================================================================
+        // ⚡ FEATURE 4: SERAHKAN SEMUA VOUCHER (1-KLIK BULK REDEMPTION)
+        // =========================================================================
         function processRedeemVoucher(orderId) {
             const order = orders.find(o => String(o.id) === String(orderId));
             if (!order) return;
@@ -1177,8 +1428,10 @@ function getOrCreateSheet(ss, name) {
             syncOrdersToCloud();
             renderAdminTransactions();
             renderUserVouchers();
+            renderAdminSummary();
 
-            showToast(`Voucher fisik untuk ${order.buyerName} berhasil diserahkan!`, 'success');
+            const count = order.vouchers ? order.vouchers.length : 1;
+            showToast(`Berhasil menyerahkan ${count} voucher fisik untuk ${order.buyerName}! 🎟️`, 'success');
         }
 
         function renderMenu() {
@@ -1405,7 +1658,6 @@ function getOrCreateSheet(ss, name) {
         function confirmCheckoutOrder(e) {
             if (e) e.preventDefault();
 
-            // Strict Validation Check
             const name = document.getElementById('buyer-name')?.value.trim();
             const nisn = document.getElementById('buyer-nisn')?.value.trim();
             const buyerClass = document.getElementById('buyer-class')?.value.trim();
@@ -1460,11 +1712,12 @@ function getOrCreateSheet(ss, name) {
             };
 
             orders.unshift(newOrder);
+            knownOrderIdsSet.add(String(orderId));
+
             if (!myOrderIds.includes(orderId)) {
                 myOrderIds.unshift(orderId);
             }
 
-            // Sync ke Google Sheets
             sendToGoogleSheets(newOrder);
 
             cart = [];
@@ -1511,6 +1764,7 @@ function getOrCreateSheet(ss, name) {
             syncOrdersToCloud();
             renderAdminTransactions();
             renderUserVouchers();
+            renderAdminSummary();
 
             showToast(`Status pembayaran ${orders[orderIndex].buyerName} diubah menjadi "${newStatus}"`, 'info');
         }
@@ -1636,6 +1890,7 @@ function getOrCreateSheet(ss, name) {
 
             // 1. Render Mobile View
             if (mobileContainer) {
+                renderAdminSummary();
                 mobileContainer.innerHTML = filteredOrders.map((o, idx) => {
                     const isAllRedeemed = o.redeemStatus === 'Sudah Ditukar' || (o.vouchers ? o.vouchers.every(v => v.redeemed) : false);
                     const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
@@ -1691,7 +1946,7 @@ function getOrCreateSheet(ss, name) {
                             <div class="pt-1">
                                 ${!isAllRedeemed ? `
                                     <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-xs">
-                                        <i class="fa-solid fa-check-double"></i> Serahkan Voucher Fisik
+                                        <i class="fa-solid fa-check-double"></i> Serahkan Semua Voucher (${unredeemedCount})
                                     </button>
                                 ` : `
                                     <div class="w-full bg-slate-200/80 text-slate-600 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
@@ -1752,7 +2007,7 @@ function getOrCreateSheet(ss, name) {
                             <td class="p-3.5 text-right">
                                 ${!isAllRedeemed ? `
                                     <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 ml-auto shadow-xs">
-                                        <i class="fa-solid fa-check-double"></i> Serahkan Voucher
+                                        <i class="fa-solid fa-check-double"></i> Serahkan Semua (${unredeemedCount})
                                     </button>
                                 ` : `
                                     <span class="text-slate-400 text-xs font-bold flex items-center gap-1 justify-end"><i class="fa-solid fa-check text-emerald-500"></i> Selesai</span>
@@ -1785,7 +2040,6 @@ function getOrCreateSheet(ss, name) {
 
             if (!isSilent) showToast('Menghubungkan Cloud...', 'info');
 
-            // Kirim PIN Kasir jika Kasir sudah login untuk mengambil data transaksi sensitif
             const fetchUrl = isAdminUnlocked ? `${webhookUrl}?pin=${encodeURIComponent(adminPin)}` : webhookUrl;
 
             fetch(fetchUrl)
@@ -1806,8 +2060,17 @@ function getOrCreateSheet(ss, name) {
                             renderMenu();
                         }
                         if (data.orders && Array.isArray(data.orders)) {
+                            let hasNewIncomingOrders = false;
                             const cloudOrdersMap = new Map();
-                            data.orders.forEach(o => cloudOrdersMap.set(String(o.id), o));
+
+                            data.orders.forEach(o => {
+                                const orderIdStr = String(o.id);
+                                cloudOrdersMap.set(orderIdStr, o);
+                                if (!knownOrderIdsSet.has(orderIdStr)) {
+                                    knownOrderIdsSet.add(orderIdStr);
+                                    hasNewIncomingOrders = true;
+                                }
+                            });
                             
                             const mergedOrders = data.orders.map(o => ({
                                 ...o,
@@ -1815,7 +2078,6 @@ function getOrCreateSheet(ss, name) {
                                 redeemStatus: o.redeemStatus || 'Belum Ditukar'
                             }));
 
-                            // Keep any unsynced local orders
                             orders.forEach(localOrder => {
                                 if (!cloudOrdersMap.has(String(localOrder.id))) {
                                     mergedOrders.unshift(localOrder);
@@ -1826,6 +2088,11 @@ function getOrCreateSheet(ss, name) {
                             localStorage.setItem('kantin_orders', JSON.stringify(orders));
                             renderAdminTransactions();
                             renderUserVouchers();
+
+                            if (hasNewIncomingOrders && isSoundEnabled && isSilent && isAdminUnlocked) {
+                                playNotificationSound();
+                                showToast('🛎️ Pesanan Baru Masuk!', 'success');
+                            }
                         }
                         updateSyncStatus(true);
                         if (!isSilent) showToast('Sync Cloud Berhasil! ☁️', 'success');
@@ -1841,7 +2108,6 @@ function getOrCreateSheet(ss, name) {
         function startAutoSync() {
             if (autoSyncTimer) clearInterval(autoSyncTimer);
             if (webhookUrl && !webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
-                // Auto sync setiap 10 detik secara silent
                 autoSyncTimer = setInterval(() => {
                     syncDataFromCloud(true);
                 }, 10000);
@@ -1943,6 +2209,7 @@ function getOrCreateSheet(ss, name) {
 
         window.onload = function() {
             applyAdminButtonVisibility();
+            updateSoundToggleButton();
             switchTab('menu');
             updateCartBadge();
             renderUserVouchers();
