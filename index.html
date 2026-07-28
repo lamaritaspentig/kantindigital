@@ -391,7 +391,12 @@
             </div>
             
             <form onsubmit="verifyAdminPin(event)" class="space-y-3">
-                <input type="password" id="input-admin-pin" maxlength="6" placeholder="Masukkan PIN" class="w-full text-center tracking-widest text-lg font-bold py-2.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
+                <div class="relative">
+                    <input type="password" id="input-admin-pin" maxlength="20" placeholder="Masukkan PIN" class="w-full text-center tracking-widest text-lg font-bold py-2.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 pr-10">
+                    <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+                        <i id="pin-toggle-icon" class="fa-solid fa-eye text-sm"></i>
+                    </button>
+                </div>
                 <p id="pin-error-msg" class="text-[11px] text-red-500 font-semibold hidden">PIN keamanan salah! Silakan coba lagi.</p>
                 
                 <div class="flex gap-2">
@@ -493,8 +498,8 @@ function doGet(e) {
         buyerPhone: String(ordersData[j][5]),
         itemsSummary: String(ordersData[j][6]),
         totalAmount: Number(ordersData[j][7]),
-        paymentStatus: String(ordersData[j][8]),
-        redeemStatus: String(ordersData[j][9]),
+        paymentStatus: String(ordersData[j][8] || 'Belum Bayar'),
+        redeemStatus: String(ordersData[j][9] || 'Belum Ditukar'),
         paymentProof: String(ordersData[j][10] || ''),
         vouchers: parsedVouchers
       });
@@ -639,7 +644,7 @@ function getOrCreateSheet(ss, name) {
         // 🛠️ PENGATURAN MANUAL WEBHOOK URL GOOGLE APPS SCRIPT
         // Tempelkan URL Webhook hasil Deploy Google Apps Script Anda di bawah ini:
         // =========================================================================
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbznkglSA8yyW3Bud025e7ckoZCUp8t0ZLX_f-dTz6ur1xsZwKaNfdK750rrE-4FyhB0/exec"; 
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwQ_J_AlOnEfftNqBfApLyAGWKSys0PialfuHr6K6mOK6dbl17HsKtuPyeW6eNyWvmk/exec"; 
         
         let menuItems = [
             { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
@@ -822,11 +827,29 @@ function getOrCreateSheet(ss, name) {
             }
         }
 
+        function togglePinVisibility() {
+            const pinInput = document.getElementById('input-admin-pin');
+            const toggleIcon = document.getElementById('pin-toggle-icon');
+            if (!pinInput || !toggleIcon) return;
+            if (pinInput.type === 'password') {
+                pinInput.type = 'text';
+                toggleIcon.className = 'fa-solid fa-eye-slash text-sm';
+            } else {
+                pinInput.type = 'password';
+                toggleIcon.className = 'fa-solid fa-eye text-sm';
+            }
+        }
+
         function openAdminPinModal() {
             const errorMsg = document.getElementById('pin-error-msg');
             if (errorMsg) errorMsg.classList.add('hidden');
             const pinInput = document.getElementById('input-admin-pin');
-            if (pinInput) pinInput.value = '';
+            const toggleIcon = document.getElementById('pin-toggle-icon');
+            if (pinInput) {
+                pinInput.value = '';
+                pinInput.type = 'password';
+            }
+            if (toggleIcon) toggleIcon.className = 'fa-solid fa-eye text-sm';
             
             openModal('modal-admin-pin');
             setTimeout(() => {
@@ -845,7 +868,12 @@ function getOrCreateSheet(ss, name) {
             const errorMsg = document.getElementById('pin-error-msg');
             if (errorMsg) errorMsg.classList.add('hidden');
             const pinInput = document.getElementById('input-admin-pin');
-            if (pinInput) pinInput.value = '';
+            const toggleIcon = document.getElementById('pin-toggle-icon');
+            if (pinInput) {
+                pinInput.value = '';
+                pinInput.type = 'password';
+            }
+            if (toggleIcon) toggleIcon.className = 'fa-solid fa-eye text-sm';
 
             currentRole = 'siswa';
             const siswaBtn = document.getElementById('role-siswa-btn');
@@ -1597,7 +1625,11 @@ function getOrCreateSheet(ss, name) {
                             renderMenu();
                         }
                         if (data.orders && Array.isArray(data.orders)) {
-                            orders = data.orders;
+                            orders = data.orders.map(o => ({
+                                ...o,
+                                paymentStatus: o.paymentStatus || 'Belum Bayar',
+                                redeemStatus: o.redeemStatus || 'Belum Ditukar'
+                            }));
                             localStorage.setItem('kantin_orders', JSON.stringify(orders));
                             renderAdminTransactions();
                             renderUserVouchers();
@@ -1645,10 +1677,10 @@ function getOrCreateSheet(ss, name) {
 
             orders.forEach(o => {
                 const vCodes = (o.vouchers || []).map(v => v.voucherCode).join(';');
-                const cleanName = (o.buyerName || '').replace(/"/g, '""');
-                const cleanClass = (o.buyerClass || '').replace(/"/g, '""');
-                const cleanItems = (o.itemsSummary || '').replace(/"/g, '""');
-                csvContent += `"${o.date}","${vCodes}","${cleanName}","'${o.buyerNisn || ''}","${cleanClass}","'${o.buyerPhone || ''}","${cleanItems}","${o.totalAmount}","${o.paymentStatus}","${o.redeemStatus}"\n`;
+                const cleanName = (o.buyerName || '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
+                const cleanClass = (o.buyerClass || '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
+                const cleanItems = (o.itemsSummary || '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
+                csvContent += `"${o.date}","${vCodes}","${cleanName}","'${o.buyerNisn || ''}","${cleanClass}","'${o.buyerPhone || ''}","${cleanItems}","${o.totalAmount}","${o.paymentStatus || 'Belum Bayar'}","${o.redeemStatus || 'Belum Ditukar'}"\n`;
             });
 
             const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
