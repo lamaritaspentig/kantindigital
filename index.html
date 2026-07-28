@@ -23,12 +23,6 @@
             margin: 0; 
         }
         input[type=number] { -moz-appearance: textfield; }
-        .ticket-cut-left {
-            mask-image: radial-gradient(circle at 0% 50%, transparent 12px, black 13px);
-        }
-        .ticket-cut-right {
-            mask-image: radial-gradient(circle at 100% 50%, transparent 12px, black 13px);
-        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
@@ -123,16 +117,17 @@
             </div>
         </div>
 
+        <!-- VIEW: MENU CATALOG -->
         <section id="view-menu" class="space-y-5">
             <!-- Filter Pills -->
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                <button onclick="setCategoryFilter('all')" class="cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition">
+                <button onclick="setCategoryFilter('all', this)" class="cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition">
                     Semua Voucher
                 </button>
-                <button onclick="setCategoryFilter('kecil')" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
+                <button onclick="setCategoryFilter('kecil', this)" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
                     Nominal Kecil (≤ Rp 3.000)
                 </button>
-                <button onclick="setCategoryFilter('besar')" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
+                <button onclick="setCategoryFilter('besar', this)" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
                     Nominal Besar (≥ Rp 5.000)
                 </button>
             </div>
@@ -143,6 +138,7 @@
             </div>
         </section>
 
+        <!-- VIEW: SHOPPING CART -->
         <section id="view-cart" class="hidden max-w-2xl mx-auto space-y-6">
             <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -207,6 +203,7 @@
             </div>
         </section>
 
+        <!-- VIEW: VOUCHER WALLET -->
         <section id="view-vouchers" class="hidden space-y-4">
             <div class="flex justify-between items-center bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs">
                 <div>
@@ -227,6 +224,7 @@
             </div>
         </section>
 
+        <!-- VIEW: ADMIN TRANSACTIONS -->
         <section id="view-admin-transactions" class="hidden space-y-4">
             <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
@@ -274,6 +272,7 @@
             </div>
         </section>
 
+        <!-- VIEW: ADMIN MANAGE MENU -->
         <section id="view-admin-manage-menu" class="hidden space-y-4">
             <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200">
                 <div>
@@ -286,6 +285,7 @@
             </div>
         </section>
 
+        <!-- VIEW: ADMIN SETTINGS -->
         <section id="view-admin-settings" class="hidden max-w-3xl mx-auto space-y-6">
             <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 space-y-6">
                 <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
@@ -429,7 +429,7 @@
     </div>
 
     <!-- MODAL: KASIR PIN VERIFICATION -->
-    <div id="modal-admin-pin" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div id="modal-admin-pin" onclick="if(event.target === this) closeAdminPinModal(event)" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl space-y-4 border border-slate-100 text-center relative">
             <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl mx-auto shadow-md">
                 <i class="fa-solid fa-lock"></i>
@@ -441,10 +441,10 @@
             
             <form onsubmit="verifyAdminPin(event)" class="space-y-3">
                 <input type="password" id="input-admin-pin" maxlength="6" placeholder="Masukkan PIN" class="w-full text-center tracking-widest text-lg font-bold py-2.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500">
-                <p id="pin-error-msg" class="text-[11px] text-red-500 font-semibold hidden">PIN salah! Coba lagi (Default: 3333)</p>
+                <p id="pin-error-msg" class="text-[11px] text-red-500 font-semibold hidden">PIN keamanan salah! Silakan coba lagi.</p>
                 
                 <div class="flex gap-2">
-                    <button type="button" onclick="setRole('siswa')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-xs transition">
+                    <button type="button" onclick="closeAdminPinModal(event)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-xs transition">
                         Batal
                     </button>
                     <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition">
@@ -506,7 +506,7 @@ function doGet(e) {
   
   return ContentService.createTextOutput(JSON.stringify({
     qrisUrl: config.qrisUrl || '',
-    adminPin: config.adminPin || '3333',
+    adminPin: String(config.adminPin || '3333'),
     menuItems: JSON.parse(config.menuItems || '[]'),
     orders: orders
   })).setMimeType(ContentService.MimeType.JSON);
@@ -520,14 +520,30 @@ function doPost(e) {
     if (data.action === "update_config") {
       var sheetConfig = getOrCreateSheet(ss, "CONFIG");
       if (data.qrisUrl !== undefined) setConfigValue(sheetConfig, "qrisUrl", data.qrisUrl);
-      if (data.adminPin !== undefined) setConfigValue(sheetConfig, "adminPin", data.adminPin);
+      if (data.adminPin !== undefined) setConfigValue(sheetConfig, "adminPin", String(data.adminPin));
       if (data.menuItems !== undefined) setConfigValue(sheetConfig, "menuItems", JSON.stringify(data.menuItems));
       return ContentService.createTextOutput("Config Saved");
     } 
+
+    if (data.action === "update_orders") {
+      var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
+      sheetOrders.clearContents();
+      sheetOrders.appendRow(["ORDER_ID", "TANGGAL", "NAMA_SISWA", "NISN", "KELAS", "NO_HP", "ITEMS", "TOTAL", "STATUS_BAYAR", "STATUS_TUKAR", "VOUCHERS_JSON"]);
+      if (data.orders && Array.isArray(data.orders)) {
+        data.orders.forEach(function(o) {
+          sheetOrders.appendRow([
+            o.id, o.date, o.buyerName, o.buyerNisn, o.buyerClass,
+            o.buyerPhone, o.itemsSummary, o.totalAmount,
+            o.paymentStatus, o.redeemStatus, JSON.stringify(o.vouchers || [])
+          ]);
+        });
+      }
+      return ContentService.createTextOutput("Orders Updated");
+    }
     
-    // Default: New Transaction
-    var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
-    sheetOrders.appendRow([
+    // Default: New Single Transaction
+    var sheetOrdersDefault = getOrCreateSheet(ss, "TRANSAKSI");
+    sheetOrdersDefault.appendRow([
       data.id, data.date, data.buyerName, data.buyerNisn, data.buyerClass, 
       data.buyerPhone, data.itemsSummary, data.totalAmount, 
       data.paymentStatus, data.redeemStatus, JSON.stringify(data.vouchers || [])
@@ -571,6 +587,7 @@ function setConfigValue(sheet, key, value) {
         </div>
     </div>
 
+    <!-- MODAL: KASIR PROOF INSPECTION -->
     <div id="modal-view-proof" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative text-center">
             <button onclick="closeViewProofModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
@@ -595,7 +612,7 @@ function setConfigValue(sheet, key, value) {
 
     <script>
         // --- GLOBAL STATE VARIABLES ---
-        const DEFAULT_WEBHOOK_URL = ""; // Optional pre-configured Apps Script URL
+        const DEFAULT_WEBHOOK_URL = ""; 
         
         let menuItems = [
             { id: 'v1000', name: 'Voucher Nominal Rp 1.000', price: 1000, stock: 100, icon: '🎟️' },
@@ -610,7 +627,7 @@ function setConfigValue(sheet, key, value) {
         let myOrderIds = [];
         let currentRole = 'siswa';
         let currentCategoryFilter = 'all';
-        let adminPin = localStorage.getItem('kantin_admin_pin') || '3333';
+        let adminPin = String(localStorage.getItem('kantin_admin_pin') || '3333').trim();
         let isAdminUnlocked = false;
         let webhookUrl = localStorage.getItem('kantin_sheet_webhook') || DEFAULT_WEBHOOK_URL;
         let currentProofDataUrl = '';
@@ -628,8 +645,19 @@ function setConfigValue(sheet, key, value) {
             console.error('Local Storage load error:', e);
         }
 
+        // --- HELPER UTILITY FUNCTIONS ---
         function formatRupiah(amount) {
             return 'Rp ' + (amount || 0).toLocaleString('id-ID');
+        }
+
+        function openModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            const el = document.getElementById(modalId);
+            if (el) el.classList.add('hidden');
         }
 
         function getVoucherTheme(price) {
@@ -749,22 +777,63 @@ function setConfigValue(sheet, key, value) {
             const adminNav = document.getElementById('admin-nav');
 
             if (role === 'siswa') {
-                siswaBtn.className = 'px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5';
-                adminBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5';
-                siswaNav.classList.remove('hidden');
-                adminNav.classList.add('hidden');
+                closeModal('modal-admin-pin');
+                if (siswaBtn) siswaBtn.className = 'px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5';
+                if (adminBtn) adminBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5';
+                if (siswaNav) siswaNav.classList.remove('hidden');
+                if (adminNav) adminNav.classList.add('hidden');
                 switchTab('menu');
             } else {
                 if (!isAdminUnlocked) {
-                    document.getElementById('modal-admin-pin')?.classList.remove('hidden');
+                    openAdminPinModal();
                     return;
                 }
-                siswaBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200';
-                adminBtn.className = 'px-3 py-1.5 rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-200 flex items-center gap-1.5';
-                siswaNav.classList.add('hidden');
-                adminNav.classList.remove('hidden');
+                if (siswaBtn) siswaBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200';
+                if (adminBtn) adminBtn.className = 'px-3 py-1.5 rounded-xl bg-slate-900 text-white shadow-sm transition-all duration-200 flex items-center gap-1.5';
+                if (siswaNav) siswaNav.classList.add('hidden');
+                if (adminNav) adminNav.classList.remove('hidden');
                 switchAdminTab('transactions');
             }
+        }
+
+        function openAdminPinModal() {
+            const errorMsg = document.getElementById('pin-error-msg');
+            if (errorMsg) errorMsg.classList.add('hidden');
+            const pinInput = document.getElementById('input-admin-pin');
+            if (pinInput) pinInput.value = '';
+            
+            openModal('modal-admin-pin');
+            setTimeout(() => {
+                if (pinInput) pinInput.focus();
+            }, 100);
+        }
+
+        function closeAdminPinModal(e) {
+            if (e) {
+                if (typeof e.preventDefault === 'function') e.preventDefault();
+                if (typeof e.stopPropagation === 'function') e.stopPropagation();
+            }
+            
+            closeModal('modal-admin-pin');
+            
+            const errorMsg = document.getElementById('pin-error-msg');
+            if (errorMsg) errorMsg.classList.add('hidden');
+            const pinInput = document.getElementById('input-admin-pin');
+            if (pinInput) pinInput.value = '';
+
+            // Force visual toggle back to Siswa / Ortu
+            currentRole = 'siswa';
+            const siswaBtn = document.getElementById('role-siswa-btn');
+            const adminBtn = document.getElementById('role-admin-btn');
+            if (siswaBtn) siswaBtn.className = 'px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-sm transition-all duration-200 flex items-center gap-1.5';
+            if (adminBtn) adminBtn.className = 'px-3 py-1.5 rounded-xl text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center gap-1.5';
+            
+            const siswaNav = document.getElementById('siswa-nav');
+            const adminNav = document.getElementById('admin-nav');
+            if (siswaNav) siswaNav.classList.remove('hidden');
+            if (adminNav) adminNav.classList.add('hidden');
+
+            return false;
         }
 
         function verifyAdminPin(e) {
@@ -772,11 +841,14 @@ function setConfigValue(sheet, key, value) {
             const pinInput = document.getElementById('input-admin-pin')?.value;
             const errorMsg = document.getElementById('pin-error-msg');
 
-            if (pinInput === adminPin) {
+            if (String(pinInput || '').trim() === String(adminPin).trim()) {
                 isAdminUnlocked = true;
                 if (errorMsg) errorMsg.classList.add('hidden');
-                document.getElementById('input-admin-pin').value = '';
-                document.getElementById('modal-admin-pin').classList.add('hidden');
+                
+                const pinInputEl = document.getElementById('input-admin-pin');
+                if (pinInputEl) pinInputEl.value = '';
+                
+                closeModal('modal-admin-pin');
                 
                 const lockIcon = document.getElementById('admin-lock-icon');
                 if (lockIcon) lockIcon.className = 'fa-solid fa-lock-open text-[10px] text-emerald-400';
@@ -784,6 +856,11 @@ function setConfigValue(sheet, key, value) {
                 setRole('admin');
             } else {
                 if (errorMsg) errorMsg.classList.remove('hidden');
+                const pinInputEl = document.getElementById('input-admin-pin');
+                if (pinInputEl) {
+                    pinInputEl.focus();
+                    pinInputEl.select();
+                }
             }
         }
 
@@ -850,15 +927,15 @@ function setConfigValue(sheet, key, value) {
             }
         }
 
-        function setCategoryFilter(filter) {
+        function setCategoryFilter(filter, el) {
             currentCategoryFilter = filter;
             const buttons = document.querySelectorAll('.cat-btn');
             buttons.forEach(btn => {
                 btn.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition';
             });
 
-            if (event && event.currentTarget) {
-                event.currentTarget.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
+            if (el) {
+                el.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
             }
             renderMenu();
         }
@@ -1024,13 +1101,16 @@ function setConfigValue(sheet, key, value) {
             const totalText = formatRupiah(totalPrice);
 
             updateQrisImagePreview();
-            document.getElementById('qris-modal-total').innerText = totalText;
-            document.getElementById('qris-modal-total-text').innerText = totalText;
-            document.getElementById('modal-qris').classList.remove('hidden');
+            const modalTotal = document.getElementById('qris-modal-total');
+            const modalTotalText = document.getElementById('qris-modal-total-text');
+            if (modalTotal) modalTotal.innerText = totalText;
+            if (modalTotalText) modalTotalText.innerText = totalText;
+            
+            openModal('modal-qris');
         }
 
         function closeQrisModal() {
-            document.getElementById('modal-qris')?.classList.add('hidden');
+            closeModal('modal-qris');
             removeProofImage();
         }
 
@@ -1216,10 +1296,10 @@ function setConfigValue(sheet, key, value) {
 
             if (query) {
                 filteredOrders = filteredOrders.filter(o => 
-                    o.buyerName.toLowerCase().includes(query) ||
+                    (o.buyerName && o.buyerName.toLowerCase().includes(query)) ||
                     (o.buyerNisn && o.buyerNisn.toLowerCase().includes(query)) ||
-                    o.buyerClass.toLowerCase().includes(query) ||
-                    o.buyerPhone.toLowerCase().includes(query) ||
+                    (o.buyerClass && o.buyerClass.toLowerCase().includes(query)) ||
+                    (o.buyerPhone && o.buyerPhone.toLowerCase().includes(query)) ||
                     (o.vouchers && o.vouchers.some(v => v.voucherCode.toLowerCase().includes(query)))
                 );
             }
@@ -1297,11 +1377,11 @@ function setConfigValue(sheet, key, value) {
             if (modalSubtitle) modalSubtitle.innerText = `Kelas ${order.buyerClass} • ${order.date} • ${formatRupiah(order.totalAmount)}`;
             if (modalImg) modalImg.src = order.paymentProof;
 
-            document.getElementById('modal-view-proof')?.classList.remove('hidden');
+            openModal('modal-view-proof');
         }
 
         function closeViewProofModal() {
-            document.getElementById('modal-view-proof')?.classList.add('hidden');
+            closeModal('modal-view-proof');
         }
 
         function processRedeemVoucher(orderId) {
@@ -1314,6 +1394,7 @@ function setConfigValue(sheet, key, value) {
             order.redeemStatus = 'Sudah Ditukar';
 
             saveData();
+            syncOrdersToCloud();
             renderAdminTransactions();
             showToast(`Voucher fisik untuk ${order.buyerName} berhasil diserahkan!`, 'success');
         }
@@ -1349,6 +1430,7 @@ function setConfigValue(sheet, key, value) {
             if (newStock !== null && !isNaN(newStock)) {
                 item.stock = parseInt(newStock) || 0;
                 saveData();
+                saveConfigToCloud({ menuItems: menuItems });
                 renderAdminMenu();
                 renderMenu();
                 showToast('Stok voucher berhasil diperbarui!', 'success');
@@ -1384,8 +1466,8 @@ function setConfigValue(sheet, key, value) {
                             updateQrisImagePreview();
                         }
                         if (data.adminPin) {
-                            adminPin = data.adminPin;
-                            localStorage.setItem('kantin_admin_pin', data.adminPin);
+                            adminPin = String(data.adminPin).trim();
+                            localStorage.setItem('kantin_admin_pin', adminPin);
                         }
                         if (data.menuItems && Array.isArray(data.menuItems) && data.menuItems.length > 0) {
                             menuItems = data.menuItems;
@@ -1407,6 +1489,19 @@ function setConfigValue(sheet, key, value) {
                     updateSyncStatus(false);
                     showToast('Gagal menarik data dari Google Sheet (periksa Webhook URL)', 'error');
                 });
+        }
+
+        function syncOrdersToCloud() {
+            if (!webhookUrl) return;
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'update_orders',
+                    orders: orders
+                })
+            }).catch(err => console.log('Orders Cloud Push Error:', err));
         }
 
         function saveConfigToCloud(configPayload) {
@@ -1470,11 +1565,11 @@ function setConfigValue(sheet, key, value) {
                 showToast('PIN minimal 4 digit angka!', 'error');
                 return;
             }
-            adminPin = newPin;
-            localStorage.setItem('kantin_admin_pin', newPin);
+            adminPin = String(newPin).trim();
+            localStorage.setItem('kantin_admin_pin', adminPin);
             document.getElementById('new-admin-pin').value = '';
             
-            saveConfigToCloud({ adminPin: newPin });
+            saveConfigToCloud({ adminPin: adminPin });
             showToast('PIN Kasir berhasil diperbarui & disimpan di Cloud Database!', 'success');
         }
 
@@ -1511,11 +1606,11 @@ function setConfigValue(sheet, key, value) {
         }
 
         function openScriptGuideModal() {
-            document.getElementById('modal-script-guide')?.classList.remove('hidden');
+            openModal('modal-script-guide');
         }
 
         function closeScriptGuideModal() {
-            document.getElementById('modal-script-guide')?.classList.add('hidden');
+            closeModal('modal-script-guide');
         }
 
         function copyAppsScriptCode() {
