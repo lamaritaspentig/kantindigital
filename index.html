@@ -2157,7 +2157,7 @@ function sanitizeFileName(str) {
         // =========================================================================
         function syncDataFromCloud(isAuto = false, reqPin = '') {
             const statusBadge = document.getElementById('cloud-sync-status');
-            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) {
+            if (!webhookUrl || webhookUrl.trim() === '' || webhookUrl.includes('...')) {
                 if (statusBadge) {
                     statusBadge.className = 'text-[10px] font-black px-3 py-1 rounded-full bg-amber-100 text-amber-800 shrink-0';
                     statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-[8px] mr-1"></i> Local (URL Belum Diatur)';
@@ -2166,11 +2166,19 @@ function sanitizeFileName(str) {
             }
 
             const fetchPin = reqPin || activeKasirPin;
-            const targetUrl = webhookUrl + (fetchPin ? `?pin=${encodeURIComponent(fetchPin)}` : '');
+            const paramChar = webhookUrl.includes('?') ? '&' : '?';
+            const targetUrl = webhookUrl + (fetchPin ? `${paramChar}pin=${encodeURIComponent(fetchPin)}` : '');
 
-            return fetch(targetUrl)
-                .then(res => res.json())
+            return fetch(targetUrl, { method: 'GET', redirect: 'follow' })
+                .then(res => {
+                    if (!res.ok) throw new Error('HTTP Status ' + res.status);
+                    return res.json();
+                })
                 .then(data => {
+                    if (data.error) {
+                        throw new Error(data.message || 'Error dari Apps Script');
+                    }
+
                     if (statusBadge) {
                         statusBadge.className = 'text-[10px] font-black px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 shrink-0';
                         statusBadge.innerHTML = '<i class="fa-solid fa-circle text-[8px] mr-1 text-emerald-500"></i> Online (Terhubung Sheet)';
@@ -2225,14 +2233,14 @@ function sanitizeFileName(str) {
                         statusBadge.innerHTML = '<i class="fa-solid fa-circle-exclamation text-[8px] mr-1"></i> Error Sync';
                     }
                     if (!isAuto && !reqPin) {
-                        showToast('Gagal terhubung ke Cloud Apps Script!', 'error');
+                        showToast('Gagal terhubung ke Cloud Apps Script! Periksa pengaturan Deployment Web App.', 'error');
                     }
                     return false;
                 });
         }
 
         function sendOrderToCloud(newOrder) {
-            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) return;
+            if (!webhookUrl || webhookUrl.trim() === '' || webhookUrl.includes('...')) return;
 
             fetch(webhookUrl, {
                 method: 'POST',
@@ -2243,7 +2251,7 @@ function sanitizeFileName(str) {
         }
 
         function syncOrdersToCloud() {
-            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) return;
+            if (!webhookUrl || webhookUrl.trim() === '' || webhookUrl.includes('...')) return;
 
             fetch(webhookUrl, {
                 method: 'POST',
@@ -2254,7 +2262,7 @@ function sanitizeFileName(str) {
         }
 
         function syncStockToCloud() {
-            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) return;
+            if (!webhookUrl || webhookUrl.trim() === '' || webhookUrl.includes('...')) return;
 
             fetch(webhookUrl, {
                 method: 'POST',
