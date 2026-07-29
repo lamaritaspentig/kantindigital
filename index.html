@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,16 +11,19 @@
     <!-- Google Fonts Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         html { 
             overflow-y: scroll; 
             scrollbar-gutter: stable; 
         }
-        body { font-family: 'Inter', sans-serif; }
+        body { 
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif; 
+        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
         /* Hide spinner arrows from number inputs */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { 
@@ -28,76 +31,114 @@
             margin: 0; 
         }
         input[type=number] { -moz-appearance: textfield; }
+
+        /* Custom Serrated Ticket Edge Effect */
+        .ticket-card {
+            position: relative;
+            background-color: #ffffff;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .ticket-card::before, .ticket-card::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            background-color: #f1f5f9; /* Matches bg-slate-100 */
+            border-radius: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+        .ticket-card::before { left: -9px; }
+        .ticket-card::after { right: -9px; }
+
+        /* Dynamic Glow Effects */
+        .emerald-glow {
+            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.3);
+        }
+        
+        /* Print styling for tickets */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            main { padding: 0 !important; max-width: 100% !important; }
+            .ticket-card { break-inside: avoid; border: 2px solid #000 !important; }
+        }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-white">
 
     <!-- HEADER NAVIGATION -->
-    <header class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
-            <div onclick="handleLogoSecretClick()" class="flex items-center gap-2.5 cursor-pointer select-none" title="Klik 5x cepat untuk sembunyikan/tampilkan tombol Kasir">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-500 text-white flex items-center justify-center font-black text-xl shadow-md shadow-emerald-200 shrink-0">
+    <header class="bg-white/80 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-40 shadow-xs transition-all">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+            <div onclick="handleLogoSecretClick()" class="flex items-center gap-3 cursor-pointer select-none group" title="Klik 5x cepat untuk sembunyikan/tampilkan tombol Kasir">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-700 via-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-2xl shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-200 shrink-0">
                     🎟️
                 </div>
                 <div>
-                    <h1 class="font-black text-slate-800 text-sm sm:text-base leading-tight tracking-tight">Kantin SARAS Spentig</h1>
-                    <p class="text-[10px] text-emerald-600 font-bold sm:text-xs">Voucher Digital</p>
+                    <div class="flex items-center gap-1.5">
+                        <h1 class="font-black text-slate-900 text-sm sm:text-base leading-tight tracking-tight group-hover:text-emerald-700 transition-colors">Kantin SARAS Spentig</h1>
+                        <span class="bg-emerald-100 text-emerald-800 text-[9px] font-extrabold px-1.5 py-0.5 rounded-md hidden sm:inline-block">OFFICIAL</span>
+                    </div>
+                    <p class="text-[10px] sm:text-xs text-emerald-600 font-bold tracking-wide">Voucher Digital Kantin Sekolah</p>
                 </div>
             </div>
 
             <!-- Role Switcher Buttons -->
             <div class="bg-slate-100 p-1 rounded-2xl flex items-center text-xs font-bold border border-slate-200/80 shadow-inner shrink-0">
-                <button onclick="setRole('siswa')" id="role-siswa-btn" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-xs font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs">
+                <button onclick="setRole('siswa')" id="role-siswa-btn" class="px-3 sm:px-4 py-2 rounded-xl bg-white text-emerald-800 shadow-sm font-extrabold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs">
                     <i class="fa-solid fa-graduation-cap text-emerald-600"></i> Siswa / Ortu
                 </button>
-                <button onclick="setRole('admin')" id="role-admin-btn" class="hidden px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-500 hover:text-slate-800 font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs">
+                <button onclick="setRole('admin')" id="role-admin-btn" class="hidden px-3 sm:px-4 py-2 rounded-xl text-slate-500 hover:text-slate-900 font-extrabold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs">
                     <i class="fa-solid fa-user-shield"></i> Kasir
-                    <i id="admin-lock-icon" class="fa-solid fa-lock text-[10px] text-slate-400"></i>
+                    <i id="admin-lock-icon" class="fa-solid fa-lock text-[10px] text-slate-400 ml-0.5"></i>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Student Navigation -->
-    <nav id="siswa-nav" class="bg-white border-b border-slate-200 sticky top-[61px] z-30 shadow-xs">
-        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between text-xs sm:text-sm font-semibold gap-2">
-            <div class="flex gap-4 sm:gap-6 overflow-x-auto no-scrollbar">
-                <button onclick="switchTab('menu')" id="nav-btn-menu" class="py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-ticket"></i> Katalog Voucher Kantin
+    <nav id="siswa-nav" class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-[68px] z-30 shadow-xs">
+        <div class="max-w-6xl mx-auto px-4 flex items-center justify-between text-xs sm:text-sm font-bold gap-2">
+            <div class="flex gap-2 sm:gap-6 overflow-x-auto no-scrollbar py-1">
+                <button onclick="switchTab('menu')" id="nav-btn-menu" class="py-2.5 px-3 border-b-2 border-emerald-600 text-emerald-600 font-extrabold flex items-center gap-2 whitespace-nowrap transition-all">
+                    <i class="fa-solid fa-ticket text-emerald-600"></i> Katalog Voucher
                 </button>
-                <button onclick="switchTab('vouchers')" id="nav-btn-vouchers" class="py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold flex items-center gap-2 whitespace-nowrap">
+                <button onclick="switchTab('vouchers')" id="nav-btn-vouchers" class="py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold flex items-center gap-2 whitespace-nowrap transition-all">
                     <i class="fa-solid fa-wallet"></i> Voucher Saya
                 </button>
             </div>
-            <button onclick="switchTab('cart')" id="nav-btn-cart" class="py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl transition flex items-center gap-2 my-2 border border-emerald-200/80 shrink-0 font-bold">
+            <button onclick="switchTab('cart')" id="nav-btn-cart" class="py-2 px-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl transition-all flex items-center gap-2 my-1.5 border border-emerald-200/80 shrink-0 font-extrabold active:scale-95 shadow-xs">
                 <i id="cart-icon" class="fa-solid fa-cart-shopping text-emerald-600 text-sm"></i>
                 <span class="hidden sm:inline">Keranjang</span>
-                <span id="cart-badge" class="bg-emerald-600 text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded-full hidden">0</span>
+                <span id="cart-badge" class="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full hidden shadow-xs">0</span>
             </button>
         </div>
     </nav>
 
     <!-- Admin / Cashier Navigation -->
-    <nav id="admin-nav" class="hidden bg-slate-900 text-slate-300 border-b border-slate-800 sticky top-[61px] z-30 shadow-md">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 py-2.5 sm:py-0">
-            <div class="flex gap-4 sm:gap-6 text-xs sm:text-sm font-medium overflow-x-auto no-scrollbar py-1">
-                <button onclick="switchAdminTab('transactions')" id="admin-nav-btn-transactions" class="py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap">
+    <nav id="admin-nav" class="hidden bg-slate-900 text-slate-300 border-b border-slate-800 sticky top-[68px] z-30 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 py-2 sm:py-0">
+            <div class="flex gap-2 sm:gap-6 text-xs sm:text-sm font-semibold overflow-x-auto no-scrollbar py-1">
+                <button onclick="switchAdminTab('transactions')" id="admin-nav-btn-transactions" class="py-2.5 px-3 border-b-2 border-emerald-400 text-emerald-400 font-extrabold flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-receipt"></i> Data Transaksi
                 </button>
-                <button onclick="switchAdminTab('manage-menu')" id="admin-nav-btn-manage-menu" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-box"></i> Stok Voucher
+                <button onclick="switchAdminTab('manage-menu')" id="admin-nav-btn-manage-menu" class="py-2.5 px-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-boxes-stacked"></i> Stok Voucher
                 </button>
-                <button onclick="switchAdminTab('settings')" id="admin-nav-btn-settings" class="py-2 sm:py-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-gear"></i> Pengaturan
+                <button onclick="switchAdminTab('settings')" id="admin-nav-btn-settings" class="py-2.5 px-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-sliders"></i> Pengaturan
                 </button>
             </div>
 
-            <div class="flex items-center gap-2">
-                <button onclick="toggleNotificationSound()" id="btn-sound-toggle" title="Notifikasi Suara Pesanan Baru" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700">
+            <div class="flex items-center gap-2 my-1.5">
+                <button onclick="toggleNotificationSound()" id="btn-sound-toggle" title="Notifikasi Suara Pesanan Baru" class="py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition border border-slate-700 shadow-xs">
                     <i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400"></i>
                     <span class="hidden md:inline">Suara: On</span>
                 </button>
-                <button onclick="lockAdmin()" class="py-2 px-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-red-500/30">
+                <button onclick="lockAdmin()" class="py-1.5 px-3 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition border border-red-500/30 shadow-xs">
                     <i class="fa-solid fa-right-from-bracket"></i> Kunci Kasir
                 </button>
             </div>
@@ -107,33 +148,37 @@
     <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 space-y-6 pb-24 sm:pb-12">
 
         <!-- Info Banner Siswa -->
-        <div id="banner-siswa" class="bg-gradient-to-br from-emerald-800 via-teal-900 to-slate-900 text-white rounded-3xl p-5 shadow-lg shadow-emerald-950/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border border-emerald-700/30 relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-2xl"></div>
-            <div class="space-y-2 relative z-10">
+        <div id="banner-siswa" class="bg-gradient-to-br from-emerald-900 via-teal-900 to-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl shadow-emerald-950/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 border border-emerald-700/40 relative overflow-hidden">
+            <div class="absolute -right-12 -bottom-12 w-48 h-48 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="space-y-2.5 relative z-10">
                 <div class="flex items-center gap-2 flex-wrap">
-                    <span class="bg-emerald-500/25 text-emerald-300 text-[10px] sm:text-xs font-extrabold uppercase px-2.5 py-1 rounded-full border border-emerald-400/40 tracking-wider flex items-center gap-1.5">
+                    <span class="bg-emerald-500/25 text-emerald-300 text-[10px] sm:text-xs font-black uppercase px-3 py-1 rounded-full border border-emerald-400/30 tracking-wider flex items-center gap-1.5 shadow-xs">
                         <i class="fa-solid fa-school text-emerald-400"></i> UPT SPF SMP Negeri 3 Makassar
                     </span>
                 </div>
-                <h2 class="font-black text-base sm:text-lg tracking-tight">Sistem Voucher Digital Kantin SARAS Spentig Makassar</h2>
-                <p class="text-xs text-slate-200/90 leading-relaxed max-w-2xl">
-                    Orang tua/siswa memesan & bayar voucher fisik via QRIS dari rumah. Di sekolah, siswa cukup sebutkan <b>Nama Lengkap, Kelas & NISN</b> di meja Kasir untuk mengambil voucher fisiknya.
+                <h2 class="font-black text-lg sm:text-xl tracking-tight leading-snug">Voucher Digital Kantin SARAS Spentig Makassar</h2>
+                <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed max-w-2xl font-medium">
+                    Pesan voucher belanja kantin sekolah via QRIS secara praktis. Saat penukaran, siswa cukup sebutkan <b class="text-emerald-300 underline underline-offset-2">Nama Lengkap, Kelas & NISN</b> ke Kasir untuk mengambil voucher fisiknya.
                 </p>
+            </div>
+            <div class="shrink-0 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/15 text-center hidden md:block">
+                <span class="text-2xl block mb-1">⚡</span>
+                <span class="text-[11px] font-black uppercase tracking-wider text-emerald-200">Cepat & Aman</span>
             </div>
         </div>
 
         <!-- Banner Ringkasan Laporan & Omset Kasir -->
-        <div id="banner-admin" class="hidden bg-slate-900 text-white rounded-3xl p-5 shadow-xl border border-slate-800 space-y-4 relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div id="banner-admin" class="hidden bg-slate-900 text-white rounded-3xl p-5 sm:p-6 shadow-xl border border-slate-800 space-y-5 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-52 h-52 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
             
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-3 relative z-10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4 relative z-10">
                 <div>
-                    <h2 class="font-black text-base sm:text-lg tracking-tight flex items-center gap-2">
-                        <i class="fa-solid fa-chart-line text-emerald-400"></i> Ringkasan Laporan & Omset Kasir
+                    <h2 class="font-black text-base sm:text-lg tracking-tight flex items-center gap-2 text-white">
+                        <i class="fa-solid fa-chart-line text-emerald-400"></i> Ringkasan Penjualan & Omset Kasir
                     </h2>
-                    <p class="text-xs text-slate-400">Pantauan omset harian, statistik penukaran voucher & status stok kantin</p>
+                    <p class="text-xs text-slate-400 font-medium mt-0.5">Pantauan omset harian, penukaran voucher & stok kantin realtime</p>
                 </div>
-                <span id="summary-today-date" class="text-[11px] font-extrabold bg-slate-800 text-emerald-400 px-3 py-1 rounded-full border border-slate-700/80 self-start sm:self-auto flex items-center gap-1.5">
+                <span id="summary-today-date" class="text-[11px] font-extrabold bg-slate-800 text-emerald-400 px-3.5 py-1.5 rounded-full border border-slate-700 self-start sm:self-auto flex items-center gap-2 shadow-xs">
                     <i class="fa-regular fa-calendar text-emerald-400"></i> Hari Ini
                 </span>
             </div>
@@ -141,8 +186,8 @@
             <!-- 4 Stat Cards Grid -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 relative z-10">
                 <!-- Stat 1: Omset Hari Ini -->
-                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
-                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-emerald-500/50 transition-colors">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-wallet text-emerald-400"></i> Omset Hari Ini
                     </p>
                     <p id="stat-omset-today" class="text-lg sm:text-xl font-black text-emerald-400 tracking-tight">Rp 0</p>
@@ -150,8 +195,8 @@
                 </div>
 
                 <!-- Stat 2: Voucher Terjual -->
-                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
-                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-blue-500/50 transition-colors">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-ticket text-blue-400"></i> Terjual Hari Ini
                     </p>
                     <p id="stat-vouchers-sold" class="text-lg sm:text-xl font-black text-blue-400 tracking-tight">0 Lembar</p>
@@ -159,8 +204,8 @@
                 </div>
 
                 <!-- Stat 3: Belum Ditukar -->
-                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
-                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-amber-500/50 transition-colors">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-hand-holding-dollar text-amber-400"></i> Belum Ditukar
                     </p>
                     <p id="stat-vouchers-unredeemed" class="text-lg sm:text-xl font-black text-amber-400 tracking-tight">0 Lembar</p>
@@ -168,8 +213,8 @@
                 </div>
 
                 <!-- Stat 4: Stok Tipis -->
-                <div class="bg-slate-800/80 p-3.5 sm:p-4 rounded-2xl border border-slate-700/60 space-y-1">
-                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1">
+                <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-purple-500/50 transition-colors">
+                    <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-boxes-stacked text-purple-400"></i> Stok Tipis (≤10)
                     </p>
                     <p id="stat-low-stock" class="text-lg sm:text-xl font-black text-purple-400 tracking-tight">0 Jenis</p>
@@ -182,44 +227,51 @@
         <section id="view-menu" class="space-y-5">
             <!-- Filter Pills -->
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-                <button onclick="setCategoryFilter('all', this)" class="cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition">
+                <button onclick="setCategoryFilter('all', this)" class="cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap shadow-md shadow-emerald-200 transition-all">
                     Semua Voucher
                 </button>
-                <button onclick="setCategoryFilter('kecil', this)" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
+                <button onclick="setCategoryFilter('kecil', this)" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shadow-xs">
                     Nominal Kecil (≤ Rp 3.000)
                 </button>
-                <button onclick="setCategoryFilter('besar', this)" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition">
+                <button onclick="setCategoryFilter('besar', this)" class="cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shadow-xs">
                     Nominal Besar (≥ Rp 5.000)
                 </button>
             </div>
 
             <!-- Items Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="menu-grid">
-                <!-- Dynamically populated from Google Sheets -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="menu-grid">
+                <!-- Dynamically populated from Google Sheets or default state -->
             </div>
         </section>
 
         <!-- VIEW: SHOPPING CART -->
         <section id="view-cart" class="hidden space-y-6 max-w-6xl mx-auto w-full">
-            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
+            <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-5 sm:p-7 space-y-6">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                    <h2 class="font-extrabold text-slate-800 text-base flex items-center gap-2">
-                        <i class="fa-solid fa-cart-shopping text-emerald-600"></i> Keranjang Voucher Pembelian
+                    <h2 class="font-black text-slate-800 text-base flex items-center gap-2.5">
+                        <i class="fa-solid fa-cart-shopping text-emerald-600"></i> Keranjang Pembelian Voucher
                     </h2>
-                    <span class="text-xs text-slate-400 font-semibold">Kantin SARAS Spentig System</span>
+                    <span class="text-xs text-slate-400 font-bold bg-slate-100 px-2.5 py-1 rounded-full">Spentig System</span>
                 </div>
 
-                <div id="cart-empty-state" class="text-center py-10 text-slate-400 space-y-3">
-                    <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-2xl">🛒</div>
-                    <p class="text-sm font-semibold text-slate-600">Keranjang belanjaan Anda masih kosong.</p>
-                    <button onclick="switchTab('menu')" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md shadow-emerald-200 transition">Pilih Voucher Sekarang</button>
+                <div id="cart-empty-state" class="text-center py-14 text-slate-400 space-y-4">
+                    <div class="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center mx-auto text-3xl shadow-inner">🛒</div>
+                    <div class="space-y-1">
+                        <p class="text-base font-extrabold text-slate-700">Keranjang belanjaan masih kosong</p>
+                        <p class="text-xs text-slate-400">Pilih nominal voucher yang ingin Anda beli untuk dimasukkan ke keranjang.</p>
+                    </div>
+                    <button onclick="switchTab('menu')" class="mt-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl font-extrabold shadow-md shadow-emerald-200 transition-all transform active:scale-95">
+                        <i class="fa-solid fa-ticket mr-1.5"></i> Pilih Voucher Sekarang
+                    </button>
                 </div>
 
                 <!-- Desktop 2-Column Responsive Grid -->
                 <div id="cart-content-grid" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                     <!-- Column Left: Cart Items List -->
                     <div class="lg:col-span-6 space-y-3">
-                        <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider mb-2">Daftar Voucher di Keranjang</h3>
+                        <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-list-check text-emerald-600"></i> Daftar Voucher Pilihan
+                        </h3>
                         <div id="cart-items-container" class="space-y-3 max-h-[420px] overflow-y-auto no-scrollbar pr-1">
                             <!-- Cart items dynamically rendered -->
                         </div>
@@ -228,31 +280,33 @@
                     <!-- Column Right: Student Identity Form & Payment Button -->
                     <div id="cart-checkout-section" class="lg:col-span-6 space-y-5 lg:border-l lg:border-slate-200 lg:pl-6 pt-4 lg:pt-0 border-t lg:border-t-0 border-slate-200">
                         <!-- Form Identitas Siswa -->
-                        <div class="space-y-4 bg-slate-50/80 p-4 sm:p-5 rounded-2xl border border-slate-200/80">
+                        <div class="space-y-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200/80">
                             <div class="flex items-center justify-between">
-                                <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider">Identitas Siswa Pembeli (Wajib)</h3>
-                                <span class="text-[10px] text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded-md">Untuk Verifikasi Kasir</span>
+                                <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user-check text-emerald-600"></i> Data Identitas Siswa
+                                </h3>
+                                <span class="text-[10px] text-amber-800 font-extrabold bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-200">Verifikasi Kasir</span>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Siswa</label>
-                                    <input type="text" id="buyer-name" placeholder="Misal: Andi Muhammad" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    <label class="block text-xs font-extrabold text-slate-700 mb-1">Nama Lengkap Siswa <span class="text-red-500">*</span></label>
+                                    <input type="text" id="buyer-name" placeholder="Misal: Andi Muhammad" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1">Kelas Siswa (Format Standar)</label>
-                                    <input type="text" id="buyer-class" placeholder="Contoh: VII.1, VIII.3, IX.11" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                                    <p class="text-[10px] text-slate-400 mt-1">Gunakan Romawi & Titik (Misal: VII.1, VIII.4, IX.2)</p>
+                                    <label class="block text-xs font-extrabold text-slate-700 mb-1">Kelas Siswa <span class="text-red-500">*</span></label>
+                                    <input type="text" id="buyer-class" placeholder="Contoh: VII.1, VIII.3, IX.11" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
+                                    <p class="text-[10px] text-slate-400 mt-1 font-medium">Sesuai format kelas sekolah</p>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1">NISN (10 Digit NISN)</label>
-                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" id="buyer-nisn" placeholder="Contoh: 0081234567" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    <label class="block text-xs font-extrabold text-slate-700 mb-1">NISN (10 Digit NISN) <span class="text-red-500">*</span></label>
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" id="buyer-nisn" placeholder="Contoh: 0081234567" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-slate-700 mb-1">Nomor HP Orang Tua / Siswa</label>
-                                    <input type="tel" id="buyer-phone" placeholder="08xxxxxxxxxx" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-medium outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                    <label class="block text-xs font-extrabold text-slate-700 mb-1">Nomor HP / WhatsApp <span class="text-red-500">*</span></label>
+                                    <input type="tel" id="buyer-phone" placeholder="08xxxxxxxxxx" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
                                 </div>
                             </div>
                         </div>
@@ -260,10 +314,10 @@
                         <!-- Total & Payment Button -->
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
                             <div>
-                                <p class="text-xs text-slate-500 font-bold uppercase tracking-wider">Total Pembayaran</p>
-                                <p class="text-2xl font-black text-emerald-600" id="cart-total-price">Rp 0</p>
+                                <p class="text-xs text-slate-500 font-extrabold uppercase tracking-wider">Total Tagihan Pembelian</p>
+                                <p class="text-2xl font-black text-emerald-600 tracking-tight" id="cart-total-price">Rp 0</p>
                             </div>
-                            <button onclick="openQrisModal()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-3.5 rounded-2xl font-extrabold text-xs shadow-lg shadow-emerald-200 flex items-center justify-center gap-2 transition transform active:scale-95">
+                            <button onclick="openQrisModal()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white px-7 py-3.5 rounded-2xl font-black text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition transform active:scale-95">
                                 <i class="fa-solid fa-qrcode text-base"></i> Bayar Lewat QRIS
                             </button>
                         </div>
@@ -273,35 +327,46 @@
         </section>
 
         <!-- VIEW: VOUCHER WALLET -->
-        <section id="view-vouchers" class="hidden space-y-4">
-            <div class="flex justify-between items-center bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <section id="view-vouchers" class="hidden space-y-5">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
                 <div>
-                    <h2 class="font-extrabold text-slate-800 text-base">Voucher Fisik Saya</h2>
-                    <p class="text-xs text-slate-500">Tunjukkan bukti ini atau sebutkan Nama, Kelas & NISN ke Kasir untuk mengambil voucher fisik</p>
+                    <h2 class="font-black text-slate-800 text-base flex items-center gap-2">
+                        <i class="fa-solid fa-wallet text-emerald-600"></i> Voucher Fisik Saya
+                    </h2>
+                    <p class="text-xs text-slate-500 font-medium">Tunjukkan bukti digital ini atau sebutkan Nama, Kelas & NISN ke Kasir untuk mengambil voucher fisik</p>
                 </div>
+                <button onclick="window.print()" class="no-print bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-xl text-xs font-extrabold border border-slate-300 transition shrink-0 flex items-center gap-2 shadow-2xs">
+                    <i class="fa-solid fa-print"></i> Cetak / Simpan
+                </button>
             </div>
 
-            <div id="vouchers-empty-state" class="text-center py-14 bg-white rounded-3xl border border-slate-200/80 space-y-3">
-                <div class="w-16 h-16 bg-amber-50 rounded-full flex items-center justify-center mx-auto text-2xl text-amber-600">🎟️</div>
-                <p class="text-sm font-extrabold text-slate-700">Belum Ada Voucher</p>
-                <p class="text-xs text-slate-400 max-w-xs mx-auto">Pesan voucher kantin sekarang untuk ditukarkan menjadi voucher fisik di sekolah.</p>
-                <button onclick="switchTab('menu')" class="mt-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl font-bold transition">Beli Voucher</button>
+            <div id="vouchers-empty-state" class="text-center py-16 bg-white rounded-3xl border border-slate-200/80 space-y-4 shadow-xs">
+                <div class="w-20 h-20 bg-amber-50 rounded-3xl flex items-center justify-center mx-auto text-3xl text-amber-600 shadow-inner">🎟️</div>
+                <div class="space-y-1">
+                    <p class="text-base font-black text-slate-800">Belum Ada Voucher Dipesan</p>
+                    <p class="text-xs text-slate-400 max-w-sm mx-auto font-medium">Pesan voucher kantin sekarang. Setelah pembayaran dikonfirmasi, voucher siap diambil di sekolah.</p>
+                </div>
+                <button onclick="switchTab('menu')" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl font-extrabold shadow-md transition-all">
+                    Beli Voucher Kantin
+                </button>
             </div>
 
-            <div id="vouchers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div id="vouchers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <!-- User purchased vouchers populated dynamically -->
             </div>
         </section>
 
         <!-- VIEW: ADMIN TRANSACTIONS -->
         <section id="view-admin-transactions" class="hidden space-y-4">
-            <div class="bg-white p-4 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+            <div class="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-100 pb-4">
                     <div>
-                        <h2 class="text-base font-extrabold text-slate-800">Data Transaksi & Penukaran Voucher</h2>
-                        <p class="text-xs text-slate-500">Cari nama, kelas, atau NISN siswa untuk menyerahkan voucher fisik di kantin</p>
+                        <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-list-ol text-emerald-600"></i> Data Transaksi & Penukaran Voucher
+                        </h2>
+                        <p class="text-xs text-slate-500 font-medium">Kelola dan verifikasi pesanan voucher siswa di kasir kantin</p>
                     </div>
-                    <button onclick="exportToExcel()" class="w-full sm:w-auto bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-4 py-2.5 rounded-xl text-xs font-bold border border-emerald-200 flex items-center justify-center gap-2 transition">
+                    <button onclick="exportToExcel()" class="w-full sm:w-auto bg-emerald-50 hover:bg-emerald-100 text-emerald-800 px-4 py-2.5 rounded-xl text-xs font-extrabold border border-emerald-200 flex items-center justify-center gap-2 transition shadow-2xs">
                         <i class="fa-solid fa-file-excel text-emerald-600"></i> Download Excel / CSV
                     </button>
                 </div>
@@ -310,9 +375,9 @@
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-                        <input type="text" id="admin-search-input" onkeyup="renderAdminTransactions()" placeholder="Ketik Nama Siswa, Kelas (misal VII.1), NISN, atau Kode Voucher..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                        <input type="text" id="admin-search-input" onkeyup="renderAdminTransactions()" placeholder="Ketik Nama Siswa, Kelas (misal VII.1), NISN, atau ID Transaksi..." class="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-2xs">
                     </div>
-                    <select id="admin-status-filter" onchange="renderAdminTransactions()" class="w-full sm:w-auto bg-slate-50 border border-slate-300 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 outline-none">
+                    <select id="admin-status-filter" onchange="renderAdminTransactions()" class="w-full sm:w-auto bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2.5 text-xs font-extrabold text-slate-700 outline-none shadow-2xs cursor-pointer">
                         <option value="all">Semua Status (Tukar & Bayar)</option>
                         <option value="unredeemed">Voucher Belum Ditukar</option>
                         <option value="redeemed">Voucher Sudah Ditukar</option>
@@ -336,12 +401,12 @@
                                 <th class="p-3.5">Siswa, Kelas & NISN</th>
                                 <th class="p-3.5">Rincian Voucher</th>
                                 <th class="p-3.5">Total</th>
-                                <th class="p-3.5">Status Pembayaran</th>
-                                <th class="p-3.5">Status Penukaran</th>
+                                <th class="p-3.5">Pembayaran</th>
+                                <th class="p-3.5">Penukaran</th>
                                 <th class="p-3.5 text-right">Aksi Kasir</th>
                             </tr>
                         </thead>
-                        <tbody id="admin-transactions-tbody" class="divide-y divide-slate-100">
+                        <tbody id="admin-transactions-tbody" class="divide-y divide-slate-100 font-medium">
                             <!-- Populated dynamically -->
                         </tbody>
                     </table>
@@ -351,13 +416,15 @@
 
         <!-- VIEW: ADMIN MANAGE MENU -->
         <section id="view-admin-manage-menu" class="hidden space-y-4">
-            <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-slate-200">
+            <div class="flex justify-between items-center bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs">
                 <div>
-                    <h2 class="text-base font-extrabold text-slate-800">Kelola Stok Voucher Kantin</h2>
-                    <p class="text-xs text-slate-500">Atur ketersediaan dan jumlah stok voucher fisik sekolah (Tersinkronisasi ke Google Sheet)</p>
+                    <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked text-emerald-600"></i> Kelola Stok Voucher Kantin
+                    </h2>
+                    <p class="text-xs text-slate-500 font-medium">Atur jumlah ketersediaan voucher fisik di sekolah (Tersinkronisasi otomatis ke Cloud Google Sheet)</p>
                 </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-menu-grid">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5" id="admin-menu-grid">
                 <!-- Populated dynamically -->
             </div>
         </section>
@@ -367,11 +434,11 @@
             <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-5 sm:p-7 space-y-6">
                 <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
                     <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-lg shadow-md shrink-0">
-                        <i class="fa-solid fa-gear"></i>
+                        <i class="fa-solid fa-sliders"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-extrabold text-slate-800">Pengaturan Kasir & Google Sheet</h2>
-                        <p class="text-xs text-slate-500">Sinkronisasi data terpusat dari Google Apps Script</p>
+                        <h2 class="text-base font-black text-slate-800">Pengaturan Kasir & Integrasi Cloud</h2>
+                        <p class="text-xs text-slate-500 font-medium">Konfigurasi visibilitas, audio, dan tautan Google Apps Script</p>
                     </div>
                 </div>
 
@@ -379,31 +446,31 @@
                     <!-- Toggle Hide Kasir Button -->
                     <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between">
                         <div class="space-y-2">
-                            <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
+                            <h3 class="font-extrabold text-slate-800 text-xs flex items-center gap-2">
                                 <i class="fa-solid fa-eye-slash text-emerald-600 text-sm"></i> Visibilitas Tombol Kasir
                             </h3>
-                            <p class="text-xs text-slate-500">Atur tampilan tombol Kasir di header agar tidak mudah diakses siswa.</p>
+                            <p class="text-xs text-slate-500 leading-relaxed font-medium">Sembunyikan tombol Kasir di header agar tidak sembarangan dibuka oleh siswa di sekolah.</p>
                         </div>
                         <div class="pt-2 space-y-2">
-                            <button onclick="toggleAdminButtonState()" id="btn-toggle-kasir-visibility" class="bg-slate-900 hover:bg-black text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-2">
+                            <button onclick="toggleAdminButtonState()" id="btn-toggle-kasir-visibility" class="bg-slate-900 hover:bg-black text-white px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-xs transition flex items-center gap-2">
                                 <i class="fa-solid fa-eye"></i> Tampilkan Tombol Kasir
                             </button>
-                            <p class="text-[11px] text-slate-400 italic">Atau ketuk Logo 🎟️ 5x cepat untuk ubah visibilitas.</p>
+                            <p class="text-[11px] text-slate-400 italic font-medium">Tips: Ketuk Logo Header 🎟️ 5x cepat untuk ubah visibilitas rahasia.</p>
                         </div>
                     </div>
 
                     <!-- Auto-Lock & Audio Settings Card -->
                     <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between">
                         <div class="space-y-2">
-                            <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                                <i class="fa-solid fa-shield-halved text-emerald-600 text-sm"></i> Keamanan & Notifikasi Kasir
+                            <h3 class="font-extrabold text-slate-800 text-xs flex items-center gap-2">
+                                <i class="fa-solid fa-shield-halved text-emerald-600 text-sm"></i> Keamanan & Notifikasi Audio
                             </h3>
-                            <p class="text-xs text-slate-500 leading-relaxed">
-                                Fitur <b>Auto-Lock</b> otomatis mengunci Kasir jika tidak ada aktivitas selama 5 menit. Suara notifikasi memberitahu jika ada order baru.
+                            <p class="text-xs text-slate-500 leading-relaxed font-medium">
+                                Fitur <b>Auto-Lock</b> otomatis mengunci Kasir jika tidak ada aktivitas selama 5 menit. Tes suara notifikasi pesanan di bawah ini.
                             </p>
                         </div>
                         <div class="pt-2 flex flex-wrap gap-2">
-                            <button onclick="playNotificationSound()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-1.5">
+                            <button onclick="playNotificationSound()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-xs transition flex items-center gap-1.5">
                                 <i class="fa-solid fa-volume-high"></i> Tes Suara Notifikasi
                             </button>
                         </div>
@@ -413,32 +480,32 @@
                     <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-4 md:col-span-2">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
                             <div>
-                                <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                                    <i class="fa-solid fa-database text-emerald-600"></i> Database & Webhook Google Apps Script
+                                <h3 class="font-extrabold text-slate-800 text-xs flex items-center gap-2">
+                                    <i class="fa-solid fa-database text-emerald-600"></i> Database Google Apps Script Webhook
                                 </h3>
-                                <p class="text-xs text-slate-500">Atur URL Webhook Google Apps Script agar terhubung sempurna dengan Google Sheets.</p>
+                                <p class="text-xs text-slate-500 font-medium">Hubungkan ke spreadsheet Google Sheets untuk mencatat seluruh transaksi & stok.</p>
                             </div>
-                            <span id="cloud-sync-status" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600 shrink-0">
+                            <span id="cloud-sync-status" class="text-[10px] font-black px-3 py-1 rounded-full bg-slate-200 text-slate-600 shrink-0">
                                 <i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)
                             </span>
                         </div>
 
                         <!-- Input URL Webhook -->
                         <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-700">URL Webhook Apps Script</label>
-                            <div class="flex gap-2">
-                                <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-emerald-500 transition">
-                                <button onclick="saveWebhookUrlSetting()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition">Simpan URL</button>
+                            <label class="block text-xs font-extrabold text-slate-700">URL Webhook Apps Script</label>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-2xs">
+                                <button onclick="saveWebhookUrlSetting()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">Simpan URL</button>
                             </div>
-                            <p class="text-[10px] text-slate-400">Tempel URL Webhook hasil Deploy Google Apps Script di sini. PIN Kasir diatur terpusat di dalam kode Google Apps Script (<code class="text-emerald-700 font-bold">MANUAL_CONFIG.adminPin</code>).</p>
+                            <p class="text-[10px] text-slate-400 font-medium">PIN Kasir diatur terpusat di dalam skrip Google Apps Script (<code class="text-emerald-700 font-bold">MANUAL_CONFIG.adminPin</code>).</p>
                         </div>
 
                         <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-200/80">
-                            <button onclick="syncDataFromCloud(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex-1 sm:flex-none">
-                                <i class="fa-solid fa-rotate mr-1"></i> Tarik Data Manual
+                            <button onclick="syncDataFromCloud(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-xs transition flex-1 sm:flex-none">
+                                <i class="fa-solid fa-rotate mr-1.5"></i> Tarik Data Manual
                             </button>
-                            <button onclick="openScriptGuideModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3.5 py-2.5 rounded-xl font-bold text-xs border border-amber-300 transition flex-1 sm:flex-none">
-                                <i class="fa-solid fa-code mr-1"></i> Panduan Kode Google Apps Script
+                            <button onclick="openScriptGuideModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-4 py-2.5 rounded-xl font-extrabold text-xs border border-amber-300 transition flex-1 sm:flex-none">
+                                <i class="fa-solid fa-code mr-1.5"></i> Panduan Kode Apps Script
                             </button>
                         </div>
                     </div>
@@ -448,93 +515,93 @@
     </main>
 
     <!-- FLOATING WHATSAPP HELP BUTTON -->
-    <a id="btn-wa-help" onclick="openWhatsAppHelp(event)" href="#" target="_blank" title="Hubungi Kasir via WhatsApp" class="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-40 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 sm:px-4 sm:py-3 rounded-2xl shadow-xl shadow-emerald-900/20 border border-emerald-400/40 flex items-center gap-2 text-[11px] sm:text-xs font-extrabold transition-all transform hover:scale-105 active:scale-95">
-        <i class="fa-brands fa-whatsapp text-base sm:text-lg text-emerald-300"></i>
+    <a id="btn-wa-help" onclick="openWhatsAppHelp(event)" href="#" target="_blank" title="Hubungi Kasir via WhatsApp" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-3 rounded-2xl shadow-xl shadow-emerald-900/20 border border-emerald-400/40 flex items-center gap-2 text-xs font-black transition-all transform hover:scale-105 active:scale-95">
+        <i class="fa-brands fa-whatsapp text-lg text-emerald-300"></i>
         <span>Bantuan Kasir</span>
     </a>
 
     <!-- MODAL: LARGE QRIS CHECKOUT -->
-    <div id="modal-qris" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-7 shadow-2xl space-y-5 border border-slate-100 text-center relative max-h-[92vh] overflow-y-auto">
+    <div id="modal-qris" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl space-y-5 border border-slate-100 text-center relative max-h-[92vh] overflow-y-auto">
             <button onclick="closeQrisModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 p-2 rounded-full hover:bg-slate-100 transition">
                 <i class="fa-solid fa-xmark text-xl"></i>
             </button>
             
             <div class="space-y-1">
-                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider">
+                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[11px] px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-200">
                     <i class="fa-solid fa-qrcode mr-1"></i> QRIS Kantin Official
                 </span>
-                <h3 class="text-xl font-black text-slate-800 tracking-tight">Scan & Bayar Sekarang</h3>
-                <p class="text-xs text-slate-500">Gunakan GoPay, OVO, DANA, ShopeePay, LinkAja, atau Mobile Banking</p>
+                <h3 class="text-xl font-black text-slate-800 tracking-tight pt-1">Pembayaran QRIS Digital</h3>
+                <p class="text-xs text-slate-500 font-medium">Scan menggunakan GoPay, OVO, DANA, ShopeePay, LinkAja, atau Mobile Banking</p>
             </div>
 
             <!-- ENLARGED & ENHANCED QRIS CARD CONTAINER -->
-            <div class="bg-slate-50 p-4 sm:p-6 rounded-3xl border-2 border-emerald-500/20 shadow-inner space-y-4">
+            <div class="bg-slate-50 p-4 sm:p-5 rounded-3xl border-2 border-emerald-500/20 shadow-inner space-y-4">
                 <!-- High-Res QR Code Frame -->
-                <div class="w-full max-w-[320px] sm:max-w-[360px] mx-auto bg-white rounded-2xl border-2 border-slate-300 p-3 shadow-md flex items-center justify-center">
-                    <img id="qris-modal-img" src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360" alt="QRIS Kantin" class="w-full h-auto object-contain max-h-[360px] rounded-lg" style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+                <div class="w-full max-w-[280px] sm:max-w-[320px] mx-auto bg-white rounded-2xl border-2 border-slate-200 p-3 shadow-sm flex items-center justify-center">
+                    <img id="qris-modal-img" src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360" alt="QRIS Kantin" class="w-full h-auto object-contain max-h-[320px] rounded-lg">
                 </div>
 
-                <div class="bg-emerald-50 py-2.5 px-4 rounded-2xl border border-emerald-200/80">
-                    <p class="text-[11px] text-emerald-800 font-bold uppercase tracking-wider">Total Tagihan Pembayaran</p>
-                    <p class="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight" id="qris-modal-total">Rp 0</p>
+                <div class="bg-emerald-50 py-3 px-4 rounded-2xl border border-emerald-200/80">
+                    <p class="text-[11px] text-emerald-800 font-black uppercase tracking-wider">Total Nominal Pembayaran</p>
+                    <p class="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight mt-0.5" id="qris-modal-total">Rp 0</p>
                 </div>
             </div>
 
-            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200 text-left space-y-1.5">
-                <p class="text-xs font-extrabold text-amber-900 flex items-center gap-1.5">
-                    <i class="fa-solid fa-circle-info text-amber-600"></i> Petunjuk Pembayaran:
+            <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200/80 text-left space-y-1.5">
+                <p class="text-xs font-black text-amber-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info text-amber-600"></i> Petunjuk Transaksi:
                 </p>
-                <ol class="text-xs text-amber-800 font-medium space-y-1 list-decimal list-inside leading-relaxed">
+                <ol class="text-xs text-amber-800 font-semibold space-y-1 list-decimal list-inside leading-relaxed">
                     <li>Buka aplikasi E-Wallet / Mobile Banking Anda</li>
-                    <li>Scan Kode QRIS di atas dan ketik nominal <b id="qris-modal-total-text">Rp 0</b></li>
-                    <li>Setelah bayar, unggah foto bukti bayar <b class="text-red-600">(Wajib)</b> lalu klik konfirmasi</li>
+                    <li>Scan Kode QRIS di atas sesuai tagihan <b id="qris-modal-total-text" class="text-amber-950">Rp 0</b></li>
+                    <li>Unggah foto bukti bayar <b class="text-red-600">(Wajib)</b> lalu klik konfirmasi</li>
                 </ol>
             </div>
 
             <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-left space-y-2">
-                <label class="block text-xs font-extrabold text-slate-700 flex items-center justify-between">
-                    <span><i class="fa-solid fa-receipt text-emerald-600 mr-1"></i> Unggah Bukti Pembayaran <span class="text-red-500">*</span></span>
-                    <span class="text-[10px] text-red-600 font-black bg-red-100 px-2 py-0.5 rounded-md">Wajib Foto / Screenshot</span>
+                <label class="block text-xs font-black text-slate-800 flex items-center justify-between">
+                    <span><i class="fa-solid fa-receipt text-emerald-600 mr-1.5"></i> Unggah Bukti Transfer <span class="text-red-500">*</span></span>
+                    <span class="text-[10px] text-red-600 font-extrabold bg-red-100 px-2 py-0.5 rounded-md">Wajib Foto/Screenshot</span>
                 </label>
                 <input type="file" id="payment-proof-input" accept="image/*" onchange="handleProofUpload(event)" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-emerald-100 file:text-emerald-800 hover:file:bg-emerald-200 cursor-pointer">
-                <div id="proof-preview-container" class="hidden relative mt-2 rounded-xl border border-slate-300 overflow-hidden bg-slate-100 max-h-40 flex items-center justify-center p-1">
-                    <img id="payment-proof-preview-img" src="" class="max-h-36 object-contain rounded-lg" alt="Preview Bukti Transfer">
-                    <button type="button" onclick="removeProofImage()" class="absolute top-2 right-2 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-md"><i class="fa-solid fa-xmark"></i></button>
+                <div id="proof-preview-container" class="hidden relative mt-2 rounded-2xl border border-slate-300 overflow-hidden bg-slate-100 max-h-40 flex items-center justify-center p-1">
+                    <img id="payment-proof-preview-img" src="" class="max-h-36 object-contain rounded-xl" alt="Preview Bukti Transfer">
+                    <button type="button" onclick="removeProofImage()" class="absolute top-2 right-2 bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs shadow-md hover:bg-red-700"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             </div>
 
-            <button onclick="confirmCheckoutOrder(event)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-200 flex items-center justify-center gap-2 transition">
+            <button onclick="confirmCheckoutOrder(event)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-xs sm:text-sm shadow-md shadow-emerald-200 flex items-center justify-center gap-2 transition active:scale-98">
                 <i class="fa-solid fa-circle-check text-base"></i> Saya Sudah Bayar
             </button>
         </div>
     </div>
 
     <!-- MODAL: KASIR PIN VERIFICATION -->
-    <div id="modal-admin-pin" onclick="if(event.target === this) closeAdminPinModal(event)" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div id="modal-admin-pin" onclick="if(event.target === this) closeAdminPinModal(event)" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-xs w-full p-6 shadow-2xl space-y-4 border border-slate-100 text-center relative">
             <div class="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center text-xl mx-auto shadow-md">
                 <i class="fa-solid fa-lock"></i>
             </div>
             <div>
-                <h3 class="text-sm font-extrabold text-slate-800">Verifikasi PIN Kasir</h3>
-                <p class="text-xs text-slate-500 mt-1">Masukkan PIN Keamanan yang diatur di Google Apps Script</p>
+                <h3 class="text-sm font-black text-slate-800">Verifikasi PIN Kasir</h3>
+                <p class="text-xs text-slate-500 font-medium mt-1">Masukkan PIN Keamanan yang diatur di Apps Script</p>
             </div>
             
             <form onsubmit="verifyAdminPin(event)" class="space-y-3">
                 <div class="relative">
-                    <input type="password" id="input-admin-pin" maxlength="20" placeholder="Masukkan PIN" class="w-full text-center tracking-widest text-lg font-bold py-2.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 pr-10">
-                    <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-3 text-slate-400 hover:text-slate-600 focus:outline-none">
+                    <input type="password" id="input-admin-pin" maxlength="20" placeholder="Masukkan PIN" class="w-full text-center tracking-widest text-lg font-black py-2.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 pr-10 shadow-2xs">
+                    <button type="button" onclick="togglePinVisibility()" class="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600 focus:outline-none">
                         <i id="pin-toggle-icon" class="fa-solid fa-eye text-sm"></i>
                     </button>
                 </div>
-                <p id="pin-error-msg" class="text-[11px] text-red-500 font-semibold hidden">PIN keamanan salah! Silakan coba lagi.</p>
+                <p id="pin-error-msg" class="text-[11px] text-red-500 font-bold hidden">PIN keamanan salah! Silakan coba lagi.</p>
                 
                 <div class="flex gap-2">
                     <button type="button" onclick="closeAdminPinModal(event)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-xs transition">
                         Batal
                     </button>
-                    <button type="submit" id="btn-submit-pin" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-1">
+                    <button type="submit" id="btn-submit-pin" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1">
                         <span>Masuk Kasir</span>
                     </button>
                 </div>
@@ -543,16 +610,16 @@
     </div>
 
     <!-- MODAL: GOOGLE APPS SCRIPT CODE GUIDE -->
-    <div id="modal-script-guide" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div id="modal-script-guide" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative max-h-[85vh] overflow-y-auto">
             <button onclick="closeScriptGuideModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             
             <div class="space-y-1">
-                <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Setup Manual Script</span>
-                <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (Secure & Private)</h3>
-                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. PIN dan data transaksi terproteksi aman.</p>
+                <span class="bg-emerald-100 text-emerald-800 font-black text-[10px] px-3 py-0.5 rounded-full uppercase tracking-wider">Google Apps Script</span>
+                <h3 class="text-base font-black text-slate-800 pt-0.5">Kode Server Google Apps Script</h3>
+                <p class="text-xs text-slate-500 font-medium">Salin kode di bawah ini ke editor Apps Script spreadsheet Google Sheets Anda.</p>
             </div>
 
             <div class="bg-slate-900 text-slate-100 p-4 rounded-2xl text-[11px] font-mono overflow-x-auto relative">
@@ -775,20 +842,20 @@ function getOrCreateSheet(ss, name) {
     </div>
 
     <!-- MODAL: KASIR PROOF INSPECTION -->
-    <div id="modal-view-proof" class="fixed inset-0 bg-slate-900/70 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div id="modal-view-proof" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative text-center">
             <button onclick="closeViewProofModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
             
             <div class="space-y-1">
-                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Verifikasi Kasir</span>
-                <h3 class="text-base font-extrabold text-slate-800" id="proof-modal-title">Bukti Pembayaran Siswa</h3>
-                <p class="text-xs text-slate-500" id="proof-modal-subtitle">-</p>
+                <span class="bg-emerald-100 text-emerald-800 font-extrabold text-[10px] px-3 py-0.5 rounded-full uppercase tracking-wider">Verifikasi Kasir</span>
+                <h3 class="text-base font-black text-slate-800 pt-0.5" id="proof-modal-title">Bukti Pembayaran Siswa</h3>
+                <p class="text-xs text-slate-500 font-medium" id="proof-modal-subtitle">-</p>
             </div>
 
-            <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200 max-h-[60vh] overflow-y-auto flex items-center justify-center">
-                <img id="proof-modal-img" src="" alt="Bukti Transfer" class="max-w-full rounded-xl object-contain shadow-xs">
+            <div class="bg-slate-50 p-2 rounded-2xl border border-slate-200 max-h-[60vh] overflow-y-auto flex items-center justify-center shadow-inner">
+                <img id="proof-modal-img" src="" alt="Bukti Transfer" class="max-w-full rounded-xl object-contain">
             </div>
 
             <div id="proof-modal-actions" class="flex gap-2">
@@ -819,16 +886,16 @@ function getOrCreateSheet(ss, name) {
             if (!container) {
                 container = document.createElement('div');
                 container.id = 'toast-container';
-                container.className = 'fixed top-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 flex flex-col items-center sm:items-end gap-2 max-w-[88vw] sm:max-w-xs w-auto pointer-events-none px-2';
+                container.className = 'fixed top-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-4 sm:translate-x-0 z-50 flex flex-col items-center sm:items-end gap-2 max-w-[90vw] sm:max-w-xs w-auto pointer-events-none px-2';
                 document.body.appendChild(container);
             }
 
             const toast = document.createElement('div');
-            const bg = type === 'success' ? 'bg-emerald-900/95 text-white' : type === 'error' ? 'bg-red-900/95 text-white' : 'bg-slate-900/95 text-white';
+            const bg = type === 'success' ? 'bg-emerald-950/95 text-white border-emerald-500/40' : type === 'error' ? 'bg-red-950/95 text-white border-red-500/40' : 'bg-slate-950/95 text-white border-slate-700/60';
             const icon = type === 'success' ? 'fa-circle-check text-emerald-400' : type === 'error' ? 'fa-circle-xmark text-red-400' : 'fa-circle-info text-blue-400';
 
-            toast.className = `${bg} backdrop-blur-md px-3.5 py-2.5 rounded-2xl shadow-xl border border-white/15 flex items-center gap-2 text-[11px] sm:text-xs font-bold transition-all duration-300 transform -translate-y-2 opacity-0 pointer-events-auto w-auto max-w-full`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-sm shrink-0"></i><span class="leading-tight">${message}</span>`;
+            toast.className = `${bg} backdrop-blur-md px-4 py-3 rounded-2xl shadow-xl border flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform -translate-y-2 opacity-0 pointer-events-auto w-auto max-w-full`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-base shrink-0"></i><span class="leading-tight">${message}</span>`;
 
             container.appendChild(toast);
 
@@ -839,7 +906,7 @@ function getOrCreateSheet(ss, name) {
             setTimeout(() => {
                 toast.classList.add('-translate-y-2', 'opacity-0');
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            }, 3200);
         }
 
         function formatRupiah(amount) {
@@ -850,53 +917,58 @@ function getOrCreateSheet(ss, name) {
             const p = Number(price || 0);
             if (p <= 1000) {
                 return {
-                    bgCard: 'bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-transparent',
-                    borderCard: 'border-amber-400/40',
-                    bgInner: 'bg-amber-50/70',
+                    bgCard: 'bg-gradient-to-br from-amber-50 via-amber-50/40 to-white',
+                    borderCard: 'border-amber-300/80',
+                    bgInner: 'bg-amber-100/60',
                     borderInner: 'border-amber-200',
                     textSub: 'text-amber-800',
                     textTitle: 'text-amber-950',
-                    textPrice: 'text-amber-700'
+                    textPrice: 'text-amber-700',
+                    accentBadge: 'bg-amber-500 text-white'
                 };
             } else if (p <= 2000) {
                 return {
-                    bgCard: 'bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-transparent',
-                    borderCard: 'border-orange-400/40',
-                    bgInner: 'bg-orange-50/70',
+                    bgCard: 'bg-gradient-to-br from-orange-50 via-amber-50/40 to-white',
+                    borderCard: 'border-orange-300/80',
+                    bgInner: 'bg-orange-100/60',
                     borderInner: 'border-orange-200',
                     textSub: 'text-orange-800',
                     textTitle: 'text-orange-950',
-                    textPrice: 'text-orange-700'
+                    textPrice: 'text-orange-700',
+                    accentBadge: 'bg-orange-500 text-white'
                 };
             } else if (p <= 3000) {
                 return {
-                    bgCard: 'bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent',
-                    borderCard: 'border-emerald-400/40',
-                    bgInner: 'bg-emerald-50/70',
+                    bgCard: 'bg-gradient-to-br from-emerald-50 via-teal-50/40 to-white',
+                    borderCard: 'border-emerald-300/80',
+                    bgInner: 'bg-emerald-100/60',
                     borderInner: 'border-emerald-200',
                     textSub: 'text-emerald-800',
                     textTitle: 'text-emerald-950',
-                    textPrice: 'text-emerald-700'
+                    textPrice: 'text-emerald-700',
+                    accentBadge: 'bg-emerald-600 text-white'
                 };
             } else if (p <= 5000) {
                 return {
-                    bgCard: 'bg-gradient-to-br from-blue-500/10 via-sky-500/5 to-transparent',
-                    borderCard: 'border-blue-400/40',
-                    bgInner: 'bg-blue-50/70',
+                    bgCard: 'bg-gradient-to-br from-blue-50 via-sky-50/40 to-white',
+                    borderCard: 'border-blue-300/80',
+                    bgInner: 'bg-blue-100/60',
                     borderInner: 'border-blue-200',
                     textSub: 'text-blue-800',
                     textTitle: 'text-blue-950',
-                    textPrice: 'text-blue-700'
+                    textPrice: 'text-blue-700',
+                    accentBadge: 'bg-blue-600 text-white'
                 };
             } else {
                 return {
-                    bgCard: 'bg-gradient-to-br from-purple-500/10 via-indigo-500/5 to-transparent',
-                    borderCard: 'border-purple-400/40',
-                    bgInner: 'bg-purple-50/70',
+                    bgCard: 'bg-gradient-to-br from-purple-50 via-indigo-50/40 to-white',
+                    borderCard: 'border-purple-300/80',
+                    bgInner: 'bg-purple-100/60',
                     borderInner: 'border-purple-200',
                     textSub: 'text-purple-800',
                     textTitle: 'text-purple-950',
-                    textPrice: 'text-purple-700'
+                    textPrice: 'text-purple-700',
+                    accentBadge: 'bg-purple-600 text-white'
                 };
             }
         }
@@ -938,8 +1010,8 @@ function getOrCreateSheet(ss, name) {
             const waHelpBtn = document.getElementById('btn-wa-help');
 
             if (role === 'siswa') {
-                if (siswaBtn) siswaBtn.className = 'px-2.5 sm:px-3 py-1.5 rounded-xl bg-white text-emerald-800 shadow-xs font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
-                if (adminBtn) adminBtn.className = 'px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-500 hover:text-slate-800 font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
+                if (siswaBtn) siswaBtn.className = 'px-3 sm:px-4 py-2 rounded-xl bg-white text-emerald-800 shadow-sm font-extrabold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
+                if (adminBtn) adminBtn.className = 'px-3 sm:px-4 py-2 rounded-xl text-slate-500 hover:text-slate-900 font-extrabold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
                 if (siswaNav) siswaNav.classList.remove('hidden');
                 if (adminNav) adminNav.classList.add('hidden');
                 if (waHelpBtn) waHelpBtn.classList.remove('hidden');
@@ -960,8 +1032,8 @@ function getOrCreateSheet(ss, name) {
                     return;
                 }
 
-                if (siswaBtn) siswaBtn.className = 'px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-500 hover:text-slate-800 font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
-                if (adminBtn) adminBtn.className = 'px-2.5 sm:px-3 py-1.5 rounded-xl bg-slate-900 text-white shadow-xs font-bold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
+                if (siswaBtn) siswaBtn.className = 'px-3 sm:px-4 py-2 rounded-xl text-slate-500 hover:text-slate-900 font-extrabold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
+                if (adminBtn) adminBtn.className = 'px-3 sm:px-4 py-2 rounded-xl bg-slate-900 text-white shadow-sm font-extrabold transition-all duration-200 flex items-center gap-1.5 whitespace-nowrap text-[11px] sm:text-xs';
                 if (siswaNav) siswaNav.classList.add('hidden');
                 if (adminNav) adminNav.classList.remove('hidden');
                 if (waHelpBtn) waHelpBtn.classList.remove('hidden');
@@ -991,9 +1063,8 @@ function getOrCreateSheet(ss, name) {
             }
 
             const submitBtn = document.getElementById('btn-submit-pin');
-            if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>Memeriksa...</span>';
+            if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin mr-1"></i><span>Memeriksa...</span>';
 
-            // Authenticate directly against Google Apps Script Cloud
             syncDataFromCloud(false, enteredPin)
                 .then(isAuthenticated => {
                     if (submitBtn) submitBtn.innerHTML = '<span>Masuk Kasir</span>';
@@ -1001,14 +1072,14 @@ function getOrCreateSheet(ss, name) {
                         activeKasirPin = enteredPin;
                         isAdminUnlocked = true;
                         const lockIcon = document.getElementById('admin-lock-icon');
-                        if (lockIcon) lockIcon.className = 'fa-solid fa-lock-open text-[10px] text-emerald-400';
+                        if (lockIcon) lockIcon.className = 'fa-solid fa-lock-open text-[10px] text-emerald-400 ml-0.5';
                         if (errorMsg) errorMsg.classList.add('hidden');
                         closeModal('modal-admin-pin');
                         showToast('Akses Kasir Terverifikasi!', 'success');
                         setRole('admin');
                     } else {
                         if (errorMsg) {
-                            errorMsg.innerText = 'PIN keamanan salah atau tidak cocok di Google Apps Script!';
+                            errorMsg.innerText = 'PIN keamanan salah atau tidak cocok!';
                             errorMsg.classList.remove('hidden');
                         }
                     }
@@ -1049,7 +1120,7 @@ function getOrCreateSheet(ss, name) {
         // =========================================================================
         // 🛠️ CONFIGURATION & INITIAL GLOBAL STATE
         // =========================================================================
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbycQ0wbLrU63jEKfEuwKlRrE-ObqsM5PwKKA0QOfsm9C5q3yLmThWkLIQQkhwn24_GP/exec"; 
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwi75kzynmkO1ypE9VhMNRSn2S2XJz2GmZylfBGob1r_BAVi6LGAB33m7r5NPk8aRRS/exec"; 
         
         let menuItems = [
             { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
@@ -1151,23 +1222,17 @@ function getOrCreateSheet(ss, name) {
 
         function updateSoundToggleButton() {
             const btn = document.getElementById('btn-sound-toggle');
-            const icon = document.getElementById('sound-icon');
-            if (!btn || !icon) return;
+            if (!btn) return;
 
             if (isSoundEnabled) {
-                icon.className = 'fa-solid fa-volume-high text-emerald-400';
                 btn.innerHTML = `<i id="sound-icon" class="fa-solid fa-volume-high text-emerald-400"></i><span class="hidden md:inline">Suara: On</span>`;
-                btn.className = 'py-2 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700';
+                btn.className = 'py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition border border-slate-700 shadow-xs';
             } else {
                 btn.innerHTML = `<i id="sound-icon" class="fa-solid fa-volume-xmark text-slate-400"></i><span class="hidden md:inline">Suara: Off</span>`;
-                btn.className = 'py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700';
+                btn.className = 'py-1.5 px-3 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition border border-slate-700 shadow-xs';
             }
-            // Fixed: Removed recursive function call that caused infinite stack overflow
         }
 
-        // =========================================================================
-        // ⏱️ AUTO-LOCK INACTIVITY TIMER (5 MENIT)
-        // =========================================================================
         function resetInactivityTimer() {
             if (inactivityTimer) clearTimeout(inactivityTimer);
             if (currentRole === 'admin' && isAdminUnlocked) {
@@ -1221,10 +1286,10 @@ function getOrCreateSheet(ss, name) {
             if (toggleSettingBtn) {
                 if (isCashierBtnHidden) {
                     toggleSettingBtn.innerHTML = '<i class="fa-solid fa-eye"></i> Tampilkan Tombol Kasir';
-                    toggleSettingBtn.className = 'bg-slate-900 hover:bg-black text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-2';
+                    toggleSettingBtn.className = 'bg-slate-900 hover:bg-black text-white px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-xs transition flex items-center gap-2';
                 } else {
                     toggleSettingBtn.innerHTML = '<i class="fa-solid fa-eye-slash"></i> Sembunyikan Tombol Kasir';
-                    toggleSettingBtn.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex items-center gap-2';
+                    toggleSettingBtn.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-xs transition flex items-center gap-2';
                 }
             }
         }
@@ -1234,7 +1299,7 @@ function getOrCreateSheet(ss, name) {
             activeKasirPin = '';
             if (inactivityTimer) clearTimeout(inactivityTimer);
             const lockIcon = document.getElementById('admin-lock-icon');
-            if (lockIcon) lockIcon.className = 'fa-solid fa-lock text-[10px] text-slate-400';
+            if (lockIcon) lockIcon.className = 'fa-solid fa-lock text-[10px] text-slate-400 ml-0.5';
             showToast('Sistem Kasir Terkunci', 'info');
             setRole('siswa');
         }
@@ -1245,7 +1310,7 @@ function getOrCreateSheet(ss, name) {
             ['nav-btn-menu', 'nav-btn-vouchers'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
-                    btn.className = 'py-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold flex items-center gap-2 whitespace-nowrap';
+                    btn.className = 'py-2.5 px-3 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold flex items-center gap-2 whitespace-nowrap transition-all';
                 }
             });
 
@@ -1255,19 +1320,19 @@ function getOrCreateSheet(ss, name) {
             if (tab === 'menu') {
                 document.getElementById('view-menu')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('nav-btn-menu');
-                if (activeBtn) activeBtn.className = 'py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap';
-                if (cartBtn) cartBtn.className = 'py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold rounded-xl transition flex items-center gap-2 my-2 border border-emerald-200/80 shrink-0';
+                if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-emerald-600 text-emerald-600 font-extrabold flex items-center gap-2 whitespace-nowrap transition-all';
+                if (cartBtn) cartBtn.className = 'py-2 px-3.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-extrabold rounded-xl transition-all flex items-center gap-2 my-1.5 border border-emerald-200/80 shrink-0 shadow-xs';
                 if (cartIcon) cartIcon.className = 'fa-solid fa-cart-shopping text-emerald-600 text-sm';
                 renderMenu();
             } else if (tab === 'cart') {
                 document.getElementById('view-cart')?.classList.remove('hidden');
-                if (cartBtn) cartBtn.className = 'py-1.5 px-3 bg-emerald-600 text-white font-bold rounded-xl transition flex items-center gap-2 my-2 border border-emerald-600 shadow-md shadow-emerald-200 shrink-0';
+                if (cartBtn) cartBtn.className = 'py-2 px-3.5 bg-emerald-600 text-white font-extrabold rounded-xl transition-all flex items-center gap-2 my-1.5 border border-emerald-600 shadow-md shadow-emerald-200 shrink-0';
                 if (cartIcon) cartIcon.className = 'fa-solid fa-cart-shopping text-white text-sm';
                 renderCart();
             } else if (tab === 'vouchers') {
                 document.getElementById('view-vouchers')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('nav-btn-vouchers');
-                if (activeBtn) activeBtn.className = 'py-3 border-b-2 border-emerald-600 text-emerald-600 font-bold flex items-center gap-2 whitespace-nowrap';
+                if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-emerald-600 text-emerald-600 font-extrabold flex items-center gap-2 whitespace-nowrap transition-all';
                 renderUserVouchers();
             }
         }
@@ -1278,24 +1343,24 @@ function getOrCreateSheet(ss, name) {
             ['admin-nav-btn-transactions', 'admin-nav-btn-manage-menu', 'admin-nav-btn-settings'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) {
-                    btn.className = 'py-2 sm:py-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap';
+                    btn.className = 'py-2.5 px-3 border-b-2 border-transparent hover:text-white font-bold flex items-center gap-2 whitespace-nowrap transition-all';
                 }
             });
 
             if (tab === 'transactions') {
                 document.getElementById('view-admin-transactions')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('admin-nav-btn-transactions');
-                if (activeBtn) activeBtn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-emerald-400 text-emerald-400 font-extrabold flex items-center gap-2 whitespace-nowrap transition-all';
                 renderAdminTransactions();
             } else if (tab === 'manage-menu') {
                 document.getElementById('view-admin-manage-menu')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('admin-nav-btn-manage-menu');
-                if (activeBtn) activeBtn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-emerald-400 text-emerald-400 font-extrabold flex items-center gap-2 whitespace-nowrap transition-all';
                 renderAdminMenu();
             } else if (tab === 'settings') {
                 document.getElementById('view-admin-settings')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('admin-nav-btn-settings');
-                if (activeBtn) activeBtn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+                if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-emerald-400 text-emerald-400 font-extrabold flex items-center gap-2 whitespace-nowrap transition-all';
 
                 const urlInput = document.getElementById('setting-webhook-url');
                 if (urlInput) urlInput.value = webhookUrl === DEFAULT_WEBHOOK_URL ? '' : webhookUrl;
@@ -1306,10 +1371,10 @@ function getOrCreateSheet(ss, name) {
             currentCategoryFilter = category;
             const buttons = document.querySelectorAll('.cat-btn');
             buttons.forEach(btn => {
-                btn.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition';
+                btn.className = 'cat-btn bg-white text-slate-700 hover:bg-slate-200/70 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all shadow-xs';
             });
             if (element) {
-                element.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm shadow-emerald-200 transition';
+                element.className = 'cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap shadow-md shadow-emerald-200 transition-all';
             }
             renderMenu();
         }
@@ -1376,25 +1441,25 @@ function getOrCreateSheet(ss, name) {
             if (!grid) return;
 
             grid.innerHTML = menuItems.map(item => `
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-3 shadow-xs">
+                <div class="bg-white p-5 rounded-3xl border border-slate-200/80 flex flex-col justify-between space-y-4 shadow-xs hover:shadow-md transition-all">
                     <div class="flex items-center justify-between">
-                        <span class="text-3xl">${item.icon}</span>
-                        <span class="text-xs font-black ${item.stock > 0 ? 'text-emerald-600' : 'text-red-500'}">
+                        <span class="text-3xl p-2.5 bg-slate-50 rounded-2xl border border-slate-200/80">${item.icon}</span>
+                        <span class="text-xs font-black px-3 py-1 rounded-full ${item.stock > 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-700'}">
                             Stok: ${item.stock}
                         </span>
                     </div>
 
                     <div>
                         <h4 class="font-extrabold text-slate-800 text-sm">${item.name}</h4>
-                        <p class="text-xs font-bold text-slate-500">${formatRupiah(item.price)}</p>
+                        <p class="text-base font-black text-emerald-600 mt-0.5">${formatRupiah(item.price)}</p>
                     </div>
 
-                    <div class="flex items-center gap-2 pt-2 border-t border-slate-100">
-                        <button onclick="changeAdminStock('${item.id}', -10)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">-10</button>
-                        <button onclick="changeAdminStock('${item.id}', -1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">-1</button>
-                        <input type="number" value="${item.stock}" onchange="updateAdminStockDirect('${item.id}', this.value)" class="w-16 text-center font-bold text-xs py-1 bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-emerald-500">
-                        <button onclick="changeAdminStock('${item.id}', 1)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">+1</button>
-                        <button onclick="changeAdminStock('${item.id}', 10)" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition">+10</button>
+                    <div class="flex items-center gap-1.5 pt-3 border-t border-slate-100">
+                        <button onclick="changeAdminStock('${item.id}', -10)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">-10</button>
+                        <button onclick="changeAdminStock('${item.id}', -1)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">-1</button>
+                        <input type="number" value="${item.stock}" onchange="updateAdminStockDirect('${item.id}', this.value)" class="w-16 text-center font-black text-xs py-1.5 bg-slate-50 border border-slate-300 rounded-xl outline-none focus:ring-1 focus:ring-emerald-500 shadow-2xs">
+                        <button onclick="changeAdminStock('${item.id}', 1)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">+1</button>
+                        <button onclick="changeAdminStock('${item.id}', 10)" class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">+10</button>
                     </div>
                 </div>
             `).join('');
@@ -1495,22 +1560,22 @@ function getOrCreateSheet(ss, name) {
             grid.innerHTML = filtered.map(item => {
                 const theme = getVoucherTheme(item.price);
                 return `
-                <div class="${theme.bgCard} rounded-3xl border-2 ${theme.borderCard} p-5 flex flex-col justify-between shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-                    <div class="space-y-3">
+                <div class="ticket-card ${theme.bgCard} border-2 ${theme.borderCard} p-5 flex flex-col justify-between shadow-xs hover:shadow-md hover:-translate-y-1 transition-all">
+                    <div class="space-y-3.5">
                         <div class="flex items-center justify-between">
-                            <span class="text-4xl p-2 bg-white/80 rounded-2xl border ${theme.borderInner}">${item.icon}</span>
-                            <span class="text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${item.stock > 0 ? 'bg-emerald-600 text-white' : 'bg-red-100 text-red-700'}">
+                            <span class="text-3xl p-2 bg-white rounded-2xl border ${theme.borderInner} shadow-2xs">${item.icon}</span>
+                            <span class="text-[10px] font-black uppercase px-3 py-1 rounded-full ${item.stock > 0 ? theme.accentBadge : 'bg-red-100 text-red-700'} shadow-2xs">
                                 ${item.stock > 0 ? `Stok: ${item.stock}` : 'Habis'}
                             </span>
                         </div>
-                        <div>
+                        <div class="space-y-0.5">
                             <span class="text-[10px] font-extrabold uppercase ${theme.textSub} tracking-wider">Kantin SARAS Spentig</span>
                             <h3 class="font-extrabold ${theme.textTitle} text-base leading-snug">${item.name}</h3>
                         </div>
-                        <p class="text-2xl font-black ${theme.textPrice}">${formatRupiah(item.price)}</p>
+                        <p class="text-2xl font-black ${theme.textPrice} tracking-tight">${formatRupiah(item.price)}</p>
                     </div>
 
-                    <button onclick="addToCart('${item.id}')" ${item.stock <= 0 ? 'disabled' : ''} class="mt-5 w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white py-3 rounded-2xl font-extrabold text-xs shadow-md transition flex items-center justify-center gap-2">
+                    <button onclick="addToCart('${item.id}')" ${item.stock <= 0 ? 'disabled' : ''} class="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white py-3 rounded-2xl font-extrabold text-xs shadow-md shadow-emerald-500/10 transition-all flex items-center justify-center gap-2 transform active:scale-95">
                         <i class="fa-solid fa-plus"></i> Tambah Ke Keranjang
                     </button>
                 </div>
@@ -1542,7 +1607,7 @@ function getOrCreateSheet(ss, name) {
             }
 
             updateCartBadge();
-            showToast(`${item.name} (${formatRupiah(item.price)}) berhasil ditambahkan!`, 'success');
+            showToast(`${item.name} (${formatRupiah(item.price)}) ditambahkan ke keranjang!`, 'success');
         }
 
         function updateCartBadge() {
@@ -1576,18 +1641,35 @@ function getOrCreateSheet(ss, name) {
             if (emptyState) emptyState.classList.add('hidden');
             if (contentGrid) contentGrid.classList.remove('hidden');
 
+            // Auto-fill student profile from localStorage if available
+            try {
+                const savedProfile = JSON.parse(localStorage.getItem('kantin_buyer_profile') || '{}');
+                if (savedProfile.name && document.getElementById('buyer-name') && !document.getElementById('buyer-name').value) {
+                    document.getElementById('buyer-name').value = savedProfile.name;
+                }
+                if (savedProfile.class && document.getElementById('buyer-class') && !document.getElementById('buyer-class').value) {
+                    document.getElementById('buyer-class').value = savedProfile.class;
+                }
+                if (savedProfile.nisn && document.getElementById('buyer-nisn') && !document.getElementById('buyer-nisn').value) {
+                    document.getElementById('buyer-nisn').value = savedProfile.nisn;
+                }
+                if (savedProfile.phone && document.getElementById('buyer-phone') && !document.getElementById('buyer-phone').value) {
+                    document.getElementById('buyer-phone').value = savedProfile.phone;
+                }
+            } catch(e) {}
+
             itemsContainer.innerHTML = cart.map(item => `
-                <div class="flex items-center justify-between bg-slate-50 p-3.5 rounded-2xl border border-slate-200/80">
+                <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
                     <div>
                         <h4 class="font-extrabold text-slate-800 text-xs sm:text-sm">${item.name} - ${formatRupiah(item.price)}</h4>
                         <p class="text-xs font-black text-emerald-600 mt-0.5">${formatRupiah(item.price * item.qty)}</p>
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <button onclick="changeCartQty('${item.id}', -1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-xs font-extrabold hover:bg-slate-100 transition shadow-xs">-</button>
-                        <span class="text-xs font-black px-1.5">${item.qty}</span>
-                        <button onclick="changeCartQty('${item.id}', 1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-xs font-extrabold hover:bg-slate-100 transition shadow-xs">+</button>
-                        <button onclick="removeFromCart('${item.id}')" class="text-slate-400 hover:text-red-500 ml-2 transition"><i class="fa-solid fa-trash-can text-xs"></i></button>
+                        <button onclick="changeCartQty('${item.id}', -1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-xs font-black hover:bg-slate-100 transition shadow-2xs">-</button>
+                        <span class="text-xs font-black px-2">${item.qty}</span>
+                        <button onclick="changeCartQty('${item.id}', 1)" class="w-8 h-8 rounded-xl bg-white border border-slate-300 flex items-center justify-center text-xs font-black hover:bg-slate-100 transition shadow-2xs">+</button>
+                        <button onclick="removeFromCart('${item.id}')" class="text-slate-400 hover:text-red-500 ml-2 transition p-1"><i class="fa-solid fa-trash-can text-xs"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -1638,10 +1720,19 @@ function getOrCreateSheet(ss, name) {
                 return;
             }
 
+            // Save student profile to localStorage for future orders
+            try {
+                localStorage.setItem('kantin_buyer_profile', JSON.stringify({
+                    name: name,
+                    class: buyerClass,
+                    nisn: nisn,
+                    phone: phone
+                }));
+            } catch(e) {}
+
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
             const totalText = formatRupiah(totalPrice);
 
-            updateQrisImagePreview();
             const modalTotal = document.getElementById('qris-modal-total');
             const modalTotalText = document.getElementById('qris-modal-total-text');
             if (modalTotal) modalTotal.innerText = totalText;
@@ -1787,48 +1878,48 @@ function getOrCreateSheet(ss, name) {
             if (emptyState) emptyState.classList.add('hidden');
 
             grid.innerHTML = myOrders.map(order => {
-                const statusBg = order.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
+                const statusBg = order.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200';
                 const statusIcon = order.paymentStatus === 'Sudah Bayar' ? 'fa-circle-check text-emerald-600' : 'fa-clock text-amber-600';
-                const redeemBg = order.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-100 text-slate-600' : 'bg-blue-100 text-blue-800';
+                const redeemBg = order.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-blue-100 text-blue-800 border-blue-200';
 
                 return `
                 <div class="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs space-y-4">
                     <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                         <div>
-                            <span class="text-[10px] font-black text-slate-400 block">${order.id}</span>
-                            <span class="text-xs font-bold text-slate-700">${order.date}</span>
+                            <span class="text-[10px] font-mono font-black text-slate-400 block">${order.id}</span>
+                            <span class="text-xs font-extrabold text-slate-700">${order.date}</span>
                         </div>
                         <div class="flex flex-col items-end gap-1">
-                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full ${statusBg} flex items-center gap-1">
+                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full border ${statusBg} flex items-center gap-1">
                                 <i class="fa-solid ${statusIcon}"></i> ${order.paymentStatus}
                             </span>
-                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full ${redeemBg}">
+                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full border ${redeemBg}">
                                 ${order.redeemStatus}
                             </span>
                         </div>
                     </div>
 
-                    <div class="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-200/60 text-xs">
-                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">Nama Siswa:</span><span class="font-extrabold text-slate-800">${order.buyerName}</span></div>
-                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">Kelas & NISN:</span><span class="font-extrabold text-slate-800">${order.buyerClass} • ${order.buyerNisn}</span></div>
-                        <div class="flex justify-between border-t border-slate-200/80 pt-1.5 mt-1.5"><span class="text-slate-500 font-semibold">Total Belanja:</span><span class="font-black text-emerald-600">${formatRupiah(order.totalAmount)}</span></div>
+                    <div class="space-y-1.5 bg-slate-50 p-3.5 rounded-2xl border border-slate-200/60 text-xs font-medium">
+                        <div class="flex justify-between"><span class="text-slate-500">Nama Siswa:</span><span class="font-extrabold text-slate-800">${order.buyerName}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500">Kelas & NISN:</span><span class="font-extrabold text-slate-800">${order.buyerClass} • ${order.buyerNisn}</span></div>
+                        <div class="flex justify-between border-t border-slate-200/80 pt-1.5 mt-1.5"><span class="text-slate-500">Total Belanja:</span><span class="font-black text-emerald-600">${formatRupiah(order.totalAmount)}</span></div>
                     </div>
 
                     <div class="space-y-2">
-                        <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Tiket / Voucher Fisik (${order.vouchers ? order.vouchers.length : 0} Lembar):</p>
+                        <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider">Tiket Voucher (${order.vouchers ? order.vouchers.length : 0} Lembar):</p>
                         <div class="grid grid-cols-1 gap-2">
                             ${(order.vouchers || []).map(v => {
                                 const theme = getVoucherTheme(v.nominal);
                                 return `
-                                <div class="${theme.bgInner} border ${theme.borderInner} p-3 rounded-2xl flex items-center justify-between">
-                                    <div class="flex items-center gap-2.5">
-                                        <span class="text-xl">🎟️</span>
+                                <div class="ticket-card ${theme.bgInner} border ${theme.borderInner} p-3.5 rounded-2xl flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-2xl">🎟️</span>
                                         <div>
                                             <span class="text-[10px] font-mono font-bold block ${theme.textSub}">${v.id}</span>
                                             <span class="text-xs font-black ${theme.textPrice}">${formatRupiah(v.nominal)}</span>
                                         </div>
                                     </div>
-                                    <span class="text-[10px] font-black px-2 py-0.5 rounded-md ${v.redeemed || order.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600' : 'bg-emerald-600 text-white'}">
+                                    <span class="text-[10px] font-black px-2.5 py-1 rounded-lg shadow-2xs ${v.redeemed || order.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600' : theme.accentBadge}">
                                         ${v.redeemed || order.redeemStatus === 'Sudah Ditukar' ? 'Sudah Ditukar' : 'Siap Ditukar'}
                                     </span>
                                 </div>
@@ -1841,9 +1932,6 @@ function getOrCreateSheet(ss, name) {
             }).join('');
         }
 
-        // =========================================================================
-        // 🛠️ ADMIN TRANSACTIONS TABLE & ACTIONS (MISSING FUNCTIONS IMPLEMENTED)
-        // =========================================================================
         function renderAdminTransactions() {
             const mobileContainer = document.getElementById('admin-transactions-mobile');
             const tbodyContainer = document.getElementById('admin-transactions-tbody');
@@ -1871,8 +1959,8 @@ function getOrCreateSheet(ss, name) {
 
             if (filteredOrders.length === 0) {
                 const emptyHtml = `
-                    <div class="text-center py-10 text-slate-400">
-                        <i class="fa-solid fa-receipt text-3xl mb-2 block"></i>
+                    <div class="text-center py-12 text-slate-400 space-y-2">
+                        <i class="fa-solid fa-receipt text-3xl block"></i>
                         <p class="text-xs font-bold">Tidak ada transaksi yang cocok.</p>
                     </div>
                 `;
@@ -1883,7 +1971,7 @@ function getOrCreateSheet(ss, name) {
 
             // Render Mobile Card List
             mobileContainer.innerHTML = filteredOrders.map(o => `
-                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3 shadow-2xs">
                     <div class="flex items-center justify-between">
                         <span class="text-[10px] font-mono font-black text-slate-500">${o.id}</span>
                         <span class="text-[10px] font-bold text-slate-400">${o.date}</span>
@@ -1902,23 +1990,23 @@ function getOrCreateSheet(ss, name) {
 
                     <div class="flex items-center justify-between gap-2 pt-1">
                         <div class="flex flex-col gap-1">
-                            <button onclick="togglePaymentStatus('${o.id}')" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            <button onclick="togglePaymentStatus('${o.id}')" class="text-[10px] font-black px-2.5 py-1 rounded-full border transition ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200'}">
                                 ${o.paymentStatus === 'Sudah Bayar' ? '✅ Lunas' : '⚠️ Belum Bayar'}
                             </button>
-                            <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600' : 'bg-blue-100 text-blue-800'}">
+                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full border ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600 border-slate-300' : 'bg-blue-100 text-blue-800 border-blue-200'}">
                                 ${o.redeemStatus}
                             </span>
                         </div>
 
                         <div class="flex items-center gap-1.5">
                             ${o.paymentProof ? `
-                                <button onclick="viewPaymentProof('${o.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold border border-blue-200 transition">
+                                <button onclick="viewPaymentProof('${o.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold border border-blue-200 transition">
                                     <i class="fa-solid fa-receipt"></i> Bukti
                                 </button>
                             ` : ''}
                             
                             ${o.redeemStatus !== 'Sudah Ditukar' ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition">
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition">
                                     Serahkan
                                 </button>
                             ` : `
@@ -1932,34 +2020,34 @@ function getOrCreateSheet(ss, name) {
             // Render Desktop Table Rows
             tbodyContainer.innerHTML = filteredOrders.map((o, idx) => `
                 <tr class="hover:bg-slate-50/80 transition text-xs">
-                    <td class="p-3.5 font-bold text-slate-400">${idx + 1}</td>
-                    <td class="p-3.5 font-medium text-slate-500 whitespace-nowrap">${o.date}</td>
+                    <td class="p-3.5 font-extrabold text-slate-400">${idx + 1}</td>
+                    <td class="p-3.5 font-semibold text-slate-500 whitespace-nowrap">${o.date}</td>
                     <td class="p-3.5">
                         <p class="font-extrabold text-slate-800">${o.buyerName}</p>
-                        <p class="text-[11px] text-slate-500">${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
+                        <p class="text-[11px] text-slate-500 font-semibold">${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
                     </td>
-                    <td class="p-3.5 font-medium text-slate-700 max-w-xs truncate">${o.itemsSummary}</td>
+                    <td class="p-3.5 font-semibold text-slate-700 max-w-xs truncate">${o.itemsSummary}</td>
                     <td class="p-3.5 font-black text-emerald-600 whitespace-nowrap">${formatRupiah(o.totalAmount)}</td>
                     <td class="p-3.5 whitespace-nowrap">
-                        <button onclick="togglePaymentStatus('${o.id}')" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold transition ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}">
+                        <button onclick="togglePaymentStatus('${o.id}')" class="px-2.5 py-1 rounded-full text-[10px] font-black border transition ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-200'}">
                             ${o.paymentStatus === 'Sudah Bayar' ? '✅ Lunas' : '⚠️ Belum Bayar'}
                         </button>
                     </td>
                     <td class="p-3.5 whitespace-nowrap">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-100 text-slate-600' : 'bg-blue-100 text-blue-800'}">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-black border ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-100 text-slate-600 border-slate-200' : 'bg-blue-100 text-blue-800 border-blue-200'}">
                             ${o.redeemStatus}
                         </span>
                     </td>
                     <td class="p-3.5 text-right whitespace-nowrap">
                         <div class="flex items-center justify-end gap-1.5">
                             ${o.paymentProof ? `
-                                <button onclick="viewPaymentProof('${o.id}')" title="Lihat Foto Bukti Transfer" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold border border-blue-200 transition">
+                                <button onclick="viewPaymentProof('${o.id}')" title="Lihat Foto Bukti Transfer" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold border border-blue-200 transition">
                                     <i class="fa-solid fa-receipt"></i> Bukti
                                 </button>
                             ` : ''}
 
                             ${o.redeemStatus !== 'Sudah Ditukar' ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition">
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition">
                                     Serahkan Voucher
                                 </button>
                             ` : `
@@ -1991,7 +2079,7 @@ function getOrCreateSheet(ss, name) {
                 return;
             }
 
-            let csvContent = "data:text/csv;charset=utf-8,ID Transaksi,Tanggal,Nama Siswa,NISN,Kelas,No HP,Rincian Items,Total (Rp),Status Bayar,Status Penukaran\n";
+            let csvContent = "\uFEFFID Transaksi,Tanggal,Nama Siswa,NISN,Kelas,No HP,Rincian Items,Total (Rp),Status Bayar,Status Penukaran\n";
 
             orders.forEach(o => {
                 const itemsClean = `"${String(o.itemsSummary || '').replace(/"/g, '""')}"`;
@@ -2011,9 +2099,10 @@ function getOrCreateSheet(ss, name) {
                 csvContent += row + "\n";
             });
 
-            const encodedUri = encodeURI(csvContent);
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", url);
             link.setAttribute("download", `Laporan_Transaksi_Kantin_SARAS_${new Date().toISOString().slice(0,10)}.csv`);
             document.body.appendChild(link);
             link.click();
@@ -2027,10 +2116,6 @@ function getOrCreateSheet(ss, name) {
             const waNum = cashierWaNumber.replace(/[^0-9]/g, '');
             const msg = encodeURIComponent("Halo Kasir Kantin SARAS Spentig Makassar, saya ingin menanyakan info voucher digital.");
             window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
-        }
-
-        function updateQrisImagePreview() {
-            // Updated dynamically if backend sends custom QRIS
         }
 
         function copyAppsScriptCode() {
@@ -2068,7 +2153,7 @@ function getOrCreateSheet(ss, name) {
             const statusBadge = document.getElementById('cloud-sync-status');
             if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) {
                 if (statusBadge) {
-                    statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 shrink-0';
+                    statusBadge.className = 'text-[10px] font-black px-3 py-1 rounded-full bg-amber-100 text-amber-800 shrink-0';
                     statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-[8px] mr-1"></i> Local (URL Belum Diatur)';
                 }
                 return Promise.resolve(false);
@@ -2081,7 +2166,7 @@ function getOrCreateSheet(ss, name) {
                 .then(res => res.json())
                 .then(data => {
                     if (statusBadge) {
-                        statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 shrink-0';
+                        statusBadge.className = 'text-[10px] font-black px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 shrink-0';
                         statusBadge.innerHTML = '<i class="fa-solid fa-circle text-[8px] mr-1 text-emerald-500"></i> Online (Terhubung Sheet)';
                     }
 
@@ -2130,7 +2215,7 @@ function getOrCreateSheet(ss, name) {
                 .catch(err => {
                     console.log('Cloud sync error:', err);
                     if (statusBadge) {
-                        statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 shrink-0';
+                        statusBadge.className = 'text-[10px] font-black px-3 py-1 rounded-full bg-red-100 text-red-800 shrink-0';
                         statusBadge.innerHTML = '<i class="fa-solid fa-circle-exclamation text-[8px] mr-1"></i> Error Sync';
                     }
                     if (!isAuto && !reqPin) {
@@ -2177,8 +2262,18 @@ function getOrCreateSheet(ss, name) {
             if (autoSyncTimer) clearInterval(autoSyncTimer);
             autoSyncTimer = setInterval(() => {
                 syncDataFromCloud(true);
-            }, 15000); // Poll cloud updates every 15s
+            }, 15000); // Poll cloud updates every 15 seconds
         }
+
+        // Close modals on Escape key press
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal('modal-qris');
+                closeModal('modal-admin-pin');
+                closeModal('modal-script-guide');
+                closeModal('modal-view-proof');
+            }
+        });
 
         // =========================================================================
         // 🚀 APPLICATION INITIALIZATION
