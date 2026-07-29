@@ -195,7 +195,7 @@
 
             <!-- Items Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="menu-grid">
-                <!-- Dynamically populated -->
+                <!-- Dynamically populated from Google Sheets -->
             </div>
         </section>
 
@@ -409,22 +409,31 @@
                         </div>
                     </div>
 
-                    <!-- Google Spreadsheet Webhook -->
-                    <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between md:col-span-2">
-                        <div class="space-y-2">
-                            <div class="flex items-center justify-between gap-2">
+                    <!-- Google Spreadsheet Webhook Settings Card -->
+                    <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-4 md:col-span-2">
+                        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
+                            <div>
                                 <h3 class="font-bold text-slate-800 text-xs flex items-center gap-2">
-                                    <i class="fa-solid fa-database text-emerald-600"></i> Database Terpusat Google Apps Script
+                                    <i class="fa-solid fa-database text-emerald-600"></i> Database & Webhook Google Apps Script
                                 </h3>
-                                <span id="cloud-sync-status" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600 shrink-0">
-                                    <i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)
-                                </span>
+                                <p class="text-xs text-slate-500">Atur URL Webhook Google Apps Script agar terhubung sempurna dengan Google Sheets.</p>
                             </div>
-                            <p class="text-xs text-slate-500 leading-relaxed">
-                                URL Webhook telah dikunci secara terpusat di dalam kodingan (variabel <code>DEFAULT_WEBHOOK_URL</code>). Auto-sync aktif setiap 10 detik.
-                            </p>
+                            <span id="cloud-sync-status" class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600 shrink-0">
+                                <i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)
+                            </span>
                         </div>
-                        <div class="flex flex-wrap gap-2 pt-2">
+
+                        <!-- Input URL Webhook -->
+                        <div class="space-y-1.5">
+                            <label class="block text-xs font-bold text-slate-700">URL Webhook Apps Script</label>
+                            <div class="flex gap-2">
+                                <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/AKfycbyogglBO8lLhMqZ7f8FX_nlfEfBq3dH3l1rIx3-exS6waK2SL2RTXK1CJMakEuSBigW/exec" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                <button onclick="saveWebhookUrlSetting()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition">Simpan URL</button>
+                            </div>
+                            <p class="text-[10px] text-slate-400">Tempel URL Webhook hasil Deploy Google Apps Script di sini. PIN Kasir diatur terpusat di dalam kode Google Apps Script (<code class="text-emerald-700 font-bold">MANUAL_CONFIG.adminPin</code>).</p>
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-200/80">
                             <button onclick="syncDataFromCloud(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl font-bold text-xs shadow-xs transition flex-1 sm:flex-none">
                                 <i class="fa-solid fa-rotate mr-1"></i> Tarik Data Manual
                             </button>
@@ -509,7 +518,7 @@
             </div>
             <div>
                 <h3 class="text-sm font-extrabold text-slate-800">Verifikasi PIN Kasir</h3>
-                <p class="text-xs text-slate-500 mt-1">Masukkan PIN Keamanan untuk membuka dashboard Kasir</p>
+                <p class="text-xs text-slate-500 mt-1">Masukkan PIN Keamanan yang diatur di Google Apps Script</p>
             </div>
             
             <form onsubmit="verifyAdminPin(event)" class="space-y-3">
@@ -525,8 +534,8 @@
                     <button type="button" onclick="closeAdminPinModal(event)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-bold text-xs transition">
                         Batal
                     </button>
-                    <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition">
-                        Masuk Kasir
+                    <button type="submit" id="btn-submit-pin" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs shadow-md transition flex items-center justify-center gap-1">
+                        <span>Masuk Kasir</span>
                     </button>
                 </div>
             </form>
@@ -543,7 +552,7 @@
             <div class="space-y-1">
                 <span class="bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">Setup Manual Script</span>
                 <h3 class="text-base font-extrabold text-slate-800">Kode Google Apps Script (Secure & Private)</h3>
-                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. Data transaksi siswa dikunci aman dan foto bukti bayar otomatis disimpan ke Google Drive.</p>
+                <p class="text-xs text-slate-500">Salin kode ini ke Apps Script Google Sheets Anda. PIN dan data transaksi terproteksi aman.</p>
             </div>
 
             <div class="bg-slate-900 text-slate-100 p-4 rounded-2xl text-[11px] font-mono overflow-x-auto relative">
@@ -555,11 +564,11 @@ function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
   // ===================================================
-  // PENGATURAN MANUAL KANTIN (EDIT DI SINI)
+  // PENGATURAN MANUAL KANTIN (TERPUSAT DI SINI)
   // ===================================================
   var MANUAL_CONFIG = {
     qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360",
-    adminPin: "3333", // PIN Kasir Rahasia
+    adminPin: "3333", // SETTING PIN KASIR UTAMA
     cashierWa: "081234567890"
   };
   // ===================================================
@@ -571,11 +580,11 @@ function doGet(e) {
 
   if (stokData.length <= 1) {
     var defaultItems = [
-      { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 0, icon: '🎟️' },
-      { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 0, icon: '🎟️' },
-      { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 0, icon: '🎟️' },
-      { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 0, icon: '🎟️' },
-      { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 0, icon: '🎟️' }
+      { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
+      { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 100, icon: '🎟️' },
+      { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 100, icon: '🎟️' },
+      { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 100, icon: '🎟️' },
+      { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 100, icon: '🎟️' }
     ];
     sheetStok.clearContents();
     sheetStok.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
@@ -597,11 +606,12 @@ function doGet(e) {
     }
   }
 
-  // 2. Keamanan: Hanya kirim data transaksi jika PIN Kasir valid
+  // 2. Keamanan: Verifikasi PIN Kasir
   var reqPin = String(e && e.parameter && e.parameter.pin || '').trim();
+  var isAuthenticated = (reqPin === MANUAL_CONFIG.adminPin);
   var orders = [];
 
-  if (reqPin === MANUAL_CONFIG.adminPin) {
+  if (isAuthenticated) {
     var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
     var ordersData = sheetOrders.getDataRange().getDisplayValues();
     var startIdx = Math.max(1, ordersData.length - 200);
@@ -633,11 +643,11 @@ function doGet(e) {
     }
   }
 
-  // PIN Kasir TIDAK PERNAH dikirim dalam respon JSON!
   return ContentService.createTextOutput(JSON.stringify({
     qrisUrl: MANUAL_CONFIG.qrisUrl,
     cashierWa: MANUAL_CONFIG.cashierWa,
     menuItems: menuItems,
+    authenticated: isAuthenticated,
     orders: orders
   })).setMimeType(ContentService.MimeType.JSON);
 }
@@ -912,7 +922,6 @@ function getOrCreateSheet(ss, name) {
 
         function saveData() {
             try {
-                localStorage.setItem('kantin_menu', JSON.stringify(menuItems));
                 localStorage.setItem('kantin_orders', JSON.stringify(orders));
                 localStorage.setItem('kantin_my_orders', JSON.stringify(myOrderIds));
             } catch(e) {
@@ -973,19 +982,44 @@ function getOrCreateSheet(ss, name) {
             const errorMsg = document.getElementById('pin-error-msg');
             const enteredPin = String(pinInput?.value || '').trim();
 
-            if (enteredPin === adminPin) {
-                isAdminUnlocked = true;
-                const lockIcon = document.getElementById('admin-lock-icon');
-                if (lockIcon) lockIcon.className = 'fa-solid fa-lock-open text-[10px] text-emerald-400';
-                if (errorMsg) errorMsg.classList.add('hidden');
-                closeModal('modal-admin-pin');
-                showToast('Akses Kasir Terverifikasi!', 'success');
-                setRole('admin');
-                syncDataFromCloud(false);
-            } else {
-                if (errorMsg) errorMsg.classList.remove('hidden');
-                showToast('PIN Kasir Salah!', 'error');
+            if (!enteredPin) {
+                if (errorMsg) {
+                    errorMsg.innerText = 'Harap masukkan PIN!';
+                    errorMsg.classList.remove('hidden');
+                }
+                return;
             }
+
+            const submitBtn = document.getElementById('btn-submit-pin');
+            if (submitBtn) submitBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i><span>Memeriksa...</span>';
+
+            // Authenticate directly against Google Apps Script Cloud
+            syncDataFromCloud(false, enteredPin)
+                .then(isAuthenticated => {
+                    if (submitBtn) submitBtn.innerHTML = '<span>Masuk Kasir</span>';
+                    if (isAuthenticated) {
+                        activeKasirPin = enteredPin;
+                        isAdminUnlocked = true;
+                        const lockIcon = document.getElementById('admin-lock-icon');
+                        if (lockIcon) lockIcon.className = 'fa-solid fa-lock-open text-[10px] text-emerald-400';
+                        if (errorMsg) errorMsg.classList.add('hidden');
+                        closeModal('modal-admin-pin');
+                        showToast('Akses Kasir Terverifikasi!', 'success');
+                        setRole('admin');
+                    } else {
+                        if (errorMsg) {
+                            errorMsg.innerText = 'PIN keamanan salah atau tidak cocok di Google Apps Script!';
+                            errorMsg.classList.remove('hidden');
+                        }
+                    }
+                })
+                .catch(() => {
+                    if (submitBtn) submitBtn.innerHTML = '<span>Masuk Kasir</span>';
+                    if (errorMsg) {
+                        errorMsg.innerText = 'Gagal terhubung ke Cloud Google Apps Script!';
+                        errorMsg.classList.remove('hidden');
+                    }
+                });
         }
 
         function closeAdminPinModal(e) {
@@ -1012,14 +1046,17 @@ function getOrCreateSheet(ss, name) {
             }
         }
 
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx-hqk_Q_gMnhxPwAOBdKcwMJnTlHXBOVzG7VoA5e0O_i02laOB2-fRUn84le2x0cVw/exec"; 
+        // =========================================================================
+        // 🛠️ CONFIGURATION & INITIAL GLOBAL STATE
+        // =========================================================================
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxYOUR_DEPLOYED_SCRIPT_ID_HERE/exec"; 
         
         let menuItems = [
-            { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 0, icon: '🎟️' },
-            { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 0, icon: '🎟️' },
-            { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 0, icon: '🎟️' },
-            { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 0, icon: '🎟️' },
-            { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 0, icon: '🎟️' }
+            { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
+            { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 100, icon: '🎟️' },
+            { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 100, icon: '🎟️' },
+            { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 100, icon: '🎟️' },
+            { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 100, icon: '🎟️' }
         ];
 
         let cart = [];
@@ -1027,27 +1064,37 @@ function getOrCreateSheet(ss, name) {
         let myOrderIds = [];
         let currentRole = 'siswa';
         let currentCategoryFilter = 'all';
-        let adminPin = String(localStorage.getItem('kantin_admin_pin') || '3333').trim();
+        let activeKasirPin = ''; 
         let cashierWaNumber = String(localStorage.getItem('kantin_cashier_wa') || '081234567890').trim();
         let isAdminUnlocked = false;
-        let webhookUrl = DEFAULT_WEBHOOK_URL;
+        let webhookUrl = String(localStorage.getItem('kantin_webhook_url') || DEFAULT_WEBHOOK_URL).trim();
         let currentProofDataUrl = '';
         let autoSyncTimer = null;
         let logoClickCount = 0;
         let logoClickTimer = null;
+
+        function saveWebhookUrlSetting() {
+            const urlInput = document.getElementById('setting-webhook-url');
+            const val = String(urlInput?.value || '').trim();
+            if (!val) {
+                showToast('URL Webhook tidak boleh kosong!', 'error');
+                return;
+            }
+            webhookUrl = val;
+            localStorage.setItem('kantin_webhook_url', val);
+            showToast('URL Webhook berhasil disimpan!', 'success');
+            syncDataFromCloud(false);
+            startAutoSync();
+        }
         
-        // Features 4, 5, 6 States
         let isSoundEnabled = localStorage.getItem('kantin_sound_enabled') !== 'false';
         let knownOrderIdsSet = new Set();
         let inactivityTimer = null;
-        const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000; // 5 Menit Auto-Lock
+        const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
 
         let isCashierBtnHidden = localStorage.getItem('kantin_hide_cashier_btn') !== 'false';
 
         try {
-            const savedMenu = localStorage.getItem('kantin_menu');
-            if (savedMenu) menuItems = JSON.parse(savedMenu);
-
             const savedOrders = localStorage.getItem('kantin_orders');
             if (savedOrders) {
                 orders = JSON.parse(savedOrders);
@@ -1061,7 +1108,7 @@ function getOrCreateSheet(ss, name) {
         }
 
         // =========================================================================
-        // 🔊 FEATURE 6: SOUND NOTIFICATION SYSTEM (WEB AUDIO API)
+        // 🔊 AUDIO NOTIFICATION SYSTEM (WEB AUDIO API)
         // =========================================================================
         function playNotificationSound() {
             try {
@@ -1074,8 +1121,8 @@ function getOrCreateSheet(ss, name) {
                 const gain = ctx.createGain();
 
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
 
                 gain.gain.setValueAtTime(0.25, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
@@ -1115,10 +1162,11 @@ function getOrCreateSheet(ss, name) {
                 btn.innerHTML = `<i id="sound-icon" class="fa-solid fa-volume-xmark text-slate-400"></i><span class="hidden md:inline">Suara: Off</span>`;
                 btn.className = 'py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-400 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition border border-slate-700';
             }
+            // Fixed: Removed recursive function call that caused infinite stack overflow
         }
 
         // =========================================================================
-        // ⏱️ FEATURE 5: AUTO-LOCK INACTIVITY TIMER (5 MENIT)
+        // ⏱️ AUTO-LOCK INACTIVITY TIMER (5 MENIT)
         // =========================================================================
         function resetInactivityTimer() {
             if (inactivityTimer) clearTimeout(inactivityTimer);
@@ -1183,6 +1231,7 @@ function getOrCreateSheet(ss, name) {
 
         function lockAdmin() {
             isAdminUnlocked = false;
+            activeKasirPin = '';
             if (inactivityTimer) clearTimeout(inactivityTimer);
             const lockIcon = document.getElementById('admin-lock-icon');
             if (lockIcon) lockIcon.className = 'fa-solid fa-lock text-[10px] text-slate-400';
@@ -1247,6 +1296,9 @@ function getOrCreateSheet(ss, name) {
                 document.getElementById('view-admin-settings')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('admin-nav-btn-settings');
                 if (activeBtn) activeBtn.className = 'py-2 sm:py-3 border-b-2 border-emerald-400 text-emerald-400 font-bold flex items-center gap-2 whitespace-nowrap';
+
+                const urlInput = document.getElementById('setting-webhook-url');
+                if (urlInput) urlInput.value = webhookUrl === DEFAULT_WEBHOOK_URL ? '' : webhookUrl;
             }
         }
 
@@ -1352,7 +1404,6 @@ function getOrCreateSheet(ss, name) {
             const item = menuItems.find(m => m.id === itemId);
             if (!item) return;
             item.stock = Math.max(0, item.stock + delta);
-            saveData();
             renderAdminMenu();
             renderMenu();
             renderAdminSummary();
@@ -1364,7 +1415,6 @@ function getOrCreateSheet(ss, name) {
             const item = menuItems.find(m => m.id === itemId);
             if (!item) return;
             item.stock = Math.max(0, parseInt(val) || 0);
-            saveData();
             renderAdminMenu();
             renderMenu();
             renderAdminSummary();
@@ -1407,9 +1457,6 @@ function getOrCreateSheet(ss, name) {
             closeModal('modal-view-proof');
         }
 
-        // =========================================================================
-        // ⚡ FEATURE 4: SERAHKAN SEMUA VOUCHER (1-KLIK BULK REDEMPTION)
-        // =========================================================================
         function processRedeemVoucher(orderId) {
             const order = orders.find(o => String(o.id) === String(orderId));
             if (!order) return;
@@ -1619,6 +1666,7 @@ function getOrCreateSheet(ss, name) {
                         const maxDim = 600;
                         let w = img.width;
                         let h = img.height;
+
                         if (w > maxDim || h > maxDim) {
                             if (w > h) {
                                 h = Math.round((h * maxDim) / w);
@@ -1628,18 +1676,18 @@ function getOrCreateSheet(ss, name) {
                                 h = maxDim;
                             }
                         }
+
                         canvas.width = w;
                         canvas.height = h;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, w, h);
+
                         currentProofDataUrl = canvas.toDataURL('image/jpeg', 0.6);
 
                         const previewImg = document.getElementById('payment-proof-preview-img');
-                        const previewContainer = document.getElementById('proof-preview-container');
-                        if (previewImg && previewContainer) {
-                            previewImg.src = currentProofDataUrl;
-                            previewContainer.classList.remove('hidden');
-                        }
+                        const container = document.getElementById('proof-preview-container');
+                        if (previewImg) previewImg.src = currentProofDataUrl;
+                        if (container) container.classList.remove('hidden');
                     };
                     img.src = e.target.result;
                 };
@@ -1649,150 +1697,88 @@ function getOrCreateSheet(ss, name) {
 
         function removeProofImage() {
             currentProofDataUrl = '';
-            const fileInput = document.getElementById('payment-proof-input');
-            if (fileInput) fileInput.value = '';
-            const previewContainer = document.getElementById('proof-preview-container');
-            if (previewContainer) previewContainer.classList.add('hidden');
+            const input = document.getElementById('payment-proof-input');
+            const container = document.getElementById('proof-preview-container');
+            const previewImg = document.getElementById('payment-proof-preview-img');
+
+            if (input) input.value = '';
+            if (previewImg) previewImg.src = '';
+            if (container) container.classList.add('hidden');
         }
 
         function confirmCheckoutOrder(e) {
             if (e) e.preventDefault();
+
+            if (!currentProofDataUrl) {
+                showToast('Harap unggah bukti pembayaran foto/screenshot QRIS terlebih dahulu!', 'error');
+                return;
+            }
 
             const name = document.getElementById('buyer-name')?.value.trim();
             const nisn = document.getElementById('buyer-nisn')?.value.trim();
             const buyerClass = document.getElementById('buyer-class')?.value.trim();
             const phone = document.getElementById('buyer-phone')?.value.trim();
 
-            if (!name || !nisn || !buyerClass || !phone) {
-                showToast('Harap lengkapi Identitas Siswa terlebih dahulu!', 'error');
-                return;
-            }
+            const orderId = 'ORD-' + Date.now().toString(36).toUpperCase();
+            const grandTotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const itemsSummary = cart.map(i => `${i.qty}x ${i.name} (${formatRupiah(i.price)})`).join(', ');
 
-            if (!currentProofDataUrl) {
-                showToast('Harap unggah bukti pembayaran terlebih dahulu!', 'error');
-                return;
-            }
-
-            const totalAmount = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const itemsSummary = cart.map(i => `${i.name} ${formatRupiah(i.price)} (x${i.qty})`).join(', ');
-
-            const generatedVouchers = [];
-            cart.forEach(cartItem => {
-                for (let i = 0; i < cartItem.qty; i++) {
-                    const vCode = generateVoucherId();
-                    generatedVouchers.push({
-                        voucherCode: vCode,
-                        itemName: `${cartItem.name} ${formatRupiah(cartItem.price)}`,
-                        nominal: cartItem.price,
-                        redeemed: false,
-                        date: new Date().toLocaleString('id-ID')
+            const orderVouchers = [];
+            cart.forEach(item => {
+                for (let i = 0; i < item.qty; i++) {
+                    orderVouchers.push({
+                        id: generateVoucherId(),
+                        nominal: item.price,
+                        redeemed: false
                     });
-
-                    const mItem = menuItems.find(m => m.id === cartItem.id);
-                    if (mItem) {
-                        mItem.stock = Math.max(0, mItem.stock - 1);
-                    }
                 }
             });
 
-            const orderId = 'ORD-' + Date.now();
             const newOrder = {
                 id: orderId,
-                date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }),
+                date: new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }),
                 buyerName: name,
                 buyerNisn: nisn,
                 buyerClass: buyerClass,
                 buyerPhone: phone,
                 itemsSummary: itemsSummary,
-                totalAmount: totalAmount,
+                totalAmount: grandTotal,
                 paymentStatus: 'Belum Bayar',
                 redeemStatus: 'Belum Ditukar',
-                paymentProof: currentProofDataUrl || '',
-                vouchers: generatedVouchers
+                paymentProof: currentProofDataUrl,
+                vouchers: orderVouchers
             };
 
             orders.unshift(newOrder);
-            knownOrderIdsSet.add(String(orderId));
-
-            if (!myOrderIds.includes(orderId)) {
-                myOrderIds.unshift(orderId);
-            }
-
-            sendToGoogleSheets(newOrder);
-
-            cart = [];
+            knownOrderIdsSet.add(String(newOrder.id));
+            myOrderIds.unshift(orderId);
             saveData();
-            closeQrisModal();
 
-            showToast('Pesanan berhasil dibuat! Menunggu verifikasi pembayaran oleh Kasir.', 'success');
-            switchTab('vouchers');
-        }
-
-        function sendToGoogleSheets(orderData) {
-            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) return;
-            fetch(webhookUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
-            }).catch(err => console.log('Spreadsheet sync error:', err));
-        }
-
-        function syncStockToCloud() {
-            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) return;
-            fetch(webhookUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'update_stock',
-                    menuItems: menuItems
-                })
-            }).catch(err => console.log('Stock Cloud Push Error:', err));
-        }
-
-        function togglePaymentStatus(orderId) {
-            const orderIndex = orders.findIndex(o => String(o.id) === String(orderId));
-            if (orderIndex === -1) return;
-
-            const currentStatus = orders[orderIndex].paymentStatus;
-            const newStatus = (currentStatus === 'Belum Bayar') ? 'Sudah Bayar' : 'Belum Bayar';
-            
-            orders[orderIndex].paymentStatus = newStatus;
-
-            saveData();
-            syncOrdersToCloud();
-            renderAdminTransactions();
-            renderUserVouchers();
-            renderAdminSummary();
-
-            showToast(`Status pembayaran ${orders[orderIndex].buyerName} diubah menjadi "${newStatus}"`, 'info');
-        }
-
-        function renderUserVouchers() {
-            const grid = document.getElementById('vouchers-grid');
-            const emptyState = document.getElementById('vouchers-empty-state');
-            if (!grid) return;
-
-            const myOrders = orders.filter(o => myOrderIds.includes(String(o.id)));
-
-            let allVouchers = [];
-            myOrders.forEach(order => {
-                if (order.vouchers && Array.isArray(order.vouchers)) {
-                    order.vouchers.forEach(v => {
-                        allVouchers.push({
-                            ...v,
-                            buyerName: order.buyerName || '-',
-                            buyerNisn: order.buyerNisn || '',
-                            buyerClass: order.buyerClass || '-',
-                            paymentStatus: order.paymentStatus || 'Belum Bayar',
-                            orderRedeemStatus: order.redeemStatus
-                        });
-                    });
+            // Potong stok lokal
+            cart.forEach(item => {
+                const menuItem = menuItems.find(m => m.id === item.id);
+                if (menuItem) {
+                    menuItem.stock = Math.max(0, menuItem.stock - item.qty);
                 }
             });
 
-            if (allVouchers.length === 0) {
+            sendOrderToCloud(newOrder);
+
+            cart = [];
+            updateCartBadge();
+            closeQrisModal();
+            showToast('Pesanan berhasil dibuat & bukti pembayaran terkirim!', 'success');
+            switchTab('vouchers');
+        }
+
+        function renderUserVouchers() {
+            const emptyState = document.getElementById('vouchers-empty-state');
+            const grid = document.getElementById('vouchers-grid');
+            if (!grid) return;
+
+            const myOrders = orders.filter(o => myOrderIds.includes(o.id));
+
+            if (myOrders.length === 0) {
                 if (emptyState) emptyState.classList.remove('hidden');
                 grid.innerHTML = '';
                 return;
@@ -1800,369 +1786,271 @@ function getOrCreateSheet(ss, name) {
 
             if (emptyState) emptyState.classList.add('hidden');
 
-            grid.innerHTML = allVouchers.map(v => {
-                const isRedeemed = v.redeemed || v.orderRedeemStatus === 'Sudah Ditukar';
-                const isUnpaid = v.paymentStatus === 'Belum Bayar';
-                const theme = getVoucherTheme(v.nominal);
+            grid.innerHTML = myOrders.map(order => {
+                const statusBg = order.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800';
+                const statusIcon = order.paymentStatus === 'Sudah Bayar' ? 'fa-circle-check text-emerald-600' : 'fa-clock text-amber-600';
+                const redeemBg = order.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-100 text-slate-600' : 'bg-blue-100 text-blue-800';
+
                 return `
-                <div class="${theme.bgCard} rounded-3xl border-2 ${isRedeemed ? 'border-slate-300 opacity-60' : theme.borderCard + ' shadow-lg'} p-4 relative overflow-hidden transition-all duration-200">
-                    <div class="${theme.bgInner} rounded-2xl p-3 border ${theme.borderInner} space-y-3">
-                        
-                        <div class="flex justify-between items-start border-b ${theme.borderInner} pb-2">
-                            <div>
-                                <p class="text-[9px] font-black uppercase tracking-wider ${theme.textSub}">KANTIN SARAS VOUCHER</p>
-                                <p class="text-[11px] font-black ${theme.textTitle} uppercase">VOUCHER BELANJA</p>
-                            </div>
-                            <div class="flex flex-col items-end gap-1">
-                                <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase ${isRedeemed ? 'bg-slate-300 text-slate-700' : 'bg-emerald-600 text-white shadow-xs'}">
-                                    ${isRedeemed ? 'Sudah Ditukar' : 'Siap Ditukar'}
-                                </span>
-                                ${isUnpaid ? `
-                                    <span class="text-[9px] px-2 py-0.5 rounded-full font-black uppercase bg-red-100 text-red-700 border border-red-300">
-                                        Belum Bayar
+                <div class="bg-white rounded-3xl border border-slate-200/80 p-5 shadow-xs space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div>
+                            <span class="text-[10px] font-black text-slate-400 block">${order.id}</span>
+                            <span class="text-xs font-bold text-slate-700">${order.date}</span>
+                        </div>
+                        <div class="flex flex-col items-end gap-1">
+                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full ${statusBg} flex items-center gap-1">
+                                <i class="fa-solid ${statusIcon}"></i> ${order.paymentStatus}
+                            </span>
+                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full ${redeemBg}">
+                                ${order.redeemStatus}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-200/60 text-xs">
+                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">Nama Siswa:</span><span class="font-extrabold text-slate-800">${order.buyerName}</span></div>
+                        <div class="flex justify-between"><span class="text-slate-500 font-semibold">Kelas & NISN:</span><span class="font-extrabold text-slate-800">${order.buyerClass} • ${order.buyerNisn}</span></div>
+                        <div class="flex justify-between border-t border-slate-200/80 pt-1.5 mt-1.5"><span class="text-slate-500 font-semibold">Total Belanja:</span><span class="font-black text-emerald-600">${formatRupiah(order.totalAmount)}</span></div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <p class="text-[11px] font-black uppercase text-slate-400 tracking-wider">Tiket / Voucher Fisik (${order.vouchers ? order.vouchers.length : 0} Lembar):</p>
+                        <div class="grid grid-cols-1 gap-2">
+                            ${(order.vouchers || []).map(v => {
+                                const theme = getVoucherTheme(v.nominal);
+                                return `
+                                <div class="${theme.bgInner} border ${theme.borderInner} p-3 rounded-2xl flex items-center justify-between">
+                                    <div class="flex items-center gap-2.5">
+                                        <span class="text-xl">🎟️</span>
+                                        <div>
+                                            <span class="text-[10px] font-mono font-bold block ${theme.textSub}">${v.id}</span>
+                                            <span class="text-xs font-black ${theme.textPrice}">${formatRupiah(v.nominal)}</span>
+                                        </div>
+                                    </div>
+                                    <span class="text-[10px] font-black px-2 py-0.5 rounded-md ${v.redeemed || order.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600' : 'bg-emerald-600 text-white'}">
+                                        ${v.redeemed || order.redeemStatus === 'Sudah Ditukar' ? 'Sudah Ditukar' : 'Siap Ditukar'}
                                     </span>
-                                ` : ''}
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between gap-2">
-                            <div>
-                                <p class="text-[9px] font-extrabold ${theme.textSub} uppercase">Nominal</p>
-                                <p class="text-2xl font-black ${theme.textPrice} leading-none tracking-tight">RP ${(v.nominal || 0).toLocaleString('id-ID')}</p>
-                                <div class="mt-2 space-y-0.5">
-                                    <p class="text-xs font-black text-slate-900 leading-tight">${v.buyerName}</p>
-                                    <p class="text-[10px] font-bold ${theme.textSub}">Kelas: ${v.buyerClass} ${v.buyerNisn ? `• NISN: ${v.buyerNisn}` : ''}</p>
                                 </div>
-                            </div>
-
-                            <div class="bg-white p-2 rounded-2xl border ${theme.borderInner} text-center shrink-0 shadow-xs">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${v.voucherCode}" alt="QR" class="w-16 h-16 object-contain mx-auto">
-                                <p class="text-[9px] font-mono font-extrabold text-slate-800 mt-1">${v.voucherCode}</p>
-                            </div>
-                        </div>
-
-                        <div class="pt-2 border-t ${theme.borderInner} flex justify-between items-center text-[9px] font-extrabold ${theme.textSub}">
-                            <span>KANTIN SARAS SPENTIG</span>
-                            <span class="uppercase">SPENTIG MAKASSAR</span>
+                            `;
+                            }).join('')}
                         </div>
                     </div>
                 </div>
-            `;
+                `;
             }).join('');
         }
 
+        // =========================================================================
+        // 🛠️ ADMIN TRANSACTIONS TABLE & ACTIONS (MISSING FUNCTIONS IMPLEMENTED)
+        // =========================================================================
         function renderAdminTransactions() {
-            const tbody = document.getElementById('admin-transactions-tbody');
             const mobileContainer = document.getElementById('admin-transactions-mobile');
-            
-            const query = (document.getElementById('admin-search-input')?.value || '').toLowerCase().trim();
-            const filter = document.getElementById('admin-status-filter')?.value || 'all';
+            const tbodyContainer = document.getElementById('admin-transactions-tbody');
+            if (!mobileContainer || !tbodyContainer) return;
 
-            let filteredOrders = orders;
+            const searchQuery = String(document.getElementById('admin-search-input')?.value || '').toLowerCase().trim();
+            const statusFilter = String(document.getElementById('admin-status-filter')?.value || 'all');
 
-            if (query) {
-                filteredOrders = filteredOrders.filter(o => 
-                    (o.buyerName && String(o.buyerName).toLowerCase().includes(query)) ||
-                    (o.buyerNisn && String(o.buyerNisn).toLowerCase().includes(query)) ||
-                    (o.buyerClass && String(o.buyerClass).toLowerCase().includes(query)) ||
-                    (o.buyerPhone && String(o.buyerPhone).toLowerCase().includes(query)) ||
-                    (o.vouchers && o.vouchers.some(v => v.voucherCode && String(v.voucherCode).toLowerCase().includes(query)))
-                );
-            }
+            let filteredOrders = orders.filter(o => {
+                const textMatch = !searchQuery || 
+                    String(o.buyerName || '').toLowerCase().includes(searchQuery) ||
+                    String(o.buyerClass || '').toLowerCase().includes(searchQuery) ||
+                    String(o.buyerNisn || '').toLowerCase().includes(searchQuery) ||
+                    String(o.id || '').toLowerCase().includes(searchQuery) ||
+                    (o.vouchers && o.vouchers.some(v => String(v.id).toLowerCase().includes(searchQuery)));
 
-            if (filter === 'unredeemed') {
-                filteredOrders = filteredOrders.filter(o => o.redeemStatus !== 'Sudah Ditukar' && o.vouchers && o.vouchers.some(v => !v.redeemed));
-            } else if (filter === 'redeemed') {
-                filteredOrders = filteredOrders.filter(o => o.redeemStatus === 'Sudah Ditukar' || (o.vouchers && o.vouchers.every(v => v.redeemed)));
-            } else if (filter === 'unpaid') {
-                filteredOrders = filteredOrders.filter(o => o.paymentStatus === 'Belum Bayar');
-            } else if (filter === 'paid') {
-                filteredOrders = filteredOrders.filter(o => o.paymentStatus !== 'Belum Bayar');
-            }
+                let statusMatch = true;
+                if (statusFilter === 'unredeemed') statusMatch = (o.redeemStatus !== 'Sudah Ditukar');
+                else if (statusFilter === 'redeemed') statusMatch = (o.redeemStatus === 'Sudah Ditukar');
+                else if (statusFilter === 'unpaid') statusMatch = (o.paymentStatus !== 'Sudah Bayar');
+                else if (statusFilter === 'paid') statusMatch = (o.paymentStatus === 'Sudah Bayar');
 
-            const emptyHtml = `<div class="text-center py-10 bg-slate-50 rounded-2xl border border-slate-200 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</div>`;
+                return textMatch && statusMatch;
+            });
 
             if (filteredOrders.length === 0) {
-                if (tbody) tbody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-slate-400 text-xs font-bold">Data transaksi tidak ditemukan.</td></tr>`;
-                if (mobileContainer) mobileContainer.innerHTML = emptyHtml;
+                const emptyHtml = `
+                    <div class="text-center py-10 text-slate-400">
+                        <i class="fa-solid fa-receipt text-3xl mb-2 block"></i>
+                        <p class="text-xs font-bold">Tidak ada transaksi yang cocok.</p>
+                    </div>
+                `;
+                mobileContainer.innerHTML = emptyHtml;
+                tbodyContainer.innerHTML = `<tr><td colspan="8">${emptyHtml}</td></tr>`;
                 return;
             }
 
-            // 1. Render Mobile View
-            if (mobileContainer) {
-                renderAdminSummary();
-                mobileContainer.innerHTML = filteredOrders.map((o, idx) => {
-                    const isAllRedeemed = o.redeemStatus === 'Sudah Ditukar' || (o.vouchers ? o.vouchers.every(v => v.redeemed) : false);
-                    const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
-                    const isUnpaid = o.paymentStatus === 'Belum Bayar';
+            // Render Mobile Card List
+            mobileContainer.innerHTML = filteredOrders.map(o => `
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-mono font-black text-slate-500">${o.id}</span>
+                        <span class="text-[10px] font-bold text-slate-400">${o.date}</span>
+                    </div>
 
-                    return `
-                        <div class="bg-slate-50/90 p-4 rounded-2xl border border-slate-200/90 space-y-3 shadow-xs">
-                            <div class="flex items-center justify-between border-b border-slate-200/80 pb-2.5">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[10px] font-black bg-slate-200 text-slate-700 px-2 py-0.5 rounded-md">#${idx + 1}</span>
-                                    <span class="text-[11px] font-bold text-slate-500"><i class="fa-regular fa-clock mr-1 text-slate-400"></i>${o.date}</span>
-                                </div>
-                                <span class="text-sm font-black text-emerald-600">${formatRupiah(o.totalAmount)}</span>
-                            </div>
+                    <div>
+                        <h4 class="font-extrabold text-slate-800 text-sm">${o.buyerName}</h4>
+                        <p class="text-xs text-slate-500 font-semibold">Kelas: ${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
+                        <p class="text-xs text-slate-500 font-semibold">HP: ${o.buyerPhone || '-'}</p>
+                    </div>
 
-                            <div class="space-y-0.5">
-                                <h4 class="text-sm font-black text-slate-800 leading-snug">${o.buyerName}</h4>
-                                <p class="text-xs font-semibold text-slate-600">Kelas ${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
-                                <p class="text-[11px] font-medium text-slate-400">No. HP: ${o.buyerPhone}</p>
-                            </div>
+                    <div class="text-xs bg-white p-2.5 rounded-xl border border-slate-200/60">
+                        <p class="font-bold text-slate-700">${o.itemsSummary}</p>
+                        <p class="font-black text-emerald-600 mt-1">${formatRupiah(o.totalAmount)}</p>
+                    </div>
 
-                            <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2">
-                                <p class="text-xs font-bold text-slate-700">${o.itemsSummary}</p>
-                                <div class="flex flex-wrap gap-1">
-                                    ${(o.vouchers || []).map(v => `
-                                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed || isAllRedeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
-                                            ${v.voucherCode}
-                                        </span>
-                                    `).join('')}
-                                </div>
-                                ${o.paymentProof ? `
-                                    <button onclick="viewPaymentProof('${o.id}')" class="w-full mt-1.5 text-xs bg-blue-50 hover:bg-blue-100 text-blue-700 font-extrabold py-2 px-3 rounded-xl border border-blue-200 flex items-center justify-center gap-1.5 transition">
-                                        <i class="fa-solid fa-image text-blue-600"></i> Lihat Bukti Bayar
-                                    </button>
-                                ` : `
-                                    <span class="block text-[10px] text-slate-400 italic pt-0.5">Tanpa Foto Bukti</span>
-                                `}
-                            </div>
-
-                            <div class="flex items-center justify-between gap-2 pt-1">
-                                <div class="flex items-center gap-1.5 flex-wrap">
-                                    <button onclick="togglePaymentStatus('${o.id}')" title="Ubah status bayar" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase cursor-pointer transition ${isUnpaid ? 'bg-red-100 text-red-700 border border-red-300' : 'bg-emerald-100 text-emerald-800 border border-emerald-300'}">
-                                        <i class="fa-solid ${isUnpaid ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-check text-emerald-600'}"></i>
-                                        ${isUnpaid ? 'Belum Bayar' : 'Sudah Bayar'}
-                                    </button>
-
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase ${isAllRedeemed ? 'bg-slate-200 text-slate-600' : 'bg-amber-100 text-amber-900'}">
-                                        ${isAllRedeemed ? 'Sudah Ditukar' : `${unredeemedCount} Belum Ditukar`}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="pt-1">
-                                ${!isAllRedeemed ? `
-                                    <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white py-2.5 rounded-xl text-xs font-extrabold transition flex items-center justify-center gap-2 shadow-xs">
-                                        <i class="fa-solid fa-check-double"></i> Serahkan Semua Voucher (${unredeemedCount})
-                                    </button>
-                                ` : `
-                                    <div class="w-full bg-slate-200/80 text-slate-600 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5">
-                                        <i class="fa-solid fa-circle-check text-emerald-600"></i> Transaksi Selesai
-                                    </div>
-                                `}
-                            </div>
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                        <div class="flex flex-col gap-1">
+                            <button onclick="togglePaymentStatus('${o.id}')" class="text-[10px] font-extrabold px-2.5 py-1 rounded-full ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                ${o.paymentStatus === 'Sudah Bayar' ? '✅ Lunas' : '⚠️ Belum Bayar'}
+                            </button>
+                            <span class="text-[10px] font-extrabold px-2.5 py-0.5 rounded-full ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600' : 'bg-blue-100 text-blue-800'}">
+                                ${o.redeemStatus}
+                            </span>
                         </div>
-                    `;
-                }).join('');
-            }
 
-            // 2. Render Desktop Table View
-            if (tbody) {
-                tbody.innerHTML = filteredOrders.map((o, idx) => {
-                    const isAllRedeemed = o.redeemStatus === 'Sudah Ditukar' || (o.vouchers ? o.vouchers.every(v => v.redeemed) : false);
-                    const unredeemedCount = o.vouchers ? o.vouchers.filter(v => !v.redeemed).length : 0;
-                    const isUnpaid = o.paymentStatus === 'Belum Bayar';
-
-                    return `
-                        <tr class="hover:bg-slate-50/80 transition">
-                            <td class="p-3.5 text-xs font-bold text-slate-500">${idx + 1}</td>
-                            <td class="p-3.5 text-xs font-extrabold text-slate-800">${o.date}</td>
-                            <td class="p-3.5">
-                                <p class="text-xs font-extrabold text-slate-800">${o.buyerName}</p>
-                                <p class="text-[11px] font-semibold text-slate-600">Kelas ${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
-                                <p class="text-[10px] text-slate-400 font-medium">No. HP: ${o.buyerPhone}</p>
-                            </td>
-                            <td class="p-3.5">
-                                <p class="text-xs font-bold text-slate-700">${o.itemsSummary}</p>
-                                <div class="flex flex-wrap gap-1 mt-1">
-                                    ${(o.vouchers || []).map(v => `
-                                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded-md border ${v.redeemed || isAllRedeemed ? 'bg-slate-100 text-slate-400 border-slate-200 line-through' : 'bg-amber-100 text-amber-900 border-amber-300 font-extrabold'}">
-                                            ${v.voucherCode}
-                                        </span>
-                                    `).join('')}
-                                </div>
-                                ${o.paymentProof ? `
-                                    <button onclick="viewPaymentProof('${o.id}')" class="mt-2 text-[10px] bg-blue-50 hover:bg-blue-100 text-blue-700 font-extrabold px-2 py-1 rounded-lg border border-blue-200 flex items-center gap-1 transition">
-                                        <i class="fa-solid fa-image text-blue-600"></i> Lihat Bukti Bayar
-                                    </button>
-                                ` : `
-                                    <span class="mt-1 block text-[10px] text-slate-400 italic">Tanpa Foto Bukti</span>
-                                `}
-                            </td>
-                            <td class="p-3.5 text-xs font-black text-emerald-600">${formatRupiah(o.totalAmount)}</td>
-                            <td class="p-3.5">
-                                <button onclick="togglePaymentStatus('${o.id}')" title="Klik untuk mengubah status pembayaran" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black uppercase cursor-pointer transition hover:scale-105 ${isUnpaid ? 'bg-red-100 text-red-700 border border-red-300 hover:bg-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-300 hover:bg-emerald-200'}">
-                                    <i class="fa-solid ${isUnpaid ? 'fa-triangle-exclamation text-red-600' : 'fa-circle-check text-emerald-600'}"></i>
-                                    ${isUnpaid ? 'Belum Bayar' : 'Sudah Bayar'}
+                        <div class="flex items-center gap-1.5">
+                            ${o.paymentProof ? `
+                                <button onclick="viewPaymentProof('${o.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold border border-blue-200 transition">
+                                    <i class="fa-solid fa-receipt"></i> Bukti
                                 </button>
-                            </td>
-                            <td class="p-3.5">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${isAllRedeemed ? 'bg-slate-100 text-slate-600' : 'bg-amber-100 text-amber-900'}">
-                                    ${isAllRedeemed ? 'Sudah Ditukar' : `${unredeemedCount} Belum Ditukar`}
-                                </span>
-                            </td>
-                            <td class="p-3.5 text-right">
-                                ${!isAllRedeemed ? `
-                                    <button onclick="processRedeemVoucher('${o.id}')" ${isUnpaid ? 'disabled title="Siswa belum bayar!"' : ''} class="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 disabled:text-slate-400 text-white px-3 py-1.5 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 ml-auto shadow-xs">
-                                        <i class="fa-solid fa-check-double"></i> Serahkan Semua (${unredeemedCount})
-                                    </button>
-                                ` : `
-                                    <span class="text-slate-400 text-xs font-bold flex items-center gap-1 justify-end"><i class="fa-solid fa-check text-emerald-500"></i> Selesai</span>
-                                `}
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-            }
-        }
-
-        function updateSyncStatus(isOnline) {
-            const statusBadge = document.getElementById('cloud-sync-status');
-            if (!statusBadge) return;
-            if (isOnline) {
-                statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800';
-                statusBadge.innerHTML = '<i class="fa-solid fa-rotate text-[10px] mr-1 animate-spin"></i> Auto-Sync Aktif (10s)';
-            } else {
-                statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-600';
-                statusBadge.innerHTML = '<i class="fa-solid fa-circle text-[8px] mr-1"></i> Offline (Local)';
-            }
-        }
-
-        function syncDataFromCloud(isSilent = false) {
-            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
-                if (!isSilent) showToast('Isi URL Webhook di kodingan (DEFAULT_WEBHOOK_URL)!', 'error');
-                updateSyncStatus(false);
-                return;
-            }
-
-            if (!isSilent) showToast('Menghubungkan Cloud...', 'info');
-
-            const fetchUrl = isAdminUnlocked ? `${webhookUrl}?pin=${encodeURIComponent(adminPin)}` : webhookUrl;
-
-            fetch(fetchUrl)
-                .then(res => res.json())
-                .then(data => {
-                    if (data) {
-                        if (data.qrisUrl) {
-                            localStorage.setItem('kantin_qris_image', data.qrisUrl);
-                            updateQrisImagePreview();
-                        }
-                        if (data.cashierWa) {
-                            cashierWaNumber = String(data.cashierWa).trim();
-                            localStorage.setItem('kantin_cashier_wa', cashierWaNumber);
-                        }
-                        if (data.menuItems && Array.isArray(data.menuItems) && data.menuItems.length > 0) {
-                            menuItems = data.menuItems;
-                            localStorage.setItem('kantin_menu', JSON.stringify(menuItems));
-                            renderMenu();
-                        }
-                        if (data.orders && Array.isArray(data.orders)) {
-                            let hasNewIncomingOrders = false;
-                            const cloudOrdersMap = new Map();
-
-                            data.orders.forEach(o => {
-                                const orderIdStr = String(o.id);
-                                cloudOrdersMap.set(orderIdStr, o);
-                                if (!knownOrderIdsSet.has(orderIdStr)) {
-                                    knownOrderIdsSet.add(orderIdStr);
-                                    hasNewIncomingOrders = true;
-                                }
-                            });
+                            ` : ''}
                             
-                            const mergedOrders = data.orders.map(o => ({
-                                ...o,
-                                paymentStatus: o.paymentStatus || 'Belum Bayar',
-                                redeemStatus: o.redeemStatus || 'Belum Ditukar'
-                            }));
+                            ${o.redeemStatus !== 'Sudah Ditukar' ? `
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition">
+                                    Serahkan
+                                </button>
+                            ` : `
+                                <span class="text-[10px] text-slate-400 font-bold italic">Selesai</span>
+                            `}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
 
-                            orders.forEach(localOrder => {
-                                if (!cloudOrdersMap.has(String(localOrder.id))) {
-                                    mergedOrders.unshift(localOrder);
-                                }
-                            });
+            // Render Desktop Table Rows
+            tbodyContainer.innerHTML = filteredOrders.map((o, idx) => `
+                <tr class="hover:bg-slate-50/80 transition text-xs">
+                    <td class="p-3.5 font-bold text-slate-400">${idx + 1}</td>
+                    <td class="p-3.5 font-medium text-slate-500 whitespace-nowrap">${o.date}</td>
+                    <td class="p-3.5">
+                        <p class="font-extrabold text-slate-800">${o.buyerName}</p>
+                        <p class="text-[11px] text-slate-500">${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
+                    </td>
+                    <td class="p-3.5 font-medium text-slate-700 max-w-xs truncate">${o.itemsSummary}</td>
+                    <td class="p-3.5 font-black text-emerald-600 whitespace-nowrap">${formatRupiah(o.totalAmount)}</td>
+                    <td class="p-3.5 whitespace-nowrap">
+                        <button onclick="togglePaymentStatus('${o.id}')" class="px-2.5 py-1 rounded-full text-[10px] font-extrabold transition ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 hover:bg-emerald-200' : 'bg-amber-100 text-amber-800 hover:bg-amber-200'}">
+                            ${o.paymentStatus === 'Sudah Bayar' ? '✅ Lunas' : '⚠️ Belum Bayar'}
+                        </button>
+                    </td>
+                    <td class="p-3.5 whitespace-nowrap">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-extrabold ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-100 text-slate-600' : 'bg-blue-100 text-blue-800'}">
+                            ${o.redeemStatus}
+                        </span>
+                    </td>
+                    <td class="p-3.5 text-right whitespace-nowrap">
+                        <div class="flex items-center justify-end gap-1.5">
+                            ${o.paymentProof ? `
+                                <button onclick="viewPaymentProof('${o.id}')" title="Lihat Foto Bukti Transfer" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold border border-blue-200 transition">
+                                    <i class="fa-solid fa-receipt"></i> Bukti
+                                </button>
+                            ` : ''}
 
-                            orders = mergedOrders;
-                            localStorage.setItem('kantin_orders', JSON.stringify(orders));
-                            renderAdminTransactions();
-                            renderUserVouchers();
-
-                            if (hasNewIncomingOrders && isSoundEnabled && isSilent && isAdminUnlocked) {
-                                playNotificationSound();
-                                showToast('🛎️ Pesanan Baru Masuk!', 'success');
-                            }
-                        }
-                        updateSyncStatus(true);
-                        if (!isSilent) showToast('Sync Cloud Berhasil! ☁️', 'success');
-                    }
-                })
-                .catch(err => {
-                    console.log('Cloud Sync Error:', err);
-                    updateSyncStatus(false);
-                    if (!isSilent) showToast('Sync Cloud Gagal!', 'error');
-                });
+                            ${o.redeemStatus !== 'Sudah Ditukar' ? `
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs transition">
+                                    Serahkan Voucher
+                                </button>
+                            ` : `
+                                <span class="text-[11px] text-slate-400 font-bold italic px-2">Selesai</span>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        function startAutoSync() {
-            if (autoSyncTimer) clearInterval(autoSyncTimer);
-            if (webhookUrl && !webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
-                autoSyncTimer = setInterval(() => {
-                    syncDataFromCloud(true);
-                }, 10000);
-            }
-        }
+        function togglePaymentStatus(orderId) {
+            const order = orders.find(o => String(o.id) === String(orderId));
+            if (!order) return;
 
-        function syncOrdersToCloud() {
-            if (!webhookUrl || webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) return;
-            fetch(webhookUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'update_orders',
-                    orders: orders
-                })
-            }).catch(err => console.log('Orders Cloud Push Error:', err));
-        }
+            order.paymentStatus = (order.paymentStatus === 'Sudah Bayar') ? 'Belum Bayar' : 'Sudah Bayar';
+            saveData();
+            syncOrdersToCloud();
+            renderAdminTransactions();
+            renderAdminSummary();
+            renderUserVouchers();
 
-        function updateQrisImagePreview() {
-            const defaultQris = "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360";
-            const savedQris = localStorage.getItem('kantin_qris_image') || defaultQris;
-            
-            const modalQrisImg = document.getElementById('qris-modal-img');
-            if (modalQrisImg) modalQrisImg.src = savedQris;
+            showToast(`Status pembayaran ${order.buyerName} diubah menjadi: ${order.paymentStatus}`, 'info');
         }
 
         function exportToExcel() {
             if (orders.length === 0) {
-                showToast('Belum ada data transaksi untuk diexport!', 'error');
+                showToast('Belum ada data transaksi untuk diekspor!', 'error');
                 return;
             }
 
-            let csvContent = "\uFEFF"; // UTF-8 BOM
-            csvContent += "Tanggal,Kode Voucher,Nama Siswa,NISN,Kelas,No HP,Item,Total,Status Bayar,Status Ditukar\n";
+            let csvContent = "data:text/csv;charset=utf-8,ID Transaksi,Tanggal,Nama Siswa,NISN,Kelas,No HP,Rincian Items,Total (Rp),Status Bayar,Status Penukaran\n";
 
             orders.forEach(o => {
-                const vCodes = (o.vouchers || []).map(v => v.voucherCode).join(';');
-                const cleanDate = String(o.date || '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
-                const cleanName = String(o.buyerName || '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
-                const cleanClass = String(o.buyerClass || '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
-                const cleanItems = String(o.itemsSummary || '').replace(/[\r\n]+/g, ' ').replace(/"/g, '""');
-                csvContent += `"${cleanDate}","${vCodes}","${cleanName}","'${o.buyerNisn || ''}","${cleanClass}","'${o.buyerPhone || ''}","${cleanItems}","${o.totalAmount}","${o.paymentStatus || 'Belum Bayar'}","${o.redeemStatus || 'Belum Ditukar'}"\n`;
+                const itemsClean = `"${String(o.itemsSummary || '').replace(/"/g, '""')}"`;
+                const nameClean = `"${String(o.buyerName || '').replace(/"/g, '""')}"`;
+                const row = [
+                    o.id,
+                    o.date,
+                    nameClean,
+                    "'" + (o.buyerNisn || ''),
+                    o.buyerClass,
+                    "'" + (o.buyerPhone || ''),
+                    itemsClean,
+                    o.totalAmount,
+                    o.paymentStatus,
+                    o.redeemStatus
+                ].join(",");
+                csvContent += row + "\n";
             });
 
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
+            const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Laporan_Transaksi_Kantin_${Date.now()}.csv`);
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Laporan_Transaksi_Kantin_SARAS_${new Date().toISOString().slice(0,10)}.csv`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            showToast('Laporan berhasil diunduh sebagai file CSV/Excel!', 'success');
+
+            showToast('Laporan transaksi berhasil diunduh (CSV/Excel)!', 'success');
+        }
+
+        function openWhatsAppHelp(e) {
+            if (e) e.preventDefault();
+            const waNum = cashierWaNumber.replace(/[^0-9]/g, '');
+            const msg = encodeURIComponent("Halo Kasir Kantin SARAS Spentig Makassar, saya ingin menanyakan info voucher digital.");
+            window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
+        }
+
+        function updateQrisImagePreview() {
+            // Updated dynamically if backend sends custom QRIS
+        }
+
+        function copyAppsScriptCode() {
+            const codeBlock = document.getElementById('apps-script-code-block');
+            if (!codeBlock) return;
+
+            const text = codeBlock.innerText;
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('Kode Google Apps Script berhasil disalin!', 'success');
+                });
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('Kode Google Apps Script berhasil disalin!', 'success');
+            }
         }
 
         function openScriptGuideModal() {
@@ -2173,54 +2061,137 @@ function getOrCreateSheet(ss, name) {
             closeModal('modal-script-guide');
         }
 
-        function openWhatsAppHelp(e) {
-            if (e) e.preventDefault();
-            let rawNum = cashierWaNumber.replace(/[^0-9]/g, '');
-            if (rawNum.startsWith('0')) {
-                rawNum = '62' + rawNum.substring(1);
+        // =========================================================================
+        // 🌐 GOOGLE APPS SCRIPT WEBHOOK SYNC
+        // =========================================================================
+        function syncDataFromCloud(isAuto = false, reqPin = '') {
+            const statusBadge = document.getElementById('cloud-sync-status');
+            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) {
+                if (statusBadge) {
+                    statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 shrink-0';
+                    statusBadge.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-[8px] mr-1"></i> Local (URL Belum Diatur)';
+                }
+                return Promise.resolve(false);
             }
-            if (!rawNum) rawNum = '6281234567890';
-            
-            const message = encodeURIComponent('Halo Kasir Kantin SARAS Spentig Makassar, saya butuh bantuan mengenai voucher kantin digital.');
-            const waUrl = `https://wa.me/${rawNum}?text=${message}`;
-            window.open(waUrl, '_blank');
+
+            const fetchPin = reqPin || activeKasirPin;
+            const targetUrl = webhookUrl + (fetchPin ? `?pin=${encodeURIComponent(fetchPin)}` : '');
+
+            return fetch(targetUrl)
+                .then(res => res.json())
+                .then(data => {
+                    if (statusBadge) {
+                        statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 shrink-0';
+                        statusBadge.innerHTML = '<i class="fa-solid fa-circle text-[8px] mr-1 text-emerald-500"></i> Online (Terhubung Sheet)';
+                    }
+
+                    if (data.qrisUrl) {
+                        const qrisImg = document.getElementById('qris-modal-img');
+                        if (qrisImg) qrisImg.src = data.qrisUrl;
+                    }
+
+                    if (data.cashierWa) {
+                        cashierWaNumber = String(data.cashierWa);
+                        localStorage.setItem('kantin_cashier_wa', cashierWaNumber);
+                    }
+
+                    if (data.menuItems && Array.isArray(data.menuItems) && data.menuItems.length > 0) {
+                        menuItems = data.menuItems;
+                        renderMenu();
+                        renderAdminMenu();
+                    }
+
+                    if (data.authenticated && data.orders && Array.isArray(data.orders)) {
+                        let hasNewOrders = false;
+                        data.orders.forEach(cloudOrder => {
+                            if (!knownOrderIdsSet.has(String(cloudOrder.id))) {
+                                knownOrderIdsSet.add(String(cloudOrder.id));
+                                hasNewOrders = true;
+                            }
+                        });
+
+                        orders = data.orders;
+                        saveData();
+                        renderAdminTransactions();
+                        renderAdminSummary();
+
+                        if (hasNewOrders && isAuto && isSoundEnabled) {
+                            playNotificationSound();
+                            showToast('Pesanan Baru Masuk! 🎟️', 'success');
+                        }
+                    }
+
+                    if (!isAuto && !reqPin) {
+                        showToast('Data berhasil ditarik dari Cloud Google Sheets!', 'success');
+                    }
+
+                    return !!data.authenticated;
+                })
+                .catch(err => {
+                    console.log('Cloud sync error:', err);
+                    if (statusBadge) {
+                        statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 shrink-0';
+                        statusBadge.innerHTML = '<i class="fa-solid fa-circle-exclamation text-[8px] mr-1"></i> Error Sync';
+                    }
+                    if (!isAuto && !reqPin) {
+                        showToast('Gagal terhubung ke Cloud Apps Script!', 'error');
+                    }
+                    return false;
+                });
         }
 
-        function copyAppsScriptCode() {
-            const codeText = document.getElementById('apps-script-code-block')?.innerText || '';
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(codeText).then(() => {
-                    showToast('Kode Google Apps Script berhasil disalin!', 'success');
-                }).catch(() => fallbackCopyCode(codeText));
-            } else {
-                fallbackCopyCode(codeText);
-            }
+        function sendOrderToCloud(newOrder) {
+            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) return;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newOrder)
+            }).catch(e => console.log('Send order cloud error:', e));
         }
 
-        function fallbackCopyCode(text) {
-            const tempInput = document.createElement('textarea');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-            showToast('Kode Google Apps Script berhasil disalin!', 'success');
+        function syncOrdersToCloud() {
+            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) return;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update_orders', orders: orders })
+            }).catch(e => console.log('Sync orders cloud error:', e));
         }
 
-        window.onload = function() {
+        function syncStockToCloud() {
+            if (!webhookUrl || webhookUrl === DEFAULT_WEBHOOK_URL) return;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'update_stock', menuItems: menuItems })
+            }).catch(e => console.log('Sync stock cloud error:', e));
+        }
+
+        function startAutoSync() {
+            if (autoSyncTimer) clearInterval(autoSyncTimer);
+            autoSyncTimer = setInterval(() => {
+                syncDataFromCloud(true);
+            }, 15000); // Poll cloud updates every 15s
+        }
+
+        // =========================================================================
+        // 🚀 APPLICATION INITIALIZATION
+        // =========================================================================
+        document.addEventListener('DOMContentLoaded', () => {
             applyAdminButtonVisibility();
             updateSoundToggleButton();
-            switchTab('menu');
+            renderMenu();
             updateCartBadge();
-            renderUserVouchers();
-            updateQrisImagePreview();
-            if (webhookUrl && !webhookUrl.includes("YOUR_DEPLOYED_SCRIPT_ID_HERE")) {
-                syncDataFromCloud(false);
-                startAutoSync();
-            } else {
-                updateSyncStatus(false);
-            }
-        };
+            setRole('siswa');
+            syncDataFromCloud(true);
+            startAutoSync();
+        });
     </script>
 </body>
 </html>
