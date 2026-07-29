@@ -427,7 +427,7 @@
                         <div class="space-y-1.5">
                             <label class="block text-xs font-bold text-slate-700">URL Webhook Apps Script</label>
                             <div class="flex gap-2">
-                                <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/AKfycbycQ0wbLrU63jEKfEuwKlRrE-ObqsM5PwKKA0QOfsm9C5q3yLmThWkLIQQkhwn24_GP/exec" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-emerald-500 transition">
+                                <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3 py-2 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-emerald-500 transition">
                                 <button onclick="saveWebhookUrlSetting()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition">Simpan URL</button>
                             </div>
                             <p class="text-[10px] text-slate-400">Tempel URL Webhook hasil Deploy Google Apps Script di sini. PIN Kasir diatur terpusat di dalam kode Google Apps Script (<code class="text-emerald-700 font-bold">MANUAL_CONFIG.adminPin</code>).</p>
@@ -560,18 +560,19 @@
                     <i class="fa-solid fa-copy"></i> Copy Kode
                 </button>
                 <pre id="apps-script-code-block" class="whitespace-pre-wrap leading-relaxed">
+// ===================================================
+// PENGATURAN MANUAL KANTIN (TERPUSAT DI SINI)
+// ===================================================
+var MANUAL_CONFIG = {
+  qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360",
+  adminPin: "3333", // SETTING PIN KASIR UTAMA
+  cashierWa: "081234567890",
+  driveFolderName: "BUKTI_PEMBAYARAN_KANTIN"
+};
+// ===================================================
+
 function doGet(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-
-  // ===================================================
-  // PENGATURAN MANUAL KANTIN (TERPUSAT DI SINI)
-  // ===================================================
-  var MANUAL_CONFIG = {
-    qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360",
-    adminPin: "3333", // SETTING PIN KASIR UTAMA
-    cashierWa: "081234567890"
-  };
-  // ===================================================
 
   // 1. Ambil/Inisialisasi Stok dari Sheet "STOK"
   var sheetStok = getOrCreateSheet(ss, "STOK");
@@ -1049,15 +1050,9 @@ function getOrCreateSheet(ss, name) {
         // =========================================================================
         // 🛠️ CONFIGURATION & INITIAL GLOBAL STATE
         // =========================================================================
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxYOUR_DEPLOYED_SCRIPT_ID_HERE/exec"; 
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbycQ0wbLrU63jEKfEuwKlRrE-ObqsM5PwKKA0QOfsm9C5q3yLmThWkLIQQkhwn24_GP/exec"; 
         
-        let menuItems = [
-            { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
-            { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 100, icon: '🎟️' },
-            { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 100, icon: '🎟️' },
-            { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 100, icon: '🎟️' },
-            { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 100, icon: '🎟️' }
-        ];
+        let menuItems = [];
 
         let cart = [];
         let orders = [];
