@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
+    <!-- Google Fonts Inter & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -46,7 +46,7 @@
             top: 50%;
             width: 18px;
             height: 18px;
-            background-color: #f1f5f9; /* Matches bg-slate-100 */
+            background-color: #f1f5f9;
             border-radius: 50%;
             transform: translateY(-50%);
             z-index: 10;
@@ -54,12 +54,6 @@
         .ticket-card::before { left: -9px; }
         .ticket-card::after { right: -9px; }
 
-        /* Dynamic Glow Effects */
-        .emerald-glow {
-            box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.3);
-        }
-        
-        /* Print styling for tickets */
         @media print {
             .no-print { display: none !important; }
             body { background: white !important; color: black !important; }
@@ -185,7 +179,6 @@
 
             <!-- 4 Stat Cards Grid -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 relative z-10">
-                <!-- Stat 1: Omset Hari Ini -->
                 <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-emerald-500/50 transition-colors">
                     <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-wallet text-emerald-400"></i> Omset Hari Ini
@@ -194,7 +187,6 @@
                     <p id="stat-omset-count" class="text-[10px] text-slate-400 font-semibold">0 Transaksi Lunas</p>
                 </div>
 
-                <!-- Stat 2: Voucher Terjual -->
                 <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-blue-500/50 transition-colors">
                     <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-ticket text-blue-400"></i> Terjual Hari Ini
@@ -203,7 +195,6 @@
                     <p class="text-[10px] text-slate-400 font-semibold">Voucher Dipesan</p>
                 </div>
 
-                <!-- Stat 3: Belum Ditukar -->
                 <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-amber-500/50 transition-colors">
                     <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-hand-holding-dollar text-amber-400"></i> Belum Ditukar
@@ -212,7 +203,6 @@
                     <p class="text-[10px] text-slate-400 font-semibold">Siap Diambil Siswa</p>
                 </div>
 
-                <!-- Stat 4: Stok Tipis -->
                 <div class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700/70 space-y-1 shadow-sm hover:border-purple-500/50 transition-colors">
                     <p class="text-[10px] font-black uppercase text-slate-400 tracking-wider flex items-center gap-1.5">
                         <i class="fa-solid fa-boxes-stacked text-purple-400"></i> Stok Tipis (≤10)
@@ -225,7 +215,6 @@
 
         <!-- VIEW: MENU CATALOG -->
         <section id="view-menu" class="space-y-5">
-            <!-- Filter Pills -->
             <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
                 <button onclick="setCategoryFilter('all', this)" class="cat-btn active bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap shadow-md shadow-emerald-200 transition-all">
                     Semua Voucher
@@ -238,9 +227,7 @@
                 </button>
             </div>
 
-            <!-- Items Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="menu-grid">
-                <!-- Dynamically populated from Google Sheets or default state -->
             </div>
         </section>
 
@@ -265,21 +252,16 @@
                     </button>
                 </div>
 
-                <!-- Desktop 2-Column Responsive Grid -->
                 <div id="cart-content-grid" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    <!-- Column Left: Cart Items List -->
                     <div class="lg:col-span-6 space-y-3">
                         <h3 class="text-xs font-black text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                             <i class="fa-solid fa-list-check text-emerald-600"></i> Daftar Voucher Pilihan
                         </h3>
                         <div id="cart-items-container" class="space-y-3 max-h-[420px] overflow-y-auto no-scrollbar pr-1">
-                            <!-- Cart items dynamically rendered -->
                         </div>
                     </div>
 
-                    <!-- Column Right: Student Identity Form & Payment Button -->
                     <div id="cart-checkout-section" class="lg:col-span-6 space-y-5 lg:border-l lg:border-slate-200 lg:pl-6 pt-4 lg:pt-0 border-t lg:border-t-0 border-slate-200">
-                        <!-- Form Identitas Siswa -->
                         <div class="space-y-4 bg-slate-50/80 p-5 rounded-2xl border border-slate-200/80">
                             <div class="flex items-center justify-between">
                                 <h3 class="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -311,7 +293,6 @@
                             </div>
                         </div>
 
-                        <!-- Total & Payment Button -->
                         <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
                             <div>
                                 <p class="text-xs text-slate-500 font-extrabold uppercase tracking-wider">Total Tagihan Pembelian</p>
@@ -352,7 +333,6 @@
             </div>
 
             <div id="vouchers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <!-- User purchased vouchers populated dynamically -->
             </div>
         </section>
 
@@ -371,7 +351,6 @@
                     </button>
                 </div>
 
-                <!-- Filter & Search Bar -->
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1">
                         <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
@@ -386,12 +365,9 @@
                     </select>
                 </div>
 
-                <!-- Tampilan Card untuk HP (Mobile View) -->
                 <div id="admin-transactions-mobile" class="space-y-3.5 md:hidden">
-                    <!-- Populated dynamically -->
                 </div>
 
-                <!-- Tampilan Tabel untuk Desktop -->
                 <div class="hidden md:block overflow-x-auto rounded-2xl border border-slate-200">
                     <table class="w-full text-left border-collapse">
                         <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-black text-slate-600 uppercase tracking-wider">
@@ -407,7 +383,6 @@
                             </tr>
                         </thead>
                         <tbody id="admin-transactions-tbody" class="divide-y divide-slate-100 font-medium">
-                            <!-- Populated dynamically -->
                         </tbody>
                     </table>
                 </div>
@@ -425,7 +400,6 @@
                 </div>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5" id="admin-menu-grid">
-                <!-- Populated dynamically -->
             </div>
         </section>
 
@@ -438,12 +412,11 @@
                     </div>
                     <div>
                         <h2 class="text-base font-black text-slate-800">Pengaturan Kasir & Integrasi Cloud</h2>
-                        <p class="text-xs text-slate-500 font-medium">Konfigurasi visibilitas, audio, dan tautan Google Apps Script</p>
+                        <p class="text-xs text-slate-500 font-medium">Konfigurasi visibilitas, audio, dan sinkronisasi Google Apps Script</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <!-- Toggle Hide Kasir Button -->
                     <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between">
                         <div class="space-y-2">
                             <h3 class="font-extrabold text-slate-800 text-xs flex items-center gap-2">
@@ -459,7 +432,6 @@
                         </div>
                     </div>
 
-                    <!-- Auto-Lock & Audio Settings Card -->
                     <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-3 flex flex-col justify-between">
                         <div class="space-y-2">
                             <h3 class="font-extrabold text-slate-800 text-xs flex items-center gap-2">
@@ -476,7 +448,6 @@
                         </div>
                     </div>
 
-                    <!-- Google Spreadsheet Webhook Settings Card -->
                     <div class="p-5 bg-slate-50/80 rounded-2xl border border-slate-200/80 space-y-4 md:col-span-2">
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
                             <div>
@@ -490,22 +461,9 @@
                             </span>
                         </div>
 
-                        <!-- Input URL Webhook -->
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-extrabold text-slate-700">URL Webhook Apps Script</label>
-                            <div class="flex flex-col sm:flex-row gap-2">
-                                <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-2xs">
-                                <button onclick="saveWebhookUrlSetting()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">Simpan URL</button>
-                            </div>
-                            <p class="text-[10px] text-slate-400 font-medium">PIN Kasir diatur terpusat di dalam skrip Google Apps Script (<code class="text-emerald-700 font-bold">CONFIG.adminPin</code>).</p>
-                        </div>
-
                         <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-200/80">
                             <button onclick="syncDataFromCloud(false)" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-extrabold text-xs shadow-xs transition flex-1 sm:flex-none">
                                 <i class="fa-solid fa-rotate mr-1.5"></i> Tarik Data Manual
-                            </button>
-                            <button onclick="openScriptGuideModal()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-4 py-2.5 rounded-xl font-extrabold text-xs border border-amber-300 transition flex-1 sm:flex-none">
-                                <i class="fa-solid fa-code mr-1.5"></i> Panduan Kode Apps Script
                             </button>
                         </div>
                     </div>
@@ -535,11 +493,15 @@
                 <p class="text-xs text-slate-500 font-medium">Scan menggunakan GoPay, OVO, DANA, ShopeePay, LinkAja, atau Mobile Banking</p>
             </div>
 
-            <!-- ENLARGED & ENHANCED QRIS CARD CONTAINER -->
             <div class="bg-slate-50 p-4 sm:p-5 rounded-3xl border-2 border-emerald-500/20 shadow-inner space-y-4">
-                <!-- High-Res QR Code Frame -->
                 <div class="w-full max-w-[280px] sm:max-w-[320px] mx-auto bg-white rounded-2xl border-2 border-slate-200 p-3 shadow-sm flex items-center justify-center">
-                    <img id="qris-modal-img" src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360" alt="QRIS Kantin" class="w-full h-auto object-contain max-h-[320px] rounded-lg">
+                    <img id="qris-modal-img" src="https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360" alt="QRIS 1 Display" class="w-full h-auto object-contain max-h-[320px] rounded-lg">
+                </div>
+
+                <div class="flex justify-center">
+                    <button onclick="downloadQrisImage()" id="btn-download-qris" class="bg-white hover:bg-emerald-50 text-emerald-800 border-2 border-emerald-300 px-4 py-2 rounded-xl text-xs font-black transition-all flex items-center gap-2 shadow-xs active:scale-95">
+                        <i class="fa-solid fa-download text-emerald-600"></i> Unduh Gambar QRIS (High-Res)
+                    </button>
                 </div>
 
                 <div class="bg-emerald-50 py-3 px-4 rounded-2xl border border-emerald-200/80">
@@ -554,7 +516,7 @@
                 </p>
                 <ol class="text-xs text-amber-800 font-semibold space-y-1 list-decimal list-inside leading-relaxed">
                     <li>Buka aplikasi E-Wallet / Mobile Banking Anda</li>
-                    <li>Scan Kode QRIS di atas sesuai tagihan <b id="qris-modal-total-text" class="text-amber-950">Rp 0</b></li>
+                    <li>Scan Kode QRIS di atas (atau unggah gambar QRIS yang diunduh) sesuai tagihan <b id="qris-modal-total-text" class="text-amber-950">Rp 0</b></li>
                     <li>Unggah foto bukti bayar <b class="text-red-600">(Wajib)</b> lalu klik konfirmasi</li>
                 </ol>
             </div>
@@ -609,237 +571,6 @@
         </div>
     </div>
 
-    <!-- MODAL: GOOGLE APPS SCRIPT CODE GUIDE -->
-    <div id="modal-script-guide" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative max-h-[85vh] overflow-y-auto">
-            <button onclick="closeScriptGuideModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            
-            <div class="space-y-1">
-                <span class="bg-emerald-100 text-emerald-800 font-black text-[10px] px-3 py-0.5 rounded-full uppercase tracking-wider">Google Apps Script</span>
-                <h3 class="text-base font-black text-slate-800 pt-0.5">Kode Server Google Apps Script</h3>
-                <p class="text-xs text-slate-500 font-medium">Salin kode di bawah ini ke editor Apps Script spreadsheet Google Sheets Anda.</p>
-            </div>
-
-            <div class="bg-slate-900 text-slate-100 p-4 rounded-2xl text-[11px] font-mono overflow-x-auto relative">
-                <button onclick="copyAppsScriptCode()" class="absolute top-3 right-3 bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg text-[10px] font-bold shadow-xs">
-                    <i class="fa-solid fa-copy"></i> Copy Kode
-                </button>
-                <pre id="apps-script-code-block" class="whitespace-pre-wrap leading-relaxed">
-var CONFIG = {
-  qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360",
-  adminPin: "3333", 
-  cashierWa: "081234567890",
-  driveFolderName: "BUKTI_PEMBAYARAN_KANTIN_SPENTIG"
-};
-
-function doGet(e) {
-  try {
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var sheetStok = getOrCreateSheet(ss, "STOK");
-    var stokData = sheetStok.getDataRange().getDisplayValues();
-    var menuItems = [];
-
-    if (stokData.length <= 1) {
-      var defaultItems = [
-        { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 0, icon: '🎟️' },
-        { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 0, icon: '🎟️' },
-        { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 0, icon: '🎟️' },
-        { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 0, icon: '🎟️' },
-        { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 0, icon: '🎟️' }
-      ];
-      sheetStok.clearContents();
-      sheetStok.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
-      defaultItems.forEach(function(item) {
-        sheetStok.appendRow([item.id, item.name, item.price, item.stock, item.icon]);
-      });
-      menuItems = defaultItems;
-    } else {
-      for (var i = 1; i < stokData.length; i++) {
-        if (stokData[i][0]) {
-          menuItems.push({
-            id: String(stokData[i][0]),
-            name: String(stokData[i][1]),
-            price: Number(stokData[i][2]),
-            stock: Number(stokData[i][3]),
-            icon: String(stokData[i][4] || '🎟️')
-          });
-        }
-      }
-    }
-
-    var reqPin = String(e && e.parameter && e.parameter.pin || '').trim();
-    var isAuthenticated = (reqPin === CONFIG.adminPin);
-    var orders = [];
-
-    if (isAuthenticated) {
-      var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
-      var ordersData = sheetOrders.getDataRange().getDisplayValues();
-      var startIdx = Math.max(1, ordersData.length - 200);
-
-      for (var j = ordersData.length - 1; j >= startIdx; j--) {
-        if (ordersData[j][0]) {
-          var parsedVouchers = [];
-          try {
-            parsedVouchers = JSON.parse(ordersData[j][11] || '[]');
-          } catch (err) {
-            parsedVouchers = [];
-          }
-
-          orders.push({
-            id: String(ordersData[j][0]),
-            date: String(ordersData[j][1]),
-            buyerName: String(ordersData[j][2]),
-            buyerNisn: String(ordersData[j][3]),
-            buyerClass: String(ordersData[j][4]),
-            buyerPhone: String(ordersData[j][5]),
-            itemsSummary: String(ordersData[j][6]),
-            totalAmount: Number(ordersData[j][7]),
-            paymentStatus: String(ordersData[j][8] || 'Belum Bayar'),
-            redeemStatus: String(ordersData[j][9] || 'Belum Ditukar'),
-            paymentProof: String(ordersData[j][10] || ''),
-            vouchers: parsedVouchers
-          });
-        }
-      }
-    }
-
-    return ContentService.createTextOutput(JSON.stringify({
-      qrisUrl: CONFIG.qrisUrl,
-      cashierWa: CONFIG.cashierWa,
-      menuItems: menuItems,
-      authenticated: isAuthenticated,
-      orders: orders
-    })).setMimeType(ContentService.MimeType.JSON);
-
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      error: true,
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-function doPost(e) {
-  var lock = LockService.getScriptLock();
-  try {
-    lock.waitLock(10000);
-    var data = JSON.parse(e.postData.contents);
-    var ss = SpreadsheetApp.getActiveSpreadsheet();
-
-    if (data.action === "update_orders") {
-      var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
-      clearSheetDataRows(sheetOrders);
-      if (data.orders && Array.isArray(data.orders)) {
-        data.orders.forEach(function(o) {
-          sheetOrders.appendRow([
-            o.id, o.date, o.buyerName, "'" + (o.buyerNisn || ''), o.buyerClass,
-            "'" + (o.buyerPhone || ''), o.itemsSummary, o.totalAmount,
-            o.paymentStatus, o.redeemStatus, o.paymentProof || '', JSON.stringify(o.vouchers || [])
-          ]);
-        });
-      }
-      return ContentService.createTextOutput("Orders Updated Successfully");
-    }
-
-    if (data.action === "update_stock") {
-      var sheetStok = getOrCreateSheet(ss, "STOK");
-      clearSheetDataRows(sheetStok);
-      if (data.menuItems && Array.isArray(data.menuItems)) {
-        data.menuItems.forEach(function(m) {
-          sheetStok.appendRow([m.id, m.name, m.price, m.stock, m.icon || '🎟️']);
-        });
-      }
-      return ContentService.createTextOutput("Stock Updated Successfully");
-    }
-
-    var proofUrl = "";
-    if (data.paymentProof && data.paymentProof.indexOf("data:image") === 0) {
-      try {
-        var folders = DriveApp.getFoldersByName(CONFIG.driveFolderName);
-        var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(CONFIG.driveFolderName);
-
-        var base64Data = data.paymentProof.split(",")[1];
-        var fileName = "BUKTI_" + sanitizeFileName(data.buyerName) + "_" + Date.now() + ".jpg";
-        var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "image/jpeg", fileName);
-        var file = folder.createFile(blob);
-        file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-        proofUrl = "https://lh3.googleusercontent.com/d/" + file.getId();
-      } catch (errDrive) {
-        proofUrl = data.paymentProof;
-      }
-    } else {
-      proofUrl = data.paymentProof || '';
-    }
-
-    var sheetDefault = getOrCreateSheet(ss, "TRANSAKSI");
-    sheetDefault.appendRow([
-      data.id, data.date, data.buyerName, "'" + data.buyerNisn, data.buyerClass, 
-      "'" + data.buyerPhone, data.itemsSummary, data.totalAmount, 
-      data.paymentStatus, data.redeemStatus, proofUrl, JSON.stringify(data.vouchers || [])
-    ]);
-
-    if (data.vouchers && Array.isArray(data.vouchers)) {
-      var sheetStok = getOrCreateSheet(ss, "STOK");
-      var stokData = sheetStok.getDataRange().getDisplayValues();
-      
-      var usage = {};
-      data.vouchers.forEach(function(v) {
-        var itemId = v.itemId || ('v' + v.nominal);
-        usage[itemId] = (usage[itemId] || 0) + 1;
-      });
-
-      for (var k = 1; k < stokData.length; k++) {
-        var currentId = String(stokData[k][0]);
-        if (usage[currentId]) {
-          var currentStock = Number(stokData[k][3]);
-          var newStock = Math.max(0, currentStock - usage[currentId]);
-          sheetStok.getRange(k + 1, 4).setValue(newStock);
-        }
-      }
-    }
-
-    return ContentService.createTextOutput("Order Saved & Stock Deducted Successfully");
-  } catch(err) {
-    return ContentService.createTextOutput("Error: " + err.toString());
-  } finally {
-    lock.releaseLock();
-  }
-}
-
-function getOrCreateSheet(ss, name) {
-  var sheet = ss.getSheetByName(name);
-  if (!sheet) {
-    sheet = ss.insertSheet(name);
-    if (name === "TRANSAKSI") {
-      sheet.appendRow(["ORDER_ID", "TANGGAL", "NAMA_SISWA", "NISN", "KELAS", "NO_HP", "ITEMS", "TOTAL", "STATUS_BAYAR", "STATUS_TUKAR", "BUKTI_PEMBAYARAN", "VOUCHERS_JSON"]);
-    } else if (name === "STOK") {
-      sheet.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
-    }
-  }
-  return sheet;
-}
-
-function clearSheetDataRows(sheet) {
-  var lastRow = sheet.getLastRow();
-  if (lastRow > 1) {
-    sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
-  }
-}
-
-function sanitizeFileName(str) {
-  return String(str || 'SISWA').replace(/[^a-zA-Z0-9]/g, '_');
-}
-                </pre>
-            </div>
-
-            <button onclick="closeScriptGuideModal()" class="w-full bg-slate-900 text-white py-3 rounded-2xl font-extrabold text-xs">
-                Tutup Panduan
-            </button>
-        </div>
-    </div>
-
     <!-- MODAL: KASIR PROOF INSPECTION -->
     <div id="modal-view-proof" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100 relative text-center">
@@ -869,9 +600,56 @@ function sanitizeFileName(str) {
     </div>
 
     <script>
-        // =========================================================================
-        // 🛠️ HELPER FUNCTIONS & UTILITIES
-        // =========================================================================
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwKa7FbaVyhcs7RyEjLKisZ8QHj88SHlsSpgf2sAlzA63w_rdxXgRooFfaNXSJJ1XP0Wg/exec"; 
+        
+        // DUAL QRIS URL DEFAULTS
+        const DEFAULT_QRIS_DISPLAY_URL = "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360";
+        const DEFAULT_QRIS_DOWNLOAD_URL = "https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360";
+
+        let qrisDisplayUrl = DEFAULT_QRIS_DISPLAY_URL;
+        let qrisDownloadUrl = DEFAULT_QRIS_DOWNLOAD_URL;
+
+        let menuItems = [
+            { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 0, icon: '🎟️' },
+            { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 0, icon: '🎟️' },
+            { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 0, icon: '🎟️' },
+            { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 0, icon: '🎟️' },
+            { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 0, icon: '🎟️' }
+        ];
+
+        let cart = [];
+        let orders = [];
+        let myOrderIds = [];
+        let currentRole = 'siswa';
+        let currentCategoryFilter = 'all';
+        let activeKasirPin = ''; 
+        let cashierWaNumber = String(localStorage.getItem('kantin_cashier_wa') || '081234567890').trim();
+        let isAdminUnlocked = false;
+        let webhookUrl = String(localStorage.getItem('kantin_webhook_url') || DEFAULT_WEBHOOK_URL).trim();
+        let currentProofDataUrl = '';
+        let autoSyncTimer = null;
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+        let isSoundEnabled = localStorage.getItem('kantin_sound_enabled') !== 'false';
+        let knownOrderIdsSet = new Set();
+        let isFirstSync = true;
+        let inactivityTimer = null;
+        const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
+        let isCashierBtnHidden = localStorage.getItem('kantin_hide_cashier_btn') !== 'false';
+
+        try {
+            const savedOrders = localStorage.getItem('kantin_orders');
+            if (savedOrders) {
+                orders = JSON.parse(savedOrders);
+                orders.forEach(o => knownOrderIdsSet.add(String(o.id)));
+            }
+
+            const savedMyOrders = localStorage.getItem('kantin_my_orders');
+            if (savedMyOrders) myOrderIds = JSON.parse(savedMyOrders);
+        } catch(e) {
+            console.error('Local Storage load error:', e);
+        }
+
         function hideAllViews() {
             const views = ['view-menu', 'view-cart', 'view-vouchers', 'view-admin-transactions', 'view-admin-manage-menu', 'view-admin-settings'];
             views.forEach(id => {
@@ -1000,6 +778,43 @@ function sanitizeFileName(str) {
             }
         }
 
+        function downloadQrisImage() {
+            if (!qrisDownloadUrl) {
+                showToast('Gambar QRIS untuk diunduh belum tersedia!', 'error');
+                return;
+            }
+
+            showToast('Memproses unduhan QRIS High-Res...', 'info');
+
+            fetch(qrisDownloadUrl)
+                .then(res => {
+                    if (!res.ok) throw new Error('Fetch status ' + res.status);
+                    return res.blob();
+                })
+                .then(blob => {
+                    const blobUrl = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = 'QRIS_Kantin_SARAS_Spentig_HighRes.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);
+                    showToast('QRIS High-Res berhasil diunduh!', 'success');
+                })
+                .catch(err => {
+                    console.log('Direct download fallback:', err);
+                    const a = document.createElement('a');
+                    a.href = qrisDownloadUrl;
+                    a.target = '_blank';
+                    a.download = 'QRIS_Kantin_SARAS_Spentig_HighRes.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    showToast('QRIS dibuka di jendela baru untuk disimpan.', 'info');
+                });
+        }
+
         function setRole(role) {
             currentRole = role;
             const siswaBtn = document.getElementById('role-siswa-btn');
@@ -1116,70 +931,6 @@ function sanitizeFileName(str) {
             }
         }
 
-        // =========================================================================
-        // 🛠️ CONFIGURATION & INITIAL GLOBAL STATE
-        // =========================================================================
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzdHqg4dVQBJAzwV_91SUqwahgK_gShXBYrYOvbZlmMQfZS8o--vYkjAYik3_O2b4FlnA/exec"; 
-        
-        let menuItems = [
-            { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
-            { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 100, icon: '🎟️' },
-            { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 100, icon: '🎟️' },
-            { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 100, icon: '🎟️' },
-            { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 100, icon: '🎟️' }
-        ];
-
-        let cart = [];
-        let orders = [];
-        let myOrderIds = [];
-        let currentRole = 'siswa';
-        let currentCategoryFilter = 'all';
-        let activeKasirPin = ''; 
-        let cashierWaNumber = String(localStorage.getItem('kantin_cashier_wa') || '081234567890').trim();
-        let isAdminUnlocked = false;
-        let webhookUrl = String(localStorage.getItem('kantin_webhook_url') || DEFAULT_WEBHOOK_URL).trim();
-        let currentProofDataUrl = '';
-        let autoSyncTimer = null;
-        let logoClickCount = 0;
-        let logoClickTimer = null;
-
-        function saveWebhookUrlSetting() {
-            const urlInput = document.getElementById('setting-webhook-url');
-            const val = String(urlInput?.value || '').trim();
-            if (!val) {
-                showToast('URL Webhook tidak boleh kosong!', 'error');
-                return;
-            }
-            webhookUrl = val;
-            localStorage.setItem('kantin_webhook_url', val);
-            showToast('URL Webhook berhasil disimpan!', 'success');
-            syncDataFromCloud(false);
-            startAutoSync();
-        }
-        
-        let isSoundEnabled = localStorage.getItem('kantin_sound_enabled') !== 'false';
-        let knownOrderIdsSet = new Set();
-        let inactivityTimer = null;
-        const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
-
-        let isCashierBtnHidden = localStorage.getItem('kantin_hide_cashier_btn') !== 'false';
-
-        try {
-            const savedOrders = localStorage.getItem('kantin_orders');
-            if (savedOrders) {
-                orders = JSON.parse(savedOrders);
-                orders.forEach(o => knownOrderIdsSet.add(String(o.id)));
-            }
-
-            const savedMyOrders = localStorage.getItem('kantin_my_orders');
-            if (savedMyOrders) myOrderIds = JSON.parse(savedMyOrders);
-        } catch(e) {
-            console.error('Local Storage load error:', e);
-        }
-
-        // =========================================================================
-        // 🔊 AUDIO NOTIFICATION SYSTEM (WEB AUDIO API)
-        // =========================================================================
         function playNotificationSound() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -1360,9 +1111,6 @@ function sanitizeFileName(str) {
                 document.getElementById('view-admin-settings')?.classList.remove('hidden');
                 const activeBtn = document.getElementById('admin-nav-btn-settings');
                 if (activeBtn) activeBtn.className = 'py-2.5 px-3 border-b-2 border-emerald-400 text-emerald-400 font-extrabold flex items-center gap-2 whitespace-nowrap transition-all';
-
-                const urlInput = document.getElementById('setting-webhook-url');
-                if (urlInput) urlInput.value = webhookUrl === DEFAULT_WEBHOOK_URL ? '' : webhookUrl;
             }
         }
 
@@ -1531,12 +1279,13 @@ function sanitizeFileName(str) {
             }
 
             order.redeemStatus = 'Sudah Ditukar';
+            order._lastModified = Date.now(); // Proteksi lokal agar tidak tertimpa sync lama
             if (order.vouchers && Array.isArray(order.vouchers)) {
                 order.vouchers.forEach(v => v.redeemed = true);
             }
 
             saveData();
-            syncOrdersToCloud();
+            syncSingleOrderToCloud(order); // Kirim update spesifik ke cloud
             renderAdminTransactions();
             renderUserVouchers();
             renderAdminSummary();
@@ -1640,7 +1389,6 @@ function sanitizeFileName(str) {
             if (emptyState) emptyState.classList.add('hidden');
             if (contentGrid) contentGrid.classList.remove('hidden');
 
-            // Auto-fill student profile from localStorage if available
             try {
                 const savedProfile = JSON.parse(localStorage.getItem('kantin_buyer_profile') || '{}');
                 if (savedProfile.name && document.getElementById('buyer-name') && !document.getElementById('buyer-name').value) {
@@ -1719,7 +1467,6 @@ function sanitizeFileName(str) {
                 return;
             }
 
-            // Save student profile to localStorage for future orders
             try {
                 localStorage.setItem('kantin_buyer_profile', JSON.stringify({
                     name: name,
@@ -1734,8 +1481,11 @@ function sanitizeFileName(str) {
 
             const modalTotal = document.getElementById('qris-modal-total');
             const modalTotalText = document.getElementById('qris-modal-total-text');
+            const qrisImg = document.getElementById('qris-modal-img');
+
             if (modalTotal) modalTotal.innerText = totalText;
             if (modalTotalText) modalTotalText.innerText = totalText;
+            if (qrisImg) qrisImg.src = qrisDisplayUrl;
             
             openModal('modal-qris');
         }
@@ -1837,7 +1587,8 @@ function sanitizeFileName(str) {
                 paymentStatus: 'Belum Bayar',
                 redeemStatus: 'Belum Ditukar',
                 paymentProof: currentProofDataUrl,
-                vouchers: orderVouchers
+                vouchers: orderVouchers,
+                _lastModified: Date.now()
             };
 
             orders.unshift(newOrder);
@@ -1845,7 +1596,6 @@ function sanitizeFileName(str) {
             myOrderIds.unshift(orderId);
             saveData();
 
-            // Potong stok lokal
             cart.forEach(item => {
                 const menuItem = menuItems.find(m => m.id === item.id);
                 if (menuItem) {
@@ -1910,6 +1660,7 @@ function sanitizeFileName(str) {
                         <div class="grid grid-cols-1 gap-2">
                             ${(order.vouchers || []).map(v => {
                                 const theme = getVoucherTheme(v.nominal);
+                                const isRedeemed = v.redeemed || order.redeemStatus === 'Sudah Ditukar';
                                 return `
                                 <div class="ticket-card ${theme.bgInner} border ${theme.borderInner} p-3.5 rounded-2xl flex items-center justify-between">
                                     <div class="flex items-center gap-3">
@@ -1919,8 +1670,8 @@ function sanitizeFileName(str) {
                                             <span class="text-xs font-black ${theme.textPrice}">${formatRupiah(v.nominal)}</span>
                                         </div>
                                     </div>
-                                    <span class="text-[10px] font-black px-2.5 py-1 rounded-lg shadow-2xs ${v.redeemed || order.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600' : theme.accentBadge}">
-                                        ${v.redeemed || order.redeemStatus === 'Sudah Ditukar' ? 'Sudah Ditukar' : 'Siap Ditukar'}
+                                    <span class="text-[10px] font-black px-2.5 py-1 rounded-lg shadow-2xs ${isRedeemed ? 'bg-slate-200 text-slate-600' : theme.accentBadge}">
+                                        ${isRedeemed ? 'Sudah Ditukar' : 'Siap Ditukar'}
                                     </span>
                                 </div>
                             `;
@@ -1969,7 +1720,6 @@ function sanitizeFileName(str) {
                 return;
             }
 
-            // Render Mobile Card List
             mobileContainer.innerHTML = filteredOrders.map(o => `
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 space-y-3 shadow-2xs">
                     <div class="flex items-center justify-between">
@@ -2017,7 +1767,6 @@ function sanitizeFileName(str) {
                 </div>
             `).join('');
 
-            // Render Desktop Table Rows
             tbodyContainer.innerHTML = filteredOrders.map((o, idx) => `
                 <tr class="hover:bg-slate-50/80 transition text-xs">
                     <td class="p-3.5 font-extrabold text-slate-400">${idx + 1}</td>
@@ -2064,8 +1813,10 @@ function sanitizeFileName(str) {
             if (!order) return;
 
             order.paymentStatus = (order.paymentStatus === 'Sudah Bayar') ? 'Belum Bayar' : 'Sudah Bayar';
+            order._lastModified = Date.now(); // Proteksi lokal agar tidak tertimpa sync lama
+
             saveData();
-            syncOrdersToCloud();
+            syncSingleOrderToCloud(order); // Update kilat ke Google Sheets
             renderAdminTransactions();
             renderAdminSummary();
             renderUserVouchers();
@@ -2124,37 +1875,6 @@ function sanitizeFileName(str) {
             window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
         }
 
-        function copyAppsScriptCode() {
-            const codeBlock = document.getElementById('apps-script-code-block');
-            if (!codeBlock) return;
-
-            const text = codeBlock.innerText;
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(text).then(() => {
-                    showToast('Kode Google Apps Script berhasil disalin!', 'success');
-                });
-            } else {
-                const textarea = document.createElement('textarea');
-                textarea.value = text;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-                showToast('Kode Google Apps Script berhasil disalin!', 'success');
-            }
-        }
-
-        function openScriptGuideModal() {
-            openModal('modal-script-guide');
-        }
-
-        function closeScriptGuideModal() {
-            closeModal('modal-script-guide');
-        }
-
-        // =========================================================================
-        // 🌐 GOOGLE APPS SCRIPT WEBHOOK SYNC
-        // =========================================================================
         function syncDataFromCloud(isAuto = false, reqPin = '') {
             const statusBadge = document.getElementById('cloud-sync-status');
             if (!webhookUrl || webhookUrl.trim() === '' || webhookUrl.includes('...')) {
@@ -2184,10 +1904,20 @@ function sanitizeFileName(str) {
                         statusBadge.innerHTML = '<i class="fa-solid fa-circle text-[8px] mr-1 text-emerald-500"></i> Online (Terhubung Sheet)';
                     }
 
-                    if (data.qrisUrl) {
-                        const qrisImg = document.getElementById('qris-modal-img');
-                        if (qrisImg) qrisImg.src = data.qrisUrl;
+                    if (data.qrisDisplayUrl) {
+                        qrisDisplayUrl = data.qrisDisplayUrl;
+                    } else if (data.qrisUrl) {
+                        qrisDisplayUrl = data.qrisUrl;
                     }
+
+                    if (data.qrisDownloadUrl) {
+                        qrisDownloadUrl = data.qrisDownloadUrl;
+                    } else if (data.qrisUrl) {
+                        qrisDownloadUrl = data.qrisUrl;
+                    }
+
+                    const qrisImg = document.getElementById('qris-modal-img');
+                    if (qrisImg && qrisDisplayUrl) qrisImg.src = qrisDisplayUrl;
 
                     if (data.cashierWa) {
                         cashierWaNumber = String(data.cashierWa);
@@ -2200,25 +1930,46 @@ function sanitizeFileName(str) {
                         renderAdminMenu();
                     }
 
-                    if (data.authenticated && data.orders && Array.isArray(data.orders)) {
+                    if (data.orders && Array.isArray(data.orders)) {
                         let hasNewOrders = false;
                         data.orders.forEach(cloudOrder => {
                             if (!knownOrderIdsSet.has(String(cloudOrder.id))) {
                                 knownOrderIdsSet.add(String(cloudOrder.id));
-                                hasNewOrders = true;
+                                if (!isFirstSync) {
+                                    hasNewOrders = true;
+                                }
                             }
                         });
 
-                        orders = data.orders;
+                        // Gabungkan Data Cloud dengan Proteksi Lokal (Anti-Overriding)
+                        const cloudOrderIds = new Set(data.orders.map(o => String(o.id)));
+                        const now = Date.now();
+
+                        orders = data.orders.map(cloudOrder => {
+                            const localOrder = orders.find(o => String(o.id) === String(cloudOrder.id));
+                            // Jika transaksi lokal baru saja diubah kurang dari 12 detik lalu, pertahankan status lokal
+                            if (localOrder && localOrder._lastModified && (now - localOrder._lastModified < 12000)) {
+                                return localOrder;
+                            }
+                            return cloudOrder;
+                        });
+
+                        // Tambahkan pesanan lokal yang belum ter-upload
+                        const pendingLocalOrders = orders.filter(o => !cloudOrderIds.has(String(o.id)));
+                        orders = [...orders, ...pendingLocalOrders];
+
                         saveData();
                         renderAdminTransactions();
                         renderAdminSummary();
+                        renderUserVouchers();
 
-                        if (hasNewOrders && isAuto && isSoundEnabled) {
+                        if (hasNewOrders && isAuto && isSoundEnabled && currentRole === 'admin') {
                             playNotificationSound();
                             showToast('Pesanan Baru Masuk! 🎟️', 'success');
                         }
                     }
+
+                    isFirstSync = false;
 
                     if (!isAuto && !reqPin) {
                         showToast('Data berhasil ditarik dari Cloud Google Sheets!', 'success');
@@ -2233,10 +1984,27 @@ function sanitizeFileName(str) {
                         statusBadge.innerHTML = '<i class="fa-solid fa-circle-exclamation text-[8px] mr-1"></i> Error Sync';
                     }
                     if (!isAuto && !reqPin) {
-                        showToast('Gagal terhubung ke Cloud Apps Script! Periksa pengaturan Deployment Web App.', 'error');
+                        showToast('Gagal terhubung ke Cloud Apps Script!', 'error');
                     }
                     return false;
                 });
+        }
+
+        function syncSingleOrderToCloud(order) {
+            if (!webhookUrl || webhookUrl.trim() === '' || webhookUrl.includes('...')) return;
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'update_single_order',
+                    orderId: order.id,
+                    paymentStatus: order.paymentStatus,
+                    redeemStatus: order.redeemStatus,
+                    vouchers: order.vouchers
+                })
+            }).catch(e => console.log('Sync single order cloud error:', e));
         }
 
         function sendOrderToCloud(newOrder) {
@@ -2276,22 +2044,17 @@ function sanitizeFileName(str) {
             if (autoSyncTimer) clearInterval(autoSyncTimer);
             autoSyncTimer = setInterval(() => {
                 syncDataFromCloud(true);
-            }, 15000); // Poll cloud updates every 15 seconds
+            }, 15000);
         }
 
-        // Close modals on Escape key press
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal('modal-qris');
                 closeModal('modal-admin-pin');
-                closeModal('modal-script-guide');
                 closeModal('modal-view-proof');
             }
         });
 
-        // =========================================================================
-        // 🚀 APPLICATION INITIALIZATION
-        // =========================================================================
         document.addEventListener('DOMContentLoaded', () => {
             applyAdminButtonVisibility();
             updateSoundToggleButton();
