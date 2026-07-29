@@ -497,7 +497,7 @@
                                 <input type="url" id="setting-webhook-url" placeholder="https://script.google.com/macros/s/.../exec" class="flex-1 px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-mono outline-none focus:ring-2 focus:ring-emerald-500 transition shadow-2xs">
                                 <button onclick="saveWebhookUrlSetting()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-extrabold transition shadow-xs">Simpan URL</button>
                             </div>
-                            <p class="text-[10px] text-slate-400 font-medium">PIN Kasir diatur terpusat di dalam skrip Google Apps Script (<code class="text-emerald-700 font-bold">MANUAL_CONFIG.adminPin</code>).</p>
+                            <p class="text-[10px] text-slate-400 font-medium">PIN Kasir diatur terpusat di dalam skrip Google Apps Script (<code class="text-emerald-700 font-bold">CONFIG.adminPin</code>).</p>
                         </div>
 
                         <div class="flex flex-wrap gap-2 pt-2 border-t border-slate-200/80">
@@ -627,123 +627,122 @@
                     <i class="fa-solid fa-copy"></i> Copy Kode
                 </button>
                 <pre id="apps-script-code-block" class="whitespace-pre-wrap leading-relaxed">
+var CONFIG = {
+  qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360",
+  adminPin: "3333", 
+  cashierWa: "081234567890",
+  driveFolderName: "BUKTI_PEMBAYARAN_KANTIN_SPENTIG"
+};
+
 function doGet(e) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheetStok = getOrCreateSheet(ss, "STOK");
+    var stokData = sheetStok.getDataRange().getDisplayValues();
+    var menuItems = [];
 
-  // ===================================================
-  // PENGATURAN MANUAL KANTIN (TERPUSAT DI SINI)
-  // ===================================================
-  var MANUAL_CONFIG = {
-    qrisUrl: "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360",
-    adminPin: "3333", // SETTING PIN KASIR UTAMA
-    cashierWa: "081234567890"
-  };
-  // ===================================================
-
-  // 1. Ambil/Inisialisasi Stok dari Sheet "STOK"
-  var sheetStok = getOrCreateSheet(ss, "STOK");
-  var stokData = sheetStok.getDataRange().getDisplayValues();
-  var menuItems = [];
-
-  if (stokData.length <= 1) {
-    var defaultItems = [
-      { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
-      { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 100, icon: '🎟️' },
-      { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 100, icon: '🎟️' },
-      { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 100, icon: '🎟️' },
-      { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 100, icon: '🎟️' }
-    ];
-    sheetStok.clearContents();
-    sheetStok.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
-    defaultItems.forEach(function(item) {
-      sheetStok.appendRow([item.id, item.name, item.price, item.stock, item.icon]);
-    });
-    menuItems = defaultItems;
-  } else {
-    for (var i = 1; i < stokData.length; i++) {
-      if (stokData[i][0]) {
-        menuItems.push({
-          id: String(stokData[i][0]),
-          name: String(stokData[i][1]),
-          price: Number(stokData[i][2]),
-          stock: Number(stokData[i][3]),
-          icon: String(stokData[i][4] || '🎟️')
-        });
-      }
-    }
-  }
-
-  // 2. Keamanan: Verifikasi PIN Kasir
-  var reqPin = String(e && e.parameter && e.parameter.pin || '').trim();
-  var isAuthenticated = (reqPin === MANUAL_CONFIG.adminPin);
-  var orders = [];
-
-  if (isAuthenticated) {
-    var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
-    var ordersData = sheetOrders.getDataRange().getDisplayValues();
-    var startIdx = Math.max(1, ordersData.length - 200);
-
-    for (var j = ordersData.length - 1; j >= startIdx; j--) {
-      if (ordersData[j][0]) {
-        var parsedVouchers = [];
-        try {
-          parsedVouchers = JSON.parse(ordersData[j][11] || '[]');
-        } catch (err) {
-          parsedVouchers = [];
+    if (stokData.length <= 1) {
+      var defaultItems = [
+        { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
+        { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 100, icon: '🎟️' },
+        { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 100, icon: '🎟️' },
+        { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 100, icon: '🎟️' },
+        { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 100, icon: '🎟️' }
+      ];
+      sheetStok.clearContents();
+      sheetStok.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
+      defaultItems.forEach(function(item) {
+        sheetStok.appendRow([item.id, item.name, item.price, item.stock, item.icon]);
+      });
+      menuItems = defaultItems;
+    } else {
+      for (var i = 1; i < stokData.length; i++) {
+        if (stokData[i][0]) {
+          menuItems.push({
+            id: String(stokData[i][0]),
+            name: String(stokData[i][1]),
+            price: Number(stokData[i][2]),
+            stock: Number(stokData[i][3]),
+            icon: String(stokData[i][4] || '🎟️')
+          });
         }
-
-        orders.push({
-          id: String(ordersData[j][0]),
-          date: String(ordersData[j][1]),
-          buyerName: String(ordersData[j][2]),
-          buyerNisn: String(ordersData[j][3]),
-          buyerClass: String(ordersData[j][4]),
-          buyerPhone: String(ordersData[j][5]),
-          itemsSummary: String(ordersData[j][6]),
-          totalAmount: Number(ordersData[j][7]),
-          paymentStatus: String(ordersData[j][8] || 'Belum Bayar'),
-          redeemStatus: String(ordersData[j][9] || 'Belum Ditukar'),
-          paymentProof: String(ordersData[j][10] || ''),
-          vouchers: parsedVouchers
-        });
       }
     }
-  }
 
-  return ContentService.createTextOutput(JSON.stringify({
-    qrisUrl: MANUAL_CONFIG.qrisUrl,
-    cashierWa: MANUAL_CONFIG.cashierWa,
-    menuItems: menuItems,
-    authenticated: isAuthenticated,
-    orders: orders
-  })).setMimeType(ContentService.MimeType.JSON);
+    var reqPin = String(e && e.parameter && e.parameter.pin || '').trim();
+    var isAuthenticated = (reqPin === CONFIG.adminPin);
+    var orders = [];
+
+    if (isAuthenticated) {
+      var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
+      var ordersData = sheetOrders.getDataRange().getDisplayValues();
+      var startIdx = Math.max(1, ordersData.length - 200);
+
+      for (var j = ordersData.length - 1; j >= startIdx; j--) {
+        if (ordersData[j][0]) {
+          var parsedVouchers = [];
+          try {
+            parsedVouchers = JSON.parse(ordersData[j][11] || '[]');
+          } catch (err) {
+            parsedVouchers = [];
+          }
+
+          orders.push({
+            id: String(ordersData[j][0]),
+            date: String(ordersData[j][1]),
+            buyerName: String(ordersData[j][2]),
+            buyerNisn: String(ordersData[j][3]),
+            buyerClass: String(ordersData[j][4]),
+            buyerPhone: String(ordersData[j][5]),
+            itemsSummary: String(ordersData[j][6]),
+            totalAmount: Number(ordersData[j][7]),
+            paymentStatus: String(ordersData[j][8] || 'Belum Bayar'),
+            redeemStatus: String(ordersData[j][9] || 'Belum Ditukar'),
+            paymentProof: String(ordersData[j][10] || ''),
+            vouchers: parsedVouchers
+          });
+        }
+      }
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({
+      qrisUrl: CONFIG.qrisUrl,
+      cashierWa: CONFIG.cashierWa,
+      menuItems: menuItems,
+      authenticated: isAuthenticated,
+      orders: orders
+    })).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      error: true,
+      message: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 function doPost(e) {
   var lock = LockService.getScriptLock();
   try {
     lock.waitLock(10000);
-
     var data = JSON.parse(e.postData.contents);
     var ss = SpreadsheetApp.getActiveSpreadsheet();
 
-    // Action: Update Transaksi Keseluruhan
     if (data.action === "update_orders") {
       var sheetOrders = getOrCreateSheet(ss, "TRANSAKSI");
       clearSheetDataRows(sheetOrders);
       if (data.orders && Array.isArray(data.orders)) {
         data.orders.forEach(function(o) {
           sheetOrders.appendRow([
-            o.id, o.date, o.buyerName, o.buyerNisn, o.buyerClass,
-            o.buyerPhone, o.itemsSummary, o.totalAmount,
+            o.id, o.date, o.buyerName, "'" + (o.buyerNisn || ''), o.buyerClass,
+            "'" + (o.buyerPhone || ''), o.itemsSummary, o.totalAmount,
             o.paymentStatus, o.redeemStatus, o.paymentProof || '', JSON.stringify(o.vouchers || [])
           ]);
         });
       }
-      return ContentService.createTextOutput("Orders Updated");
+      return ContentService.createTextOutput("Orders Updated Successfully");
     }
 
-    // Action: Update Stok Keseluruhan
     if (data.action === "update_stock") {
       var sheetStok = getOrCreateSheet(ss, "STOK");
       clearSheetDataRows(sheetStok);
@@ -752,19 +751,18 @@ function doPost(e) {
           sheetStok.appendRow([m.id, m.name, m.price, m.stock, m.icon || '🎟️']);
         });
       }
-      return ContentService.createTextOutput("Stock Updated");
+      return ContentService.createTextOutput("Stock Updated Successfully");
     }
 
-    // Process Gambar Bukti Pembayaran: Simpan ke Google Drive
     var proofUrl = "";
     if (data.paymentProof && data.paymentProof.indexOf("data:image") === 0) {
       try {
-        var folderName = "BUKTI_PEMBAYARAN_KANTIN";
-        var folders = DriveApp.getFoldersByName(folderName);
-        var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(folderName);
+        var folders = DriveApp.getFoldersByName(CONFIG.driveFolderName);
+        var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder(CONFIG.driveFolderName);
 
         var base64Data = data.paymentProof.split(",")[1];
-        var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "image/jpeg", "BUKTI_" + data.buyerName + "_" + Date.now() + ".jpg");
+        var fileName = "BUKTI_" + sanitizeFileName(data.buyerName) + "_" + Date.now() + ".jpg";
+        var blob = Utilities.newBlob(Utilities.base64Decode(base64Data), "image/jpeg", fileName);
         var file = folder.createFile(blob);
         file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
         proofUrl = "https://lh3.googleusercontent.com/d/" + file.getId();
@@ -775,48 +773,38 @@ function doPost(e) {
       proofUrl = data.paymentProof || '';
     }
 
-    // Default Action: Tambah Transaksi Baru & Kurangi Stok Otomatis
     var sheetDefault = getOrCreateSheet(ss, "TRANSAKSI");
     sheetDefault.appendRow([
-      data.id, data.date, data.buyerName, data.buyerNisn, data.buyerClass, 
-      data.buyerPhone, data.itemsSummary, data.totalAmount, 
+      data.id, data.date, data.buyerName, "'" + data.buyerNisn, data.buyerClass, 
+      "'" + data.buyerPhone, data.itemsSummary, data.totalAmount, 
       data.paymentStatus, data.redeemStatus, proofUrl, JSON.stringify(data.vouchers || [])
     ]);
 
-    // Update stok jika ada
     if (data.vouchers && Array.isArray(data.vouchers)) {
       var sheetStok = getOrCreateSheet(ss, "STOK");
       var stokData = sheetStok.getDataRange().getDisplayValues();
       
       var usage = {};
       data.vouchers.forEach(function(v) {
-        var nominal = v.nominal;
-        var itemId = 'v' + nominal;
+        var itemId = v.itemId || ('v' + v.nominal);
         usage[itemId] = (usage[itemId] || 0) + 1;
       });
 
-      for (var i = 1; i < stokData.length; i++) {
-        var currentId = String(stokData[i][0]);
+      for (var k = 1; k < stokData.length; k++) {
+        var currentId = String(stokData[k][0]);
         if (usage[currentId]) {
-          var currentStock = Number(stokData[i][3]);
+          var currentStock = Number(stokData[k][3]);
           var newStock = Math.max(0, currentStock - usage[currentId]);
-          sheetStok.getRange(i + 1, 4).setValue(newStock);
+          sheetStok.getRange(k + 1, 4).setValue(newStock);
         }
       }
     }
 
-    return ContentService.createTextOutput("Order Saved & Stock Deducted");
+    return ContentService.createTextOutput("Order Saved & Stock Deducted Successfully");
   } catch(err) {
     return ContentService.createTextOutput("Error: " + err.toString());
   } finally {
     lock.releaseLock();
-  }
-}
-
-function clearSheetDataRows(sheet) {
-  var lastRow = sheet.getLastRow();
-  if (lastRow > 1) {
-    sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
   }
 }
 
@@ -831,6 +819,17 @@ function getOrCreateSheet(ss, name) {
     }
   }
   return sheet;
+}
+
+function clearSheetDataRows(sheet) {
+  var lastRow = sheet.getLastRow();
+  if (lastRow > 1) {
+    sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
+  }
+}
+
+function sanitizeFileName(str) {
+  return String(str || 'SISWA').replace(/[^a-zA-Z0-9]/g, '_');
 }
                 </pre>
             </div>
@@ -1120,7 +1119,7 @@ function getOrCreateSheet(ss, name) {
         // =========================================================================
         // 🛠️ CONFIGURATION & INITIAL GLOBAL STATE
         // =========================================================================
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwi75kzynmkO1ypE9VhMNRSn2S2XJz2GmZylfBGob1r_BAVi6LGAB33m7r5NPk8aRRS/exec"; 
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzdHqg4dVQBJAzwV_91SUqwahgK_gShXBYrYOvbZlmMQfZS8o--vYkjAYik3_O2b4FlnA/exec"; 
         
         let menuItems = [
             { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
@@ -1819,6 +1818,7 @@ function getOrCreateSheet(ss, name) {
                 for (let i = 0; i < item.qty; i++) {
                     orderVouchers.push({
                         id: generateVoucherId(),
+                        itemId: item.id,
                         nominal: item.price,
                         redeemed: false
                     });
@@ -2084,17 +2084,20 @@ function getOrCreateSheet(ss, name) {
             orders.forEach(o => {
                 const itemsClean = `"${String(o.itemsSummary || '').replace(/"/g, '""')}"`;
                 const nameClean = `"${String(o.buyerName || '').replace(/"/g, '""')}"`;
+                const dateClean = `"${String(o.date || '').replace(/"/g, '""')}"`;
+                const classClean = `"${String(o.buyerClass || '').replace(/"/g, '""')}"`;
+                
                 const row = [
                     o.id,
-                    o.date,
+                    dateClean,
                     nameClean,
                     "'" + (o.buyerNisn || ''),
-                    o.buyerClass,
+                    classClean,
                     "'" + (o.buyerPhone || ''),
                     itemsClean,
                     o.totalAmount,
-                    o.paymentStatus,
-                    o.redeemStatus
+                    `"${String(o.paymentStatus || '').replace(/"/g, '""')}"`,
+                    `"${String(o.redeemStatus || '').replace(/"/g, '""')}"`
                 ].join(",");
                 csvContent += row + "\n";
             });
@@ -2113,7 +2116,10 @@ function getOrCreateSheet(ss, name) {
 
         function openWhatsAppHelp(e) {
             if (e) e.preventDefault();
-            const waNum = cashierWaNumber.replace(/[^0-9]/g, '');
+            let waNum = cashierWaNumber.replace(/[^0-9]/g, '');
+            if (waNum.startsWith('0')) {
+                waNum = '62' + waNum.slice(1);
+            }
             const msg = encodeURIComponent("Halo Kasir Kantin SARAS Spentig Makassar, saya ingin menanyakan info voucher digital.");
             window.open(`https://wa.me/${waNum}?text=${msg}`, '_blank');
         }
