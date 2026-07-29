@@ -643,11 +643,11 @@ function doGet(e) {
 
     if (stokData.length <= 1) {
       var defaultItems = [
-        { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 100, icon: '🎟️' },
-        { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 100, icon: '🎟️' },
-        { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 100, icon: '🎟️' },
-        { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 100, icon: '🎟️' },
-        { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 100, icon: '🎟️' }
+        { id: 'v1000', name: 'Voucher Belanja', price: 1000, stock: 0, icon: '🎟️' },
+        { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 0, icon: '🎟️' },
+        { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 0, icon: '🎟️' },
+        { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 0, icon: '🎟️' },
+        { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 0, icon: '🎟️' }
       ];
       sheetStok.clearContents();
       sheetStok.appendRow(["ID", "NAMA_VOUCHER", "HARGA", "STOK", "ICON"]);
