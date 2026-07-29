@@ -234,11 +234,11 @@
         <!-- VIEW: SHOPPING CART -->
         <section id="view-cart" class="hidden space-y-6 max-w-6xl mx-auto w-full">
             <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-5 sm:p-7 space-y-6">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-                    <h2 class="font-black text-slate-800 text-base flex items-center gap-2.5">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-2 border-b border-slate-100 pb-4 text-center sm:text-left">
+                    <h2 class="font-black text-slate-800 text-base flex items-center justify-center sm:justify-start gap-2.5">
                         <i class="fa-solid fa-cart-shopping text-emerald-600"></i> Keranjang Pembelian Voucher
                     </h2>
-                    <span class="text-xs text-slate-400 font-bold bg-slate-100 px-2.5 py-1 rounded-full">Spentig System</span>
+                    <span class="text-xs text-slate-400 font-bold bg-slate-100 px-2.5 py-1 rounded-full mx-auto sm:mx-0">Spentig System</span>
                 </div>
 
                 <div id="cart-empty-state" class="text-center py-14 text-slate-400 space-y-4">
@@ -379,7 +379,7 @@
                                 <th class="p-3.5">Total</th>
                                 <th class="p-3.5">Pembayaran</th>
                                 <th class="p-3.5">Penukaran</th>
-                                <th class="p-3.5 text-right">Aksi Kasir</th>
+                                <th class="p-3.5 text-right min-w-[170px] w-[170px]">Aksi Kasir</th>
                             </tr>
                         </thead>
                         <tbody id="admin-transactions-tbody" class="divide-y divide-slate-100 font-medium">
@@ -1734,33 +1734,33 @@
                     </div>
 
                     <div class="text-xs bg-white p-2.5 rounded-xl border border-slate-200/60">
-                        <p class="font-bold text-slate-700">${o.itemsSummary}</p>
+                        <p class="font-bold text-slate-700 break-words leading-relaxed">${o.itemsSummary}</p>
                         <p class="font-black text-emerald-600 mt-1">${formatRupiah(o.totalAmount)}</p>
                     </div>
 
-                    <div class="flex items-center justify-between gap-2 pt-1">
-                        <div class="flex flex-col gap-1">
-                            <button onclick="togglePaymentStatus('${o.id}')" class="text-[10px] font-black px-2.5 py-1 rounded-full border transition ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200'}">
+                    <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/60">
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <button onclick="togglePaymentStatus('${o.id}')" class="text-[10px] font-black px-2.5 py-1 rounded-full border transition shrink-0 ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200'}">
                                 ${o.paymentStatus === 'Sudah Bayar' ? '✅ Lunas' : '⚠️ Belum Bayar'}
                             </button>
-                            <span class="text-[10px] font-black px-2.5 py-0.5 rounded-full border ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600 border-slate-300' : 'bg-blue-100 text-blue-800 border-blue-200'}">
+                            <span class="text-[10px] font-black px-2.5 py-1 rounded-full border shrink-0 ${o.redeemStatus === 'Sudah Ditukar' ? 'bg-slate-200 text-slate-600 border-slate-300' : 'bg-blue-100 text-blue-800 border-blue-200'}">
                                 ${o.redeemStatus}
                             </span>
                         </div>
 
-                        <div class="flex items-center gap-1.5">
+                        <div class="flex items-center gap-1.5 shrink-0 justify-end">
                             ${o.paymentProof ? `
-                                <button onclick="viewPaymentProof('${o.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold border border-blue-200 transition">
+                                <button onclick="viewPaymentProof('${o.id}')" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold border border-blue-200 transition shrink-0">
                                     <i class="fa-solid fa-receipt"></i> Bukti
                                 </button>
                             ` : ''}
                             
                             ${o.redeemStatus !== 'Sudah Ditukar' ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition">
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition shrink-0">
                                     Serahkan
                                 </button>
                             ` : `
-                                <span class="text-[10px] text-slate-400 font-bold italic">Selesai</span>
+                                <span class="text-[10px] text-slate-400 font-bold italic px-2 shrink-0">Selesai</span>
                             `}
                         </div>
                     </div>
@@ -1775,7 +1775,7 @@
                         <p class="font-extrabold text-slate-800">${o.buyerName}</p>
                         <p class="text-[11px] text-slate-500 font-semibold">${o.buyerClass} • NISN: ${o.buyerNisn || '-'}</p>
                     </td>
-                    <td class="p-3.5 font-semibold text-slate-700 max-w-xs truncate">${o.itemsSummary}</td>
+                    <td class="p-3.5 font-semibold text-slate-700 max-w-xs break-words leading-normal">${o.itemsSummary}</td>
                     <td class="p-3.5 font-black text-emerald-600 whitespace-nowrap">${formatRupiah(o.totalAmount)}</td>
                     <td class="p-3.5 whitespace-nowrap">
                         <button onclick="togglePaymentStatus('${o.id}')" class="px-2.5 py-1 rounded-full text-[10px] font-black border transition ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-200' : 'bg-amber-100 text-amber-800 border-amber-200 hover:bg-amber-200'}">
@@ -1787,20 +1787,20 @@
                             ${o.redeemStatus}
                         </span>
                     </td>
-                    <td class="p-3.5 text-right whitespace-nowrap">
-                        <div class="flex items-center justify-end gap-1.5">
+                    <td class="p-3.5 text-right whitespace-nowrap min-w-[170px] w-[170px]">
+                        <div class="flex items-center justify-end gap-1.5 shrink-0">
                             ${o.paymentProof ? `
-                                <button onclick="viewPaymentProof('${o.id}')" title="Lihat Foto Bukti Transfer" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold border border-blue-200 transition">
+                                <button onclick="viewPaymentProof('${o.id}')" title="Lihat Foto Bukti Transfer" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold border border-blue-200 transition shrink-0">
                                     <i class="fa-solid fa-receipt"></i> Bukti
                                 </button>
                             ` : ''}
 
                             ${o.redeemStatus !== 'Sudah Ditukar' ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition">
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition shrink-0">
                                     Serahkan Voucher
                                 </button>
                             ` : `
-                                <span class="text-[11px] text-slate-400 font-bold italic px-2">Selesai</span>
+                                <span class="text-[11px] text-slate-400 font-bold italic px-2 shrink-0">Selesai</span>
                             `}
                         </div>
                     </td>
