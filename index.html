@@ -275,11 +275,11 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                 <div>
                                     <label class="block text-xs font-extrabold text-slate-700 mb-1">Nama Lengkap Siswa <span class="text-red-500">*</span></label>
-                                    <input type="text" id="buyer-name" oninput="this.value = this.value.toUpperCase()" placeholder="Misal: RAHMAT JAYA" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs uppercase">
+                                    <input type="text" id="buyer-name" oninput="this.value = this.value.toUpperCase()" placeholder="Misal: RAHMAT JAYA" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs uppercase" style="text-transform: uppercase;">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-extrabold text-slate-700 mb-1">Kelas Siswa <span class="text-red-500">*</span></label>
-                                    <input type="text" id="buyer-class" oninput="this.value = this.value.toUpperCase()" placeholder="Contoh: VII.1, VIII.3, IX.11" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs uppercase">
+                                    <input type="text" id="buyer-class" oninput="this.value = this.value.toUpperCase()" placeholder="Contoh: VII.1, VIII.3, IX.11" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-800 outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs uppercase" style="text-transform: uppercase;">
                                     <p class="text-[10px] text-slate-400 mt-1 font-medium">Sesuai format kelas sekolah</p>
                                 </div>
                             </div>
@@ -382,7 +382,7 @@
                                 <th class="p-3.5">Total</th>
                                 <th class="p-3.5">Pembayaran</th>
                                 <th class="p-3.5">Penukaran</th>
-                                <th class="p-3.5 text-right min-w-[170px] w-[170px]">Aksi Kasir</th>
+                                <th class="p-3.5 text-right min-w-[190px] w-[190px] align-middle">Aksi Kasir</th>
                             </tr>
                         </thead>
                         <tbody id="admin-transactions-tbody" class="divide-y divide-slate-100 font-medium">
@@ -603,7 +603,7 @@
     </div>
 
     <script>
-        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz7dXU-BLLpQqJoeoAObjjrhafQthSzm5kDy89f0_o_c84e2qrHfbWNIQTfXFWS/exec"; 
+        const DEFAULT_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxesW8vdUyq_9p_7fC_UvtvItOdvdxHkdgqXCB4EcFDGSZDx_TTbYhpJ3t3nripCb0IFw/exec"; 
         
         // DUAL QRIS URL DEFAULTS
         const DEFAULT_QRIS_DISPLAY_URL = "https://api.qrserver.com/v1/create-qr-code/?size=450x450&data=00020101021126580014ID.GO.QRIS.WWW01189360091400000000000215KANTINSEKOLAH0153033605802ID5914IRMA%20JAYA5303360";
@@ -617,7 +617,8 @@
             { id: 'v2000', name: 'Voucher Belanja', price: 2000, stock: 0, icon: '🎟️' },
             { id: 'v3000', name: 'Voucher Belanja', price: 3000, stock: 0, icon: '🎟️' },
             { id: 'v5000', name: 'Voucher Belanja', price: 5000, stock: 0, icon: '🎟️' },
-            { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 0, icon: '🎟️' }
+            { id: 'v10000', name: 'Voucher Belanja', price: 10000, stock: 0, icon: '🎟️' },
+            { id: 'v15000', name: 'Voucher Belanja', price: 15000, stock: 0, icon: '🎟️' }
         ];
 
         let cart = [];
@@ -739,7 +740,7 @@
                     textPrice: 'text-blue-700',
                     accentBadge: 'bg-blue-600 text-white'
                 };
-            } else {
+            } else if (p <= 10000) {
                 return {
                     bgCard: 'bg-gradient-to-br from-purple-50 via-indigo-50/40 to-white',
                     borderCard: 'border-purple-300/80',
@@ -749,6 +750,17 @@
                     textTitle: 'text-purple-950',
                     textPrice: 'text-purple-700',
                     accentBadge: 'bg-purple-600 text-white'
+                };
+            } else {
+                return {
+                    bgCard: 'bg-gradient-to-br from-rose-50 via-pink-50/40 to-white',
+                    borderCard: 'border-rose-300/80',
+                    bgInner: 'bg-rose-100/60',
+                    borderInner: 'border-rose-200',
+                    textSub: 'text-rose-800',
+                    textTitle: 'text-rose-950',
+                    textPrice: 'text-rose-700',
+                    accentBadge: 'bg-rose-600 text-white'
                 };
             }
         }
@@ -1809,7 +1821,7 @@
                             ${o.redeemStatus}
                         </span>
                     </td>
-                    <td class="p-3.5 text-right whitespace-nowrap min-w-[170px] w-[170px]">
+                    <td class="p-3.5 text-right whitespace-nowrap min-w-[190px] w-[190px] align-middle">
                         <div class="flex items-center justify-end gap-1.5 shrink-0">
                             ${o.paymentProof ? `
                                 <button onclick="viewPaymentProof('${o.id}')" title="Lihat Foto Bukti Transfer" class="px-2.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold border border-blue-200 transition shrink-0">
@@ -1949,7 +1961,13 @@
                     }
 
                     if (data.menuItems && Array.isArray(data.menuItems) && data.menuItems.length > 0) {
-                        menuItems = data.menuItems;
+                        let cloudItems = data.menuItems;
+                        // Ensure Rp 15.000 voucher always exists and is never erased by sync
+                        const has15k = cloudItems.some(i => i.id === 'v15000');
+                        if (!has15k) {
+                            cloudItems.push({ id: 'v15000', name: 'Voucher Belanja', price: 15000, stock: 0, icon: '🎟️' });
+                        }
+                        menuItems = cloudItems;
                         renderMenu();
                         renderAdminMenu();
                     }
