@@ -241,7 +241,6 @@
                     <h2 class="font-black text-slate-800 text-base flex items-center justify-center sm:justify-start gap-2.5">
                         <i class="fa-solid fa-cart-shopping text-emerald-600"></i> Keranjang Pembelian Voucher
                     </h2>
-                    <span class="text-xs text-slate-400 font-bold bg-slate-100 px-2.5 py-1 rounded-full mx-auto sm:mx-0">Spentig System</span>
                 </div>
 
                 <div id="cart-empty-state" class="text-center py-14 text-slate-400 space-y-4">
@@ -287,11 +286,11 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                                 <div>
                                     <label class="block text-xs font-extrabold text-slate-700 mb-1">NISN (10 Digit NISN) <span class="text-red-500">*</span></label>
-                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" id="buyer-nisn" placeholder="Contoh: 0081234567" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
+                                    <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" id="buyer-nisn" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="Contoh: 0081234567" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-extrabold text-slate-700 mb-1">Nomor HP / WhatsApp <span class="text-red-500">*</span></label>
-                                    <input type="tel" id="buyer-phone" placeholder="08xxxxxxxxxx" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
+                                    <input type="tel" id="buyer-phone" oninput="this.value = this.value.replace(/[^0-9]/g, '')" placeholder="08xxxxxxxxxx" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs font-semibold outline-none focus:ring-2 focus:ring-emerald-500 transition-all shadow-2xs">
                                 </div>
                             </div>
                         </div>
@@ -301,7 +300,7 @@
                                 <p class="text-xs text-slate-500 font-extrabold uppercase tracking-wider">Total Tagihan Pembelian</p>
                                 <p class="text-2xl font-black text-emerald-600 tracking-tight" id="cart-total-price">Rp 0</p>
                             </div>
-                            <button onclick="openQrisModal()" class="w-full sm:w-auto bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white px-7 py-3.5 rounded-2xl font-black text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition transform active:scale-95">
+                            <button onclick="openQrisModal()" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white px-7 py-3.5 rounded-2xl font-black text-xs shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 transition transform active:scale-95">
                                 <i class="fa-solid fa-qrcode text-base"></i> Bayar Lewat QRIS
                             </button>
                         </div>
@@ -536,7 +535,7 @@
                 </div>
             </div>
 
-            <button onclick="confirmCheckoutOrder(event)" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-4 rounded-2xl font-black text-xs sm:text-sm shadow-md shadow-emerald-200 flex items-center justify-center gap-2 transition active:scale-98">
+            <button onclick="confirmCheckoutOrder(event)" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-2xl font-black text-xs sm:text-sm shadow-md shadow-blue-200 flex items-center justify-center gap-2 transition active:scale-98">
                 <i class="fa-solid fa-circle-check text-base"></i> Saya Sudah Bayar
             </button>
         </div>
@@ -1790,7 +1789,7 @@
                             ` : ''}
                             
                             ${o.redeemStatus !== 'Sudah Ditukar' ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition shrink-0">
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-xs transition shrink-0 ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-slate-200 text-slate-500 hover:bg-slate-300'}">
                                     Serahkan
                                 </button>
                             ` : `
@@ -1830,7 +1829,7 @@
                             ` : ''}
 
                             ${o.redeemStatus !== 'Sudah Ditukar' ? `
-                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-extrabold shadow-xs transition shrink-0">
+                                <button onclick="processRedeemVoucher('${o.id}')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-xs transition shrink-0 ${o.paymentStatus === 'Sudah Bayar' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-slate-200 text-slate-500 hover:bg-slate-300'}">
                                     Serahkan Voucher
                                 </button>
                             ` : `
@@ -1962,7 +1961,7 @@
 
                     if (data.menuItems && Array.isArray(data.menuItems) && data.menuItems.length > 0) {
                         let cloudItems = data.menuItems;
-                        // Ensure Rp 15.000 voucher always exists and is never erased by sync
+                        // Pastikan voucher Rp 15.000 tidak terhapus jika belum ditambahkan di sheet
                         const has15k = cloudItems.some(i => i.id === 'v15000');
                         if (!has15k) {
                             cloudItems.push({ id: 'v15000', name: 'Voucher Belanja', price: 15000, stock: 0, icon: '🎟️' });
@@ -2055,17 +2054,6 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newOrder)
             }).catch(e => console.log('Send order cloud error:', e));
-        }
-
-        function syncOrdersToCloud() {
-            if (!webhookUrl || webhookUrl.trim() === '' || webhookUrl.includes('...')) return;
-
-            fetch(webhookUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'update_orders', orders: orders })
-            }).catch(e => console.log('Sync orders cloud error:', e));
         }
 
         function syncStockToCloud() {
